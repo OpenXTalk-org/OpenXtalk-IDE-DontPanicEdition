@@ -292,6 +292,8 @@ function deployGetVersionsMap
    put "8.1" into tMap[27]
    put "9.0 - Pie" into tMap[28]
    put "10 - Q" into tMap[29]
+   put "11 - R" into tMap[30]
+   put "12 - S" into tMap[31]
    return tMap
 end deployGetVersionsMap
 
