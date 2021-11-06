@@ -111,17 +111,13 @@ command revMailUnicode pTo, pCC, pSubject, pBody
    else
       local tMailApp
       put queryRegistry("HKEY_CLASSES_ROOT\mailto\shell\open\command\") into tMailApp
-      if tMailApp is empty then
-         launch url tURL
-      else
-         replace quote & "%1" & quote with tURL in tMailApp
-         replace "%1" with tURL in tMailApp
-         replace "%ProgramFiles%" with $ProgramFiles in tMailApp
-         if the length of tMailApp > 32767 then
-            return "message too long"
-         end if
-         open process tMailApp for neither
+      replace quote & "%1" & quote with tURL in tMailApp
+      replace "%1" with tURL in tMailApp
+      replace "%ProgramFiles%" with $ProgramFiles in tMailApp
+      if the length of tMailApp > 32767 then
+         return "message too long"
       end if
+      open process tMailApp for neither
    end if
 end revMailUnicode
 
