@@ -1577,9 +1577,9 @@ command revInternal__InitialiseOptions
    
    get the cDarkMode of stack "revPreferences"
    if it is true then 
-      --setAllToDarkMode
+      setAllToDarkMode
    else
-      --setAllToLightMode
+      setAllToLightMode
    end if
    
    revInternal__Log "Leave", "Options Initialisation"
