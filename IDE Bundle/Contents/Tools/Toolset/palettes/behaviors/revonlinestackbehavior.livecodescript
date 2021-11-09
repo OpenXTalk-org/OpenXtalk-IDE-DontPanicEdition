@@ -696,7 +696,7 @@ end rvoCancelSearch
 
 ### Temporary
 command rvoAccountFailureDisplay
-   set the cTooltip of group "progressbar" of me to "A valid license is required to create a RevOnline account"
+   --   set the cTooltip of group "progressbar" of me to "A valid license is required to create a RevOnline account"
 end rvoAccountFailureDisplay
 
 # Used by "share this stack" item in file menu of revmenubar

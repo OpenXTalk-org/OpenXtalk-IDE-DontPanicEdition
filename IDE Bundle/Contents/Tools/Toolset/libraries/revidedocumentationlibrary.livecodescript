@@ -172,7 +172,7 @@ of data
 pertaining to a Script API entry with the given name.
 */
 function ideDocsFetchScriptData pEntryName
-   return ideDocsFetchData("oxt_script", "", pEntryName)
+   return ideDocsFetchData("script", "", pEntryName)
 end ideDocsFetchScriptData
 
 /*
@@ -184,7 +184,7 @@ of data
 pertaining to a  script dictionary entry with the given name.
 */
 function ideDocsFetchLCSData pEntryName
-   return ideDocsFetchData("oxt_script", "Script", pEntryName)
+   return ideDocsFetchData("script", "Script", pEntryName)
 end ideDocsFetchLCSData
 
 /*
@@ -197,7 +197,7 @@ of data pertaining to the unique script dictionary entry with the
 given name and type.
 */
 function ideDocsFetchLCSDataOfType pEntryName, pType
-   return ideDocsFetchDataOfType("oxt_script", "Script", pEntryName, pType)
+   return ideDocsFetchDataOfType("script", "Script", pEntryName, pType)
 end ideDocsFetchLCSDataOfType
 
 /*
@@ -210,7 +210,7 @@ of data describing the element of the array of data
 pertaining to the script dictionary entry with the given name and type.
 */
 function ideDocsFetchLCSElementOfType pEntryName, pType, pElement
-   return ideDocsFetchElementOfType("oxt_script", "Script", pEntryName, pType, pElement)
+   return ideDocsFetchElementOfType("script", "Script", pEntryName, pType, pElement)
 end ideDocsFetchLCSElementOfType
 
 /*
@@ -221,7 +221,7 @@ A numerically keyed array of data, each element of which is an array of data
 pertaining to a script dictionary entry with the given type.
 */
 function ideDocsFetchLCSElementsOfType pType
-   return __ideDocsFetchData("oxt_script", "Script", "", pType)
+   return __ideDocsFetchData("script", "Script", "", pType)
 end ideDocsFetchLCSElementsOfType
 
 /*
@@ -233,7 +233,7 @@ of data
 pertaining to a builder dictionary entry with the given name.
 */
 function ideDocsFetchLCBData pEntryName
-   return ideDocsFetchData("oxt_builder", "Builder", pEntryName)
+   return ideDocsFetchData("builder", "Builder", pEntryName)
 end ideDocsFetchLCBData
 
 /*
@@ -246,7 +246,7 @@ of data pertaining to the unique builder dictionary entry with the
 given name and type.
 */
 function ideDocsFetchLCBDataOfType pEntryName, pType
-   return ideDocsFetchDataOfType("oxt_builder", "Builder", pEntryName, pType)
+   return ideDocsFetchDataOfType("builder", "Builder", pEntryName, pType)
 end ideDocsFetchLCBDataOfType
 
 /*
@@ -259,7 +259,7 @@ of data describing the element of the array of data
 pertaining to the builder dictionary entry with the given name and type.
 */
 function ideDocsFetchLCBElementOfType pEntryName, pType, pElement
-   return ideDocsFetchElementOfType("oxt_builder", "Builder", pEntryName, pType, pElement)
+   return ideDocsFetchElementOfType("builder", "Builder", pEntryName, pType, pElement)
 end ideDocsFetchLCBElementOfType
 
 /*
@@ -270,7 +270,7 @@ A numerically keyed array of data, each element of which is an array of data
 pertaining to a builder dictionary entry with the given type.
 */
 function ideDocsFetchLCBElementsOfType pType
-   return __ideDocsFetchData("oxt_builder", "Builder", "", pType)
+   return __ideDocsFetchData("builder", "Builder", "", pType)
 end ideDocsFetchLCBElementsOfType
 
 /*

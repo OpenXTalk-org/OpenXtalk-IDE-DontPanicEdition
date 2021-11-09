@@ -41,7 +41,7 @@ local laSocketClosedByScript
 -- MM-2014-02-27: [[ HTTPS Proxy ]] Stores if a given socket is secured.
 local laSocketSecured
 
--- MM-2014-02-27: [[ PAC Support ]] 
+-- MM-2014-02-27: [[ PAC Support ]]
 local lvProxyInitialized       -- If we have already attempted to extract the systems proxy settings
 local lvUsePACFileForProxy     -- If we should use the configured PAC file for proxy settings
 local lvHTTPProxy              -- The proxy server (if any) configured by the system
@@ -78,7 +78,7 @@ local laUrlByFile ##used by libUrlUploadFile to track which files go to which ur
 ------------------------------------------------
 on libraryStack
    if the target is not me then pass libraryStack
-   
+
    // AL-2015-01-29: [[ Scriptify revLibUrl ]] Initialise custom properties when stack becomes in use
    initialiseCustomProps
 end libraryStack
@@ -147,19 +147,19 @@ on initialiseCustomProps
    put "ABOR:225,226|Connect:220|CWD:250|DELE:250|LIST:125,150|MKD:257|MODE:200|NLST:125,150|PASS:230,202|PASV:227|PORT:200|PWD:257|QUIT:221|RETR:125,150|RMD:250|SIZE:213|STOR:125,150|transferComplete:226|TYPE:200|USER:230,331" into tFtpCodes
    split tFtpCodes by "|" and ":"
    set the customProperties["cFtpGoodCodes"] of me to tFtpCodes
-   
+
    # initialise default header
    set the cDefaultHeader of me to "METHOD --- HTTP/1.1" & return & \
       "Host: " & return & "User-Agent: "
-   
+
    # initialise version
    set the cVersion of me to "1.2.0"
-   
+
    # initalise PAC support javascript
    local tPacSupport
    put "function isPlainHostName(e){return e.indexOf('.')==-1?true:false}function dnsDomainIs(e,t){var n=e.toLowerCase();var r=t.toLowerCase();var i=n.substring(n.length-r.length,n.length);if(i==r)return true;return false}function localHostOrDomainIs(e,t){var n=e.toLowerCase();var r=t.toLowerCase();return n==r||isPlainHostName(n)&!isPlainHostName(r)?true:false}function isResolvable(e){var t=dnsResolve(e);return typeof t=='string'&&t.length?true:false}function isInNet(e,t,n){var r=dnsResolve(e);if(r){var i=t.split('.');var s=n.split('.');var o=r.split('.');if(i.length==s.length&&s.length==o.length){for(var u=0;u<i.length;u++){if((i[u]&s[u])!=(s[u]&o[u]))return false}return true}}return false}function dnsResolve(e){var t;t=__dnsResolve(e);var n;n=t.split('.');if(n.length==4)return t;return null}function myIpAddress(){var e;e=__myIpAddress();var t;t=e.split('.');if(t.length==4)return e;return null}function dnsDomainLevels(e){var t=e.split('.');return t.length-1}function shExpMatch(e,t){if(typeof e!='string'||typeof t!='string')return false;if(t=='*')return true;if(e==''&&t=='')return true;e=e.toLowerCase();t=t.toLowerCase();var n=e.length;var r=t.split('*');var i=0;for(var s=0;s<r.length;s++){if(r[s]=='')continue;if(i>n)return false;i=e.indexOf(r[s]);if(i==-1)return false;i+=r[s].length;e=e.substring(i,n);n=e.length}s--;if(r[s]==''||e=='')return true;return false}function weekdayRange(e,t,n){var r=new Date;var i='SUNMONTUEWEDTHUFRISAT';e=e.toUpperCase();if(t==undefined)t=e;else t=t.toUpperCase();var s=i.indexOf(e);var o=i.indexOf(t);if(o==-1&&t=='GMT'){n=t;o=s}if(s==-1||o==-1)return false;s=s/3;o=o/3;if(n=='GMT')r=r.getUTCDay();else r=r.getDay();if(s<=o&&r>=s&&r<=o)return true;if(o<s&&(r<=o||r>=s))return true;return false}function dateRange(){var e=new Date;var t=arguments.length;var n=arguments[t-1];if(typeof n!='string')n=false;else{n=n.toUpperCase();if(n!='GMT')n=false;else{n=true;t--}}if(!t||t>6)return false;var r=0;var i=0;var s=0;var o=0;var u=0;var a=0;for(var f=0;f<t;f++){var l=arguments[f];if(typeof l=='number'){if(l>31){if(!u)u=l;else if(!a)a=l;else return false}else if(!l)return false;else if(!r)r=l;else if(!i)i=l;else return false}else if(typeof l=='string'){var c='JANFEBMARAPRMAYJUNJULAUGSEPOCTNOVDEC';l=l.toUpperCase();l=c.indexOf(l);if(l==-1)return false;l/=3;l+=1;if(!s)s=l;else if(!o)o=l;else return false}else return false}if(!u)u=n?e.getUTCFullYear():e.getFullYear();if(!a)a=u;if(!s)s=(n?e.getUTCMonth():e.getMonth())+1;if(!o)o=s;if(!r)r=n?e.getUTCDate():e.getDate();if(!i)i=r;var h;var p;if(n){h=Date.UTC(u,s-1,r,0,0,0,0);p=Date.UTC(a,o-1,i,23,59,59,999)}else{h=Date(u,s-1,r,0,0,0,0).valueOf();p=Date(a,o-1,i,23,59,59,999).valueOf()}e=e.valueOf();return h<=e&&e<=p}function timeRange(){var e=0;var t=new Date;var n=new Date;var r=new Date;var i=arguments.length;var s=arguments[i-1];if(typeof s!='string')s=false;else{s=s.toUpperCase();if(s!='GMT')s=false;else{s=true;i--}}if(!i||i>6||i%2&&i!=1)return false;t.setMinutes(0);t.setSeconds(0);t.setMilliseconds(0);r.setMinutes(59);r.setSeconds(59);r.setMilliseconds(999);for(e=0;e<i/2;e++){var o=arguments[e];if(s){switch(e){case 0:t.setUTCHours(o);r.setUTCHours(o);break;case 1:t.setUTCMinutes(o);r.setUTCMinutes(o);break;case 2:t.setUTCSeconds(o);r.setUTCSeconds(o);break}}else{switch(e){case 0:t.setHours(o);r.setHours(o);break;case 1:t.setMinutes(o);r.setMinutes(o);break;case 2:t.setSeconds(o);r.setSeconds(o);break}}}if(i!=1){r.setMinutes(0);r.setSeconds(0);r.setMilliseconds(0);for(e=0;e<i/2;e++){var o=arguments[i/2+e];if(s){switch(e){case 0:r.setUTCHours(o);break;case 1:r.setUTCMinutes(o);break;case 2:r.setUTCSeconds(o);break}}else{switch(e){case 0:r.setHours(o);break;case 1:r.setMinutes(o);break;case 2:r.setSeconds(o);break}}}}n=n.valueOf();t=t.valueOf();r=r.valueOf();if(r<t)r+=864e5;return t<=n&&n<=r}function __FindProxyForURL(e,t){return FindProxyForURL(e,t)}" into tPacSupport
    set the cPACSupport of me to tPacSupport
-   
+
    # initialise top level domains
    local tTopLevelDomains
    put "biz,com,info,name,net,org,pro,aero,asia,cat,coop,edu,gov,int,jobs,mil,mobi,museum,tel,travel,arpa,nato,example,invalid,localhost,test,bitnet,csnet,local,root,uucp,onion,exit,berlin,lat,nyc,bzh,cym,gal,sco,geo,mail,kids,post,shop,web,xxx,ac,ad,ae,af,ag,ai,al,am,an,ao,aq,ar,as,at,au,aq,ax,az,ac,ad,ae,af,ag,ai,al,am,an,ao,aq,ar,as,at,au,aw,ax,az,ba,bb,bd,be,bf,bg,bh,bi,bj,bm,bn,bo,br,bs,bt,bw,by,bz,ca,cc,cd,cf,cg,ch,ci,ck,cl,cm,cn,co,cr,cu,cv,cx,cy,cz,de,dj,dk,dm,do,dz,ec,ee,eg,er,es,et,eu,fi,fj,fk,fm,fo,fr,ga,gd,ge,gf,gg,gh,gi,gl,gm,gn,gp,gq,gr,gs,gt,gu,gw,gy,hk,hm,hn,hr,ht,hu,id,ie,il,im,in,io,iq,ir,is,it,je,jm,jo,jp,ke,kg,kh,ki,km,kn,kp,kr,kw,ky,kz,la,lb,lc,li,lk,lr,ls,lt,lu,lv,ly,ma,mc,md,me,mg,mh,mk,ml,mm,mn,mo,mp,mq,mr,ms,mt,mu,mv,mw,mx,my,mz,na,nc,ne,nf,ng,ni,nl,no,np,nr,nu,nz,om,pa,pe,pf,pg,ph,pk,pl,pn,pr,ps,pt,pw,py,qa,re,ro,rs,ru,rw,sa,sb,sc,sd,se,sg,sh,si,sk,sl,sm,sn,sr,st,su,sv,sy,sz,tc,td,tf,tg,th,tj,tk,tl,tm,tn,to,tr,tt,tv,tw,tz,ua,ug,uk,us,uy,uz,va,vc,ve,vg,vi,vn,vu,wf,ws,ye,za,zm,zw,um,bl,eh,mf,bv,gb,pm,sj,so,yt,tp,yu,cs,zr" into tTopLevelDomains
@@ -191,7 +191,7 @@ on loadUrl x,y
          return "error  URL is currently loading" ##with empty
          break
       case newUrl is not among the keys of laLoadedUrls OR laUrlLoadStatus[newUrl] is not "cached"
-         
+
          ##  put the long id of the target &","& item 2 of the params into laMessg[newUrl]
          ##dc 081104
          put the long id of the target &","& item -1 of the params into laMessg[newUrl]
@@ -201,12 +201,12 @@ on loadUrl x,y
          put empty into laUrlErrorStatus[newUrl]
          put empty into laUrlLoadStatus[newUrl]
          put empty into laLoadedUrls[newUrl]
-         
+
          ulGetFormat newUrl,lvCount
-         
+
          -- SN 2014-02-21 Decode the URL read according to the encoding specified in the head part
          ulDecodeData newUrl
-         
+
          if laUrlLoadStatus[newUrl] is "error" and not laCancelled[newurl] then
             ulSendMessage newUrl ##send message now only if error occurred befoe block point
             return "error"
@@ -225,7 +225,7 @@ on loadUrl x,y
          -----------------------
          break
       case newUrl is among the keys of laLoadedUrls and laUrlLoadStatus[newUrl] is "cached" #url is in cache
-         
+
          ## put the long id of the target &","& item 2 of the params into laMessg[newUrl]
          ##dc 081104
          put the long id of the target &","& item -1 of the params into laMessg[newUrl]
@@ -272,20 +272,20 @@ on getUrl x
       if lvCount is empty then
          put "6923" into lvCount
       end if
-      
+
       put empty into laUrlErrorStatus[newUrl]
       put "getData" into laAction[newUrl]
       put empty into laData[newUrl]
       ulGetFormat newUrl,lvCount # convert url to components
-      
+
       -- SN 2014-02-21 Decode the URL read according to the encoding specified in the head part
       ulDecodeData newUrl
       ##final clean up here
-      
+
       if laAuthRecursCount[newUrl] < 1 then
          delete local laStatus[newUrl] ##
          delete local laAuthRecursCount[newUrl] ##
-         
+
          put laUrlErrorStatus[newUrl] into tRetResult
          delete local  laUrlErrorStatus[newUrl]
 
@@ -323,13 +323,13 @@ on postUrl y,x
       put empty into laUrlErrorStatus[newUrl]
       put empty into laData[newUrl]
       ulGetFormat newUrl,lvCount # convert url to components
-      
+
       ----------------------------------
       ##final clean up here
       if laAuthRecursCount[newUrl] < 1 then
          delete local laStatus[newUrl]
          delete local laAuthRecursCount[newUrl]
-         
+
          put laUrlErrorStatus[newUrl] into tRetResult
          delete local  laUrlErrorStatus[newUrl]
 
@@ -365,7 +365,7 @@ on putUrl y,x
       put y into laPostData[newUrl]
       put length(y) into laPostLength[newUrl]
       put 0 into laPostBytes[newUrl]
-      
+
       put "putData" into laAction[newUrl]
       put empty into laUrlErrorStatus[newUrl]
       put empty into laData[newUrl]
@@ -375,7 +375,7 @@ on putUrl y,x
       if laAuthRecursCount[newUrl] < 1 then
          delete local laStatus[newUrl]
          delete local laAuthRecursCount[newUrl]
-         
+
          put laUrlErrorStatus[newUrl] into tRetResult
          delete local  laUrlErrorStatus[newUrl]
 
@@ -387,7 +387,7 @@ on putUrl y,x
          return 1
       end if
       -----------------------------------
-      
+
    else ##blocked by previous request
       put "error Previous request not completed" into tRetResult
       return tRetResult with urlResult empty
@@ -408,11 +408,11 @@ on deleteUrl x
       if lvCount is empty then
          put "6923" into lvCount
       end if
-      
+
       put "deleteData" into laAction[newUrl]
       put empty into laUrlErrorStatus[newUrl]
       ulGetFormat newUrl,lvCount # convert url to components
-      
+
       ----------------------------------
       ##final clean up here
       delete local laStatus[newUrl]
@@ -424,7 +424,7 @@ on deleteUrl x
       put empty into lvBlockingUrl ##clear
       return tRetResult with urlResult tRetData
       -----------------------------------
-      
+
    else ##blocked by previous request
       put "error Previous request not completed" into tRetResult
       return tRetResult with urlResult empty
@@ -458,12 +458,12 @@ on ulGetFormat pUrl,pCount
    local tString,tOff,tURLHost,tUrlPort,tSavedDel
    local tConnectHost,tBadAddress
    local tPre,tUser,tPass,tHost,tPort,tFilename,tHostblock
-   
+
    try
       ## url parsing method changed for 1.0.13
       ## we use offset and not just matchText to keep compatible with older engines
       ## that can't handle non-greedy regex
-      
+
       put pUrl into tString
       put offset("://", tString) into tOff
       if tOff > 0 then
@@ -479,30 +479,30 @@ on ulGetFormat pUrl,pCount
          else
             throw "error"
          end if
-         
+
       else
          throw "error"
       end if
-      
+
       if  matchText(tHostBlock, "(.+):(.+)@([^:]*)(.*)", tUser,tPass,tHost,tPort) then
-         
+
       else if  matchText(tHostBlock, "([^:]*)(.*)", tHost,tPort) then
-         
+
       else
          throw "error"
       end if
-      
+
       if tPort is not empty and char 2 to -1 of tPort is not a integer then
          throw "error"
       end if
-      
-      
+
+
    catch pErr
       put "invalid URL: " & quote & pUrl & quote into laUrlErrorStatus[pUrl]
       if laLoadReq[pUrl] then put "error" into laUrlLoadStatus[pUrl]
       exit "ulGetFormat"
    end try
-   
+
    if tPre is "https" and char 1 to 3 of the version < 2.6  then
       put "https protocol not supported in this version" into laUrlErrorStatus[pUrl]
       if laLoadReq[pUrl] then
@@ -511,16 +511,16 @@ on ulGetFormat pUrl,pCount
       end if
       exit "ulGetFormat"
    end if
-   
+
    ##set connection IP
    switch tPre
       case "http"
       case "https"
-         
+
          -- MM-2014-02-27: [[ PAC Support ]] Extract any proxy for the given URL.
          put _proxyForURL(pURL) into laUrlProxy[pURL]
          ulLogIt "Proxy for URL:" && laUrlProxy[pURL] & cr
-         
+
          -- CW-2016-08-14: [[ External driver support ]] Bypass URL/Proxy manipulation and async check for external drivers.
          if lvExtDriver is empty then
             -- CW-2016-08-14: If we are not using an external driver, asynchronous HTTP uploads are not supported.
@@ -530,7 +530,7 @@ on ulGetFormat pUrl,pCount
                delete local laLoadingUrls[pUrl]
                exit "ulGetFormat"
             end if
-            
+
             -- MM-2014-02-27: [[ HTTPS Proxy ]] We now support fetching https URLs through a proxy.
             if laUrlProxy[pURL] is not empty then
                ## for now don't allow https connections through proxies
@@ -563,7 +563,7 @@ on ulGetFormat pUrl,pCount
                end if
             end if
          end if
-         
+
          break
       case "sftp"
          -- CW-2016-06-11: [[ External driver support ]] SFTP is only supported by external drivers.
@@ -576,13 +576,13 @@ on ulGetFormat pUrl,pCount
          -- CW-2016-06-11: [[ External driver support ]] This processing is only needed by the internal driver.
          if lvExtDriver is empty then
             if tPort is empty then put ":21" into tPort
-         
+
             if tUser is empty then
                put "anonymous" into tUser
                put "guest" into tPass
             end if
          end if
-         
+
          if tFilename is not empty then
             break
          end if
@@ -592,10 +592,10 @@ on ulGetFormat pUrl,pCount
          exit "ulGetFormat"
          break
    end switch
-   
+
    ##store current state of httpHeaders ad use when request is actually processed
    put the httpHeaders into laCurrentHttpHeaders[pURL]
-   
+
    if laUrlFormat[pUrl]["references"] > 0 then
       add 1 to laUrlFormat[pUrl]["references"]
    else
@@ -610,7 +610,7 @@ on ulGetFormat pUrl,pCount
       put tURLPort into laURLFormat[pURL]["urlPort"]
       put tURLHost into laURLFormat[pURL]["urlhost"]
    end if
-   
+
    -- CW-2016-06-11: [[ External driver support ]] Call external library to handle request rather than process directly.
    if lvExtDriver is not empty then
       ulExtHandleRequest pUrl, laAction[pUrl], laCurrentHttpHeaders[pUrl], laPostData[pUrl], laUrlProxy[pUrl]
@@ -619,14 +619,14 @@ on ulGetFormat pUrl,pCount
       put merge("[[tHost]]|[[pURL]]") into tResolveHost
       # clear status before resolving hostname
       put empty into laStatus[pUrl]
-      
+
       get hostNameToAddress(tResolveHost, "ulHostnameToAddressCallback")
       ## I.M. 2010-03-11  Need to check result and handle immediate failure where
       ##  no callback message will be sent
       if the result is not empty then
          ulHostNameToAddressCallback tResolveHost, empty, the result
       end if
-      
+
       if laLoadReq[pUrl] is empty or  laAuthRecursCount[pUrl] > 0 then ##dc 170205
          repeat while laStatus[pUrl] is empty
             if lvJumpOut then exit to top
@@ -644,7 +644,7 @@ on ulHostNameToAddressCallback pHostname, pIP, pOptionalError
    local tConnectHost, tBadAddress
    put offset("|", pHostname) into tOffset
    put char (tOffset + 1) to -1 of pHostname into tURL
-   
+
    put laURLFormat[tURL]["protocol"] into tPre
    put laURLFormat[tURL]["host"] into tHost
    put laURLFormat[tURL]["port"] into tPort
@@ -653,7 +653,7 @@ on ulHostNameToAddressCallback pHostname, pIP, pOptionalError
    put laURLFormat[tURL]["filename"] into tFilename
    put laURLFormat[tURL]["urlPort"] into tURLPort
    put laURLFormat[tURL]["urlHost"] into tURLHost
-   
+
    if pIP is not empty then
       put line 1 of pIP & tPort into tConnectHost
       ##TEMP CHECK
@@ -664,7 +664,7 @@ on ulHostNameToAddressCallback pHostname, pIP, pOptionalError
    else
       put true into tBadAddress
    end if
-   
+
    if tBadAddress then
       if pOptionalError is not empty then
          put pOptionalError into laUrlErrorStatus[tURL]
@@ -680,14 +680,14 @@ on ulHostNameToAddressCallback pHostname, pIP, pOptionalError
       put false into laStatus[tUrl]
       ##need better clean up here
    else
-      
+
       ##dc 080702
       ##need to keep separate reference for ftp IPs by user
       ## in case we need to connect to two accounts simultaneously
       ##so just keep user + host ref for all  urls
       ##so laConnectHost has format host:port|user
       put tConnectHost &  "|" & tUser into laConnectHost[tURL]
-      
+
       if tUser is not empty then put urlDecode(tUser) into laUser[tURL]
       if tPass is not empty  then
          put urlDecode(tPass) into laPasswd[tURL]
@@ -717,7 +717,7 @@ on ulHostNameToAddressCallback pHostname, pIP, pOptionalError
          ulFtpRequest tURL
       end if
    end if
-   
+
    ## AL-2013-07-30: [[ Bug 10796 ]] HTTP "get URL" omits port number from HOST header
    ## delete this array at the end so that 'get url' can use the port and protocol data.
    subtract 1 from laURLFormat[tURL]["references"]
@@ -751,7 +751,7 @@ end ulHttpRequest
 ##set up queue for http load requests
 on ulHttpLoad pUrl
    local tIP,tLoadingKeys,tHaveConnection
-   
+
    put laConnectHost[pUrl] into tIP
    put keys(laLoadQ) into tLoadingKeys
    if tIP is among the lines of tLoadingKeys then
@@ -761,7 +761,7 @@ on ulHttpLoad pUrl
    end if
    put pUrl & cr after  laLoadQ[tIP]
    put "queued" into laUrlLoadStatus[pUrl]
-   
+
    if not tHaveConnection then
       ulNextHttpLoadRequest tIP
    end if
@@ -770,7 +770,7 @@ end ulHttpLoad
 ##dispatch next load request
 on ulNextHttpLoadRequest pIP
    local tUrl
-   
+
    put line 1 of laLoadQ[pIP] into tUrl
    if tUrl <> empty then
       if tUrl = lvBlockingUrl then ##the same URL is being requested in a blocking call
@@ -782,7 +782,7 @@ on ulNextHttpLoadRequest pIP
       ##in case url was "unloaded" during any wait, check that it's still in the queue
       if tUrl is among the lines of keys(laLoadingUrls) then
          delete line 1 of laLoadQ[pIP] ##added in 1.0.8r4
-         
+
          ulGetHttp tUrl
       else
          ##modified dc 00202 Delete current rquest if not in laLoadingUrls
@@ -793,7 +793,7 @@ on ulNextHttpLoadRequest pIP
          delete local laLoadReq[tUrl] ##added dc 210702
          delete local laLoadedUrls[tUrl]##added dc 210702
          delete local laMessg[tUrl]##added dc 210702
-         
+
          delete local laUrlErrorStatus[tUrl]
          delete local laUrlLoadStatus[tUrl]
          delete local laCancelled[tUrl]
@@ -813,23 +813,23 @@ end ulNextHttpLoadRequest
 
 on ulGetHttp pUrl
    local tSocket,tRequest
-   
+
    try
       put empty into laStatus[pUrl] ##set wait flag here
       put "started" into laUrlErrorStatus[pUrl]
       put ulWhichSocket(pUrl) into tSocket
-      
+
       put pUrl into laUrl[tSocket] #ref the url to the used socket##KEY REFERENCE
       if tSocket is not among the lines of the openSockets then
          ulStartTickle ##safeguard routine
          get ulOpenSocket(tSocket)
          if not it then throw it ##error opening socket
       end if
-      
+
       put "contacted" into laUrlErrorStatus[pUrl]
       if laLoadReq[pUrl] then put "contacted" into laUrlLoadStatus[pUrl]
       ulSendCallback pUrl,"contacted"  ##CALLBACK FEATURE
-      
+
       ##ADD file opening HERE for libUrlDownloadToFile
       if laFile[pUrl] <> empty then
          open file laFile[pUrl] for binary write
@@ -837,7 +837,7 @@ on ulGetHttp pUrl
             throw the result
          end if
       end if
-      
+
       put ulBuildHttpRequest(pUrl) into tRequest
       ulLogit  tRequest & cr ##LOG
       write tRequest & crlf  to socket tSocket  with message "ulStartRead"
@@ -848,13 +848,13 @@ on ulGetHttp pUrl
       --------------------------
       ##blocking point "get url"
       #If we got here by "load url" then we don't block, otherwise we do
-      
+
       if laLoadReq[pUrl] is empty or  laAuthRecursCount[pUrl] > 0 then ##dc 170205
          repeat while laStatus[pUrl] is empty
             if lvJumpOut then exit to top
             wait for messages
          end repeat
-         
+
       end if
    catch pErr ##clean up point
       ulHttpEarlyCleanUp tSocket,pUrl,pErr
@@ -864,21 +864,21 @@ end ulGetHttp
 ----------------------------------
 on ulHttpEarlyCleanUp x, pUrl, pErr
    local tLoadReq,tConnectHost
-   
+
    put "error" && pErr into laUrlErrorStatus[pUrl]
    if laLoadReq[pUrl] then put "error" into laUrlLoadStatus[pUrl]
    put false into laStatus[pUrl] ##to unblock waits
    put laLoadReq[pUrl] into tLoadReq ##holder
    put laConnectHost[pUrl] into tConnectHost
    ulCleanUpHttp x
-   
+
    # OK-2009-03-25 : Bug 7837 - Error code 624 means user interrupt. In this case we unblock and exit to top,
    # to allow users to abort loops containing locking url accesses.
    if item 1 of pErr = 624 then
       put empty into lvBlockingUrl
       ulExitToTop
    end if
-   
+
    if tLoadReq then
       ulSendMessage pUrl ##added 091002
       ##use send to ensure this thread finishes before next request starts
@@ -892,7 +892,7 @@ end ulExitToTop
 ----------------------------------------------------------
 on ulStartRead x,y
    local tUrlHolder
-   
+
    if laUrl[x] <> empty then ##carry on
       -----------------------------------
       put "requested" into laUrlErrorStatus[laUrl[x]]
@@ -905,7 +905,7 @@ on ulStartRead x,y
       end if
       put empty into laTmpData[laUrl[x]]
       put empty into laTemp[laUrl[x]]
-      
+
       read from socket x  with message "ulReadmore"
       --------------------------------
       if the result <> empty then
@@ -925,11 +925,11 @@ on ulStartRead x,y
       ----------------------------------------
       ## CLEAN UP POINT
       ####auth handling here
-      
+
       ##  if not laLoadReq[laUrl[x]] then ##removed to allow load with authcallback
       ulHandleAuth x
       ##    end if
-      
+
       if laStatus[laUrl[x]] is false and x is among the lines of the opensockets then
          close socket x ##if user unloaded
       else if laConn[laUrl[x]] is "close" and x is among the lines of the opensockets then
@@ -942,12 +942,12 @@ on ulStartRead x,y
          ulHttpLateCleanUp x
          if lvNewSocketForAuth > 0 then
             ulRemoveAuthSocketRefs tUrlHolder
-            
+
          end if
       end if
-      
+
    end if
-   
+
 end ulStartRead
 ---------------------------------------
 on ulRemoveAuthSocketRefs pUrl
@@ -959,7 +959,7 @@ on ulRemoveAuthSocketRefs pUrl
    put keys(laUrl) into tKeys
    repeat for each line tSocket in tKeys
       if laUrl[tSocket] = pUrl then
-         
+
          delete local laUrl[tSocket]
       end if
    end repeat
@@ -967,7 +967,7 @@ end ulRemoveAuthSocketRefs
 ---------------------------------------------------------------
 on ulHandleAuth x
    local tSkip,tOff,tAuth,i,tLine,tCloseSocket,tRes, tNewSocketForAuth
-   
+
    if laStatusCode[laUrl[x]] is 407 then ##proxy authentication
       put 0 into tSkip
       repeat
@@ -976,23 +976,23 @@ on ulHandleAuth x
          put line (tOff + tSkip) of laRhHeader[laUrl[x]] into tAuth[word 2 of line (tOff + tSkip) of laRhHeader[laUrl[x]]]
          add tOff to tSkip
       end repeat
-      
+
       repeat with i = the number of lines of lvAuthCallbacks down to 1
          put line i of lvAuthCallbacks into tLine
          if item 1 of tLine is among the lines of keys(tAuth) then
             put laConn[laUrl[x]] is "close" into tCloseSocket ##
-            
+
             add 1 to laAuthRecursCount[laUrl[x]]
             if tCloseSocket then
                put true into laSocketClosedByScript[x] ##for OS X
                close socket x ##
                add 1 to lvNewSocketForAuth
             end if
-            
+
             ulSendAuthMessage item 1 of tLine, laUrl[x], tAuth[item 1 of tLine]
             put the result into tRes
             subtract 1 from laAuthRecursCount[laUrl[x]]
-            
+
             exit repeat
          end if
       end repeat
@@ -1004,7 +1004,7 @@ on ulHandleAuth x
          put line (tOff + tSkip) of laRhHeader[laUrl[x]] into tAuth[word 2 of line (tOff + tSkip) of laRhHeader[laUrl[x]]]
          add tOff to tSkip
       end repeat
-      
+
       repeat with i = the number of lines of lvAuthCallbacks down to 1
          put line i of lvAuthCallbacks into tLine
          if item 1 of tLine is among the lines of keys(tAuth) then
@@ -1014,44 +1014,44 @@ on ulHandleAuth x
                put true into laSocketClosedByScript[x] ##for OS X
                close socket x ##
                add 1 to lvNewSocketForAuth
-               
+
             end if
-            
+
             ulSendAuthMessage item 1 of tLine, laUrl[x], tAuth[item 1 of tLine]
             put the result into tRes
-            
+
             subtract 1 from laAuthRecursCount[laUrl[x]]
-            
+
             exit repeat
-            
+
          end if
       end repeat
-      
-      
+
+
    end if
-   
+
 end ulHandleAuth
 --------------------------------------
 on ulParseHeaders x
    local tLocLine,tLenLine,tContentLine,tCodeLine,tConnectionLine,ptConnLine
-   
+
    set the lastRhHeaders of me to laRhHeader[laUrl[x]] ##set property
    // SN-2015-06-04: [[ Bug 15456 ]] Apply fix proposed by Dave Cragg
    //  see http://runtime-revolution.278305.n4.nabble.com/OT-More-on-false-timeouts-and-headers-td4692465.html
    filter lines of laRhHeader[laUrl[x]]  without  "*Content-Transfer-Encoding:*"
-   
+
    put lineOffset("Location:",laRhHeader[laUrl[x]]) into tLocLine
    put lineOffset("Content-Length:",laRhHeader[laUrl[x]]) into tLenLine
    put lineOffset("Content-Type:",laRhHeader[laUrl[x]]) into tContentLine
    put lineOffset("Transfer-Encoding:",laRhHeader[laUrl[x]]) into tCodeLine
    put lineOffset("Connection:",laRhHeader[laUrl[x]]) into tConnectionLine
    put lineOffset("Proxy-Connection:",laRhHeader[laUrl[x]]) into ptConnLine
-   
+
    #get status code
    put word 2 of line 1 of laRhHeader[laUrl[x]] into laStatusCode[laUrl[x]]
    #get status message for error results
    put word 2 to -1 of line 1 of laRhHeader[laUrl[x]] into laStatusMessage[laUrl[x]]
-   
+
    if laStatusCode[laUrl[x]] is not a number then ##no point hanging around
       return "Unable to resolve server response."
       # put "error" && "Unable to resolve server response." into laUrlErrorStatus[laUrl[x]]
@@ -1059,11 +1059,11 @@ on ulParseHeaders x
       # put false into laStatus[laUrl[x]] ##to unblock wait
       # exit "ulDoProcess"
    end if
-   
+
    # MW-2011-04-23: [[ Bug 9520 ]] HTTP headers don't necessarily have a space
    #     after the ':'.
    set the itemDelimiter to ":"
-   
+
    if tConnectionLine is not "0" then
       put the last word of item 2 to -1 of line tConnectionLine of laRhHeader[laUrl[x]] into laConn[laUrl[x]]
    else
@@ -1084,17 +1084,17 @@ on ulParseHeaders x
    if tLocLine <> "0" then
       put the last word of item 2 to -1 of line tLocLine of laRhHeader[laUrl[x]] into laNewLoc[laUrl[x]]
    end if
-   
+
    return empty
 end ulParseHeaders
 ---------------------------------------
 on ulHttpLateCleanUp x
    local tLoadReq,tUrlHolder,tConnectHost
-   
+
    if laFile[laUrl[x]] <> empty then
       close file laFile[laUrl[x]] ##close here??
    end if
-   
+
    put laLoadReq[laUrl[x]] into tLoadReq ##holder
    put laUrl[x] into tUrlHolder #so we can delete in cleanUp
    put laConnectHost[laUrl[x]] into tConnectHost #holder so we can delete in clean up
@@ -1122,19 +1122,19 @@ on ulHttpLateCleanUp x
       ##use send to ensure current request finishes completely
       send "ulNextHttpLoadRequest" && quote & tConnectHost & quote to me in 1 milliseconds
    end if
-   
+
 end ulHttpLateCleanUp
 ------------------------------------------------------------------
 on ulReadmore x,y
    local tHeaderOffSet
    #separate the header from body
-   
+
    put false into laHaveHeader[laUrl[x]]
    put y after laTmpData[laUrl[x]]
    put y after laTemp[laUrl[x]]
-   
+
    put lineOffset(crlf & crlf, laTmpData[laUrl[x]]) into tHeaderOffSet ##proper header structure
-   
+
    ##added to catch irregularly formed headers 1.0.7b1
    if tHeaderOffset is 0 then ##for irregularly formed headers
       put lineOffset(cr & crlf, laTmpData[laUrl[x]]) into tHeaderOffSet
@@ -1142,7 +1142,7 @@ on ulReadmore x,y
          put lineOffset(cr & cr, laTmpData[laUrl[x]]) into tHeaderOffSet
       end if
    end if
-   
+
    if tHeaderOffSet is not 0 then#1
       put tHeaderOffSet into laLineNum[laUrl[x]]
       put line 1 to laLineNum[laUrl[x]] of laTmpData[laUrl[x]] into laRhHeader[laUrl[x]]
@@ -1157,28 +1157,28 @@ on ulReadmore x,y
             exit "ulReadmore"
          end if
       end repeat
-      
+
       switch
          case word 2 of line 1 of laRhHeader[laUrl[x]] is  "100"
             ##Is this handled right??
             ulLogit line 1 to laLineNum[laUrl[x]]+1 of laTmpData[laUrl[x]] & cr ##LOG
             delete line 1 to laLineNum[laUrl[x]]+1 of laTmpData[laUrl[x]]
             delete line 1 to laLineNum[laUrl[x]]+1 of laTemp[laUrl[x]]
-            
+
             get lineOffset(crlf & crlf, laTmpData[laUrl[x]])
             if it is not "0" then
                put it into laLineNum[laUrl[x]]
                put line 1 to laLineNum[laUrl[x]] of laTmpData[laUrl[x]] into laRhHeader[laUrl[x]]
                ulDoProcess x,y
             else
-               
+
                read from socket x  with message "ulReadmore"
             end if
             break
          case word 2 of line 1 of laRhHeader[laUrl[x]] is  not "100"
             ulDoProcess x,y
       end switch
-      
+
    else#1
       if laStatus[laUrl[x]] is empty then
          read from socket x  with message "ulReadmore"
@@ -1195,35 +1195,35 @@ on ulReadmore x,y
 end ulReadmore
 -------------------------------------------
 on ulDoProcess x,y
-   
+
    local tCloseSocket,tNewLoc,tRedData,tUrlHolder,tStatus
    local tData
-   
+
    #handles reading data depending on whether transfer method is streamed, chunked or "until socket closes"
-   
+
    if not laHaveHeader[laUrl[x]] then ##pick up header first time only
       ulLogIt laRhHeader[laUrl[x]] & cr & cr --LOG
-      
+
       ulParseHeaders x
       if the result <> empty then
          put "error" && the result into laUrlErrorStatus[laUrl[x]]
          if laLoadReq[laUrl[x]] then put "error" into laUrlLoadStatus[laUrl[x]]
          put false into laStatus[laUrl[x]] ##to unblock wait
          exit "ulDoProcess"
-         
+
       end if
       delete line 1 to laLineNum[laUrl[x]]+1 in laTmpData[laUrl[x]]
       put true into laHaveHeader[laUrl[x]]
-      
+
    else
       put y after laTmpData[laUrl[x]]
    end if
    -------------------------------------
-   
+
    ---------------------------------------
    switch
       case laStatusCode[laUrl[x]] is among the items of "301,302,307" and laAction[laUrl[x]] is "getdata" and lvFollowHttpRedirects is not false
-         
+
          # OK-2008-09-19 : fixed unquoted literal
          --case aStatusCode[laUrl[x]] is "303" and lvFollowHttpRedirects is not false
       case laStatusCode[laUrl[x]] is "303" and lvFollowHttpRedirects is not false
@@ -1235,18 +1235,18 @@ on ulDoProcess x,y
             if tCloseSocket then close socket x
             put true into lvBlockBypass ##to allow another blocking call
             add 1 to laAuthRecursCount[laUrl[x]]
-            
+
             put laUrl[x] into tUrlHolder
-            
+
             local tResult
             put url tNewLoc into tRedData
             put the result into tResult
-            
+
             put tUrlHolder into laUrl[x]
-            
+
             if tResult is empty then
                ulStoreData laUrl[x],tRedData
-               
+
                put empty into laUrlErrorStatus[laUrl[x]]
                if laFile[laUrl[x]] is empty then
                   put "cached" into tStatus
@@ -1275,7 +1275,7 @@ on ulDoProcess x,y
             put true into laStatus[laUrl[x]]
          end if
          break
-         
+
          ## added in 1.0,15b9
       case laStatusCode[laUrl[x]] is among the items of "100,304"
          ## responses that return no message entity
@@ -1286,18 +1286,18 @@ on ulDoProcess x,y
          if laLoadReq[laUrl[x]] is "true" then
             put "error" into laUrlLoadStatus[laUrl[x]]
          end if
-         
+
          delete local laHaveHeader[laUrl[x]]
-         
+
          break
-         
+
       case laStatusCode[laUrl[x]] is "200" and laURLFormat[laUrl[x]]["protocol"] is "https" and laUrlProxy[laUrl[x]] is not empty and laSocketSecured[x] is false
-         -- MM-2014-02-28: [[ HTTPS Proxy ]] A status code of 200 recieved when fetching a HTTPS URL through a proxy 
+         -- MM-2014-02-28: [[ HTTPS Proxy ]] A status code of 200 recieved when fetching a HTTPS URL through a proxy
          --  indicates that the proxy has succesfully connected to the URL. We can now continue communicating with the
          --  proxy as if talking to the URL directly. Secure the socket and send the HTTP request as if the proxy was not there.
          local tURL
          put laURL[x] into tURL
-         -- Deleting the URL logged against this socket means we will reuse this (newly secured) socket when sending the request 
+         -- Deleting the URL logged against this socket means we will reuse this (newly secured) socket when sending the request
          -- rather than createing a brand new one (see ulWhichSocket).
          delete variable laURL[x]
          put false into laHaveHeader[tURL]
@@ -1309,16 +1309,16 @@ on ulDoProcess x,y
          put true into laSocketSecured[x]
          ulHttpRequest tURL
          break
-         
+
          ##normal case
       case laLength[laUrl[x]] is not empty
       case laStatusCode[laUrl[x]] is "204"  -- When a 204 is returned no data is returned, just the length of the data in the header.
-         
+
          put  laTmpData[laUrl[x]] into tData
          ulStoreData laUrl[x],tData
          put length(tData) into laReadBytes[laUrl[x]]
          if laStatus[laUrl[x]]  is empty then ulDoProcessLength x
-         
+
          break
          #### chunked ######################################
       case laCode[laUrl[x]] is "chunked"
@@ -1335,7 +1335,7 @@ on ulDoProcess x,y
          put length(tData) into laReadBytes[laUrl[x]]
          put empty into laTmpData[laUrl[x]] ##clear buffer
          ulDoProcessNoLength x
-         break         
+         break
    end switch
 end ulDoProcess
 ------------------------------------------------------------------
@@ -1346,10 +1346,10 @@ on ulDoProcessLength x,y
       ulStoreData laUrl[x],y
       add length(y) to laReadBytes[laUrl[x]]
    end if
-   
+
    if laReadBytes[laUrl[x]] >= laLength[laUrl[x]] then
       put "true" into laStatus[laUrl[x]]
-      
+
       if char 1 of laStatusCode[laUrl[x]] = 2 then ##in 200 range--OK
          if laFile[laUrl[x]] is empty then
             put "cached" into tStatus
@@ -1363,14 +1363,14 @@ on ulDoProcessLength x,y
          else
             ulSendCallback laUrl[x],"uploaded" ##CALLBACK
          end if
-         
+
       else
          put "error" && laStatusMessage[laUrl[x]] into laUrlErrorStatus[laUrl[x]]
          if laLoadReq[laUrl[x]] is "true" then
             put "error" into laUrlLoadStatus[laUrl[x]]
          end if
       end if
-      
+
       delete local laHaveHeader[laUrl[x]]
       --------------------------
    else ##need more data
@@ -1395,16 +1395,16 @@ on ulDoProcessLength x,y
          ------------------------------
       end if
    end if
-   
+
 end ulDoProcessLength
 ------------------------------------------------------------
 on ulDoProcessChunked x,y
    local wOffset,tRead,tStatus,tData
-   
+
    if y <> empty then
       put y after laTmpData[laUrl[x]]
    end if
-   
+
    repeat while  laStatus[laUrl[x]] is empty
       if laNeedChunk[laUrl[x]] then
          get the number of chars of line 1 of laTmpData[laUrl[x]]
@@ -1424,7 +1424,7 @@ on ulDoProcessChunked x,y
             end if
             exit "ulDoProcessChunked"
          end if
-         
+
          put offset(numtochar(13), laTmpData[laUrl[x]]) into wOffset[laUrl[x]]
          ----get chunk size value (store in laChunk)
          put char 1 to wOffset[laUrl[x]]-1 of laTmpData[laUrl[x]] into tRead[laUrl[x]]
@@ -1432,7 +1432,7 @@ on ulDoProcessChunked x,y
          put item 1 of tRead[laUrl[x]] into tRead[laUrl[x]] ##remove any chunk extension
          set the itemdel to comma
          replace space with empty in tRead[laUrl[x]]
-         
+
          put baseConvert(tRead[laUrl[x]],16,10) into laChunk[laUrl[x]]
          ---------
          delete char 1 to wOffset[laUrl[x]]+1 of laTmpData[laUrl[x]]
@@ -1453,7 +1453,7 @@ on ulDoProcessChunked x,y
                else
                   ulSendCallback laUrl[x],"uploaded" ##CALLBACK
                end if
-               
+
             else
                put "error" && laStatusMessage[laUrl[x]] into laUrlErrorStatus[laUrl[x]]
                if laLoadReq[laUrl[x]] is "true" then
@@ -1463,7 +1463,7 @@ on ulDoProcessChunked x,y
             exit "ulDoProcessChunked"
          end if
       end if
-      
+
       switch
          case length(laTmpData[laUrl[x]])=laChunk[laUrl[x]] + 2
             put char 1 to laChunk[laUrl[x]] of laTmpData[laUrl[x]] into tData
@@ -1528,21 +1528,21 @@ end ulDoProcessChunked
 ---------------------------------------
 on ulDoProcessNoLength x,y
    local tResult,tStatus
-   
+
    if y <> empty then
       ulStoreData laUrl[x],y
       add length(y) to laReadBytes[laUrl[x]]
    end if
-   
+
    if x is among the lines of the openSockets then ##test for closure here
       if laStatus[laUrl[x]] is empty and laHttpDataDone[laUrl[x]] is empty then
          read from socket x  with message "ulDoProcessNoLength"
          ----------------------------------------
          if the result <> empty then
-            
+
             put the result into tResult
             if tResult is not "socket is not open" then
-               
+
                put "error" && the result into laUrlErrorStatus[laUrl[x]]
                put false into laStatus[laUrl[x]] ##to unblock wait
                if laLoadReq[laUrl[x]] then
@@ -1552,7 +1552,7 @@ on ulDoProcessNoLength x,y
                   put empty into laData[laUrl[x]] ##empty any data here
                end if
             else ##assume that we've got all the data ##treat as "completed" as below
-               
+
                put "true" into laStatus[laUrl[x]]
                if char 1 of laStatusCode[laUrl[x]] = 2 then
                   if laFile[laUrl[x]] is empty then
@@ -1567,7 +1567,7 @@ on ulDoProcessNoLength x,y
                   else
                      ulSendCallback laUrl[x],"uploaded" ##CALLBACK
                   end if
-                  
+
                else
                   put "error" && laStatusMessage[laUrl[x]] into laUrlErrorStatus[laUrl[x]]
                   if  laLoadReq[laUrl[x]] is "true" then put "error" into laUrlLoadStatus[laUrl[x]]
@@ -1575,12 +1575,12 @@ on ulDoProcessNoLength x,y
                delete local laHaveHeader[laUrl[x]]
             end if
          else
-            
+
          end if
          ---------------------------------------------
       end if
    else ##completed
-      
+
       put "true" into laStatus[laUrl[x]]
       if char 1 of laStatusCode[laUrl[x]] = 2 then
          if laFile[laUrl[x]] is empty then
@@ -1595,7 +1595,7 @@ on ulDoProcessNoLength x,y
          else
             ulSendCallback laUrl[x],"uploaded" ##CALLBACK
          end if
-         
+
       else
          put "error" && laStatusMessage[laUrl[x]] into laUrlErrorStatus[laUrl[x]]
          if  laLoadReq[laUrl[x]] is "true" then put "error" into laUrlLoadStatus[laUrl[x]]
@@ -1607,7 +1607,7 @@ end ulDoProcessNoLength
 
 on ulDeleteHttp pUrl
    local tSocket,tRequest
-   
+
    try
       put empty into laStatus[pUrl]
       put ulWhichSocket(pUrl) into tSocket
@@ -1631,7 +1631,7 @@ on ulDeleteHttp pUrl
       ulSendCallback pUrl,"requested"  ##CALLBACK FEATURE
       read from socket tSocket   until crlf & crlf  with message "ulReadMore"
       if  the result is not empty then throw the result
-      
+
       repeat while laStatus[pUrl] is empty
          if lvJumpOut then exit to top
          wait for messages
@@ -1653,7 +1653,7 @@ on ulPostHttp pUrl
       put empty into laStatus[pUrl] ##set wait flag here
       put ulWhichSocket(pUrl) into tSocket
       put pUrl into laUrl[tSocket] #ref the url to the used socket
-      
+
       if tSocket is not among the lines of the openSockets then
          ulStartTickle ##safeguard routine
          get ulOpenSocket(tSocket)
@@ -1676,15 +1676,15 @@ on ulPostHttp pUrl
          throw the result
       end if
       --------------------------
-      
+
       ## blocking point
       repeat while laStatus[pUrl] is empty
          if lvJumpOut then exit to top
          wait for messages
       end repeat
-      
+
       ulHandleAuth tSocket
-      
+
       ## added for 1.0.11
       if laStatus[pUrl] is false and tSocket is among the lines of the opensockets then
          close socket tSocket
@@ -1695,15 +1695,15 @@ on ulPostHttp pUrl
       if word 1 of laUrlErrorStatus[pUrl] is "error" then
          ulSendCallback pUrl, "error"  ##send CALLBACK here if error
       end if
-      
+
       if laAuthRecursCount[pUrl] < 1 then
          ulHttpLateCleanUp tSocket
          if lvNewSocketForAuth > 0 then
             ulRemoveAuthSocketRefs pUrl
          end if
       end if
-      
-      
+
+
    catch pErr
       ulHttpEarlyCleanUp tSocket,pUrl,pErr
       exit ulPostHttp
@@ -1716,7 +1716,7 @@ end ulPostResponse
 ---------------------------------------------------
 on ulReadPostResponse  x,y
    local tHeader,tResponseCode,tConn,tSkip,tOff,tAuth,tLine,tRes
-   
+
    put empty into tHeader
    ulGetHttpHeader y, tHeader
    if the result is empty then
@@ -1726,12 +1726,12 @@ on ulReadPostResponse  x,y
          case 100
             ulWriteSome x
             break
-            
+
          default
             put tHeader into laRhHeader[laUrl[x]]
             ulParseHeaders x
             put "error" && word 2 to -1 of line 1 of tHeader into laUrlErrorStatus[laUrl[x]]
-            
+
             if laLoadReq[laUrl[x]] then put "error" into laUrlLoadStatus[laUrl[x]]
             put false into laStatus[laUrl[x]] ##to unblock wait
             exit "ulReadPostResponse"
@@ -1742,14 +1742,14 @@ on ulReadPostResponse  x,y
       if laLoadReq[laUrl[x]] then put "error" into laUrlLoadStatus[laUrl[x]]
       put false into laStatus[laUrl[x]] ##to unblock wait
       exit "ulReadPostResponse"
-      
+
    end if
-   
+
 end ulReadPostResponse
 ------------------------
 function ulConnection pHeaders
    local tConnectionLine,ptConnLine,tConn
-   
+
    put lineOffset("Connection:",pHeaders) into tConnectionLine
    put lineOffset("Proxy-Connection:",pHeaders) into ptConnLine
    if tConnectionLine is not "0" then
@@ -1759,43 +1759,43 @@ function ulConnection pHeaders
       put last word of line ptConnLine of pHeaders into tConn
    end if
    return tConn
-   
+
 end ulConnection
 ----------------------------------------------------
 -- Ensure the encoding has no space or hyphen included
 function ulNormaliseEncoding pEncoding
    replace "-" with empty in pEncoding
    replace " " with empty in pEncoding
-   return toLower(pEncoding) 
+   return toLower(pEncoding)
 end ulNormaliseEncoding
 
 -- Convert the data according to the encoding specified
 command ulDecodeData pUrl
-   
+
    -- MM-2014-04-08: [[ Bug 12006 ]] Ignore the content type encoding for pre 7.0 versions of LiveCode.
    if the buildNumber < 10000 then
       return empty
    end if
-   
+
    local tEncoding
    put empty into tEncoding
-   
+
    local tHeadSize
    --   Only look for the encoding in the head part
    put offset("</head>", laData[pUrl]) into tHeadSize
-   
+
    if tHeadSize is 0 then exit "ulDecodeData"
-   
+
    local tHead
    put char 1 to tHeadSize of laData[pUrl] into tHead
-   
+
    local tCharsetRegex
    put "<meta .*charset=" & quote & "?([a-zA-Z0-9 -]+)" & quote & ".*>" into tCharsetRegex
-   
+
    local tCharset
-   if matchtext(tHead, tCharsetRegex, tCharset) then      
+   if matchtext(tHead, tCharsetRegex, tCharset) then
       switch ulNormaliseEncoding(tCharset)
-         case "utf8"            
+         case "utf8"
             put "UTF8" into tEncoding
             break
          case "utf16"
@@ -1805,11 +1805,11 @@ command ulDecodeData pUrl
             put "ANSI" into tEncoding
             break
       end switch
-      
+
       if tEncoding is not empty then
          local tDecoded
          put uniEncode(laData[pUrl], tEncoding) into tDecoded
-         put uniDecode(tDecoded) into laData[pUrl]   
+         put uniDecode(tDecoded) into laData[pUrl]
       end if
    end if
 end ulDecodeData
@@ -1821,7 +1821,7 @@ on ulGetHttpHeader @pBuffer, @pHeader
    ## added to allow 100 responses to post commands
    ## but must also accommodate 401,407 responses (authentication)
    put lineOffset(crlf & crlf, pBuffer) into tHeaderOffSet ##proper header structure
-   
+
    ##added to catch irregularly formed headers 1.0.7b1
    if tHeaderOffset is 0 then ##for irregularly formed headers
       put lineOffset(cr & crlf, pBuffer) into tHeaderOffSet
@@ -1829,7 +1829,7 @@ on ulGetHttpHeader @pBuffer, @pHeader
          put lineOffset(cr & cr, pBuffer) into tHeaderOffSet
       end if
    end if
-   
+
    if tHeaderOffSet is not 0 then
       put line 1 to tHeaderOffSet of pBuffer into tHeader
       repeat
@@ -1878,9 +1878,9 @@ on ulWriteSome x
          put "uploading," & laPostBytes[laUrl[x]] & "," & laPostLength[laUrl[x]] into tStatusString
          ulSendCallback laUrl[x],tStatusString  ##CALLBACK FEATURE
          write tChunk to socket x with message "ulWriteSome"
-         
+
       end if
-      
+
    end if
 end ulWriteSome
 --------------------------------------
@@ -1892,7 +1892,7 @@ end ulWriteOver
 
 on ulPutHttp pUrl
    local tSocket,tRequest
-   
+
    try
       put empty into laStatus[pUrl]##flag
       put ulWhichSocket(pUrl) into tSocket
@@ -1909,7 +1909,7 @@ on ulPutHttp pUrl
       put empty into  laData[pUrl]
       put empty into laTmpData[pUrl]
       ulLogit  tRequest & cr ##LOG
-      
+
       ##just the same as ulPostHttp from this point
       if "Expect: 100-continue" is in tRequest then
          write tRequest  & crlf   to socket tSocket with message "ulPostResponse"
@@ -1921,15 +1921,15 @@ on ulPutHttp pUrl
          throw the result
       end if
       --------------------------
-      
+
       ##blocking point
       repeat while laStatus[pUrl] is empty
          if lvJumpOut then exit to top
          wait for messages
       end repeat
-      
+
       ulHandleAuth tSocket
-      
+
       ## added for 1.0.11
       if laStatus[pUrl] is false and tSocket is among the lines of the opensockets then
          close socket tSocket
@@ -1940,7 +1940,7 @@ on ulPutHttp pUrl
       if word 1 of laUrlErrorStatus[pUrl] is "error" then
          ulSendCallback pUrl, "error"  ##send CALLBACK here if error
       end if
-      
+
       if laAuthRecursCount[pUrl] < 1 then
          ulHttpLateCleanUp tSocket
          if lvNewSocketForAuth > 0 then
@@ -1955,7 +1955,7 @@ end ulPutHttp
 --------------------------------------------
 function ulWhichSocket pUrl
    local tConnectHost,tConnID,tIsFtp,tSocket
-   
+
    ##build socket ref including Connection ID number
    ## re-use sockets for blocking requests if open
    ##load request sequences will always use same socket
@@ -1983,7 +1983,7 @@ function ulWhichSocket pUrl
          if item 1 of tConnectHost is item 1 of i and (i is not among the lines of keys(laUrl) or lvAuthBlockBypass is true or lvBlockBypass is true) then #OK to use
             if laConn[pUrl] <> "close" then
                put last item of i into tConnID
-               
+
                exit repeat
             end if
          end if
@@ -1991,7 +1991,7 @@ function ulWhichSocket pUrl
       if tConnID is empty then ##need new socket ref
          add 1 to lvCount
          put lvCount into tConnID
-         
+
       end if
    end if
    ##swap out user name for connection ID
@@ -2008,36 +2008,36 @@ end ulWhichSocket
 
 ---------------------------------------------
 
-private command _AddProxyAuthToRequest pUrl, @pRequest      
+private command _AddProxyAuthToRequest pUrl, @pRequest
    set the itemDel to "|"
    local tConnectHost
    put item 1 of laConnectHost[pUrl] into tConnectHost
    set the itemDel to comma
-   
+
    local tFilter
    put tConnectHost & ",*" into tFilter
-   
+
    local tAuthKeys
    put keys(laProxyAuthTokens) into tAuthKeys
    filter tAuthKeys with tFilter
    if tAuthKeys <> empty then
       local tKey
       put line 1 of tAuthKeys into tKey
-      
+
       local tToken
       put item 2 of laProxyAuthTokens[tKey] into tToken
-      
+
       local tUseAgain
       put item 1 of laProxyAuthTokens[tKey] into tUseAgain
-      
+
       local tHeader
       put "Proxy-Authorization:" && tToken into tHeader
-      
+
       put return & tHeader after pRequest
-      
+
       if tUseAgain is not true then ##once only
          delete local laProxyAuthTokens[tKey]
-      end if           
+      end if
    end if
 end _AddProxyAuthToRequest
 
@@ -2045,16 +2045,16 @@ function ulBuildHttpRequest pUrl
    local tRequest,tAction,tMethod,tAgent,tDataSize,tLogin,tHaveServerAuth
    local tAuthKeys,tAuthKey,tFilter,tKey,tToken,tUseAgain,tHeader,tHeaderLine
    local tConnectHost,tRequest2
-   
+
    ##build the httpRequest including
    ##request line and basic headers
-   
-   if the customHTTPHeaders of me <> empty then#a      
+
+   if the customHTTPHeaders of me <> empty then#a
       put the customHTTPHeaders of me into tRequest
       set the customHTTPHeaders of me to empty
    else if laUrlProxy[pUrl] is not empty and laUrlFormat[pUrl]["protocol"] is "https" then
       -- MM-2014-02-27: [[ HTTPS Proxy ]] We are fetching a HTTPS URL through a proxy.
-      --  If we have yet to secure the socket we are using for this URL, we must first 
+      --  If we have yet to secure the socket we are using for this URL, we must first
       --  tell the proxy we want to tunnel through (using the CONNECT command).
       --  If the socket is already secured, we can assume we are talking to the desired URL
       --  directly (by tunneling through the proxy) and build the request as normal.
@@ -2066,14 +2066,14 @@ function ulBuildHttpRequest pUrl
       end repeat
       if laSocketSecured[tSocket] is false then
          put "CONNECT" &&  laUrlFormat[pUrl]["urlHost"] & laUrlFormat[pUrl]["urlPort"] && "HTTP/1.1" & cr & "Host:" && laUrlFormat[pUrl]["urlHost"] & laUrlFormat[pUrl]["urlPort"] into tRequest
-         
+
          -- MM-2014-06-05: [[ Bug 12566 ]] Make sure we authenticate the proxy.
          if laUrlProxy[pUrl] <> empty then
             _AddProxyAuthToRequest pUrl, tRequest
          end if
       end if
    end if
-   
+
    if tRequest is empty then
       ##get template
       put the cDefaultHeader of me into tRequest
@@ -2093,7 +2093,7 @@ function ulBuildHttpRequest pUrl
             put "POST" into tMethod
             break
       end switch
-      
+
       replace "METHOD" with tMethod in tRequest
       ----------------------------
       ##fill in url resource
@@ -2102,29 +2102,29 @@ function ulBuildHttpRequest pUrl
       put  laHost[pUrl]  after line 2 of tRequest
       ## AL-2013-07-30: [[ Bug 10796 ]]  HTTP "get URL" omits port number from HOST header
       ## add port if not default
-      
+
       local tPort
       put laUrlFormat[pUrl]["port"] into tPort
-      
+
       local tProtocol
       put laUrlFormat[pUrl]["protocol"] into tProtocol
-      
+
       -- MM-2014-02-27: [[ HTTPS Proxy ]] We now support HTTPS URLs over a proxy, so ammend port accordingly.
       if tProtocol is "https" and laUrlProxy[pUrl] is not empty and laUrlFormat[pUrl]["urlPort"] is not ":443" then
          put laUrlFormat[pUrl]["urlPort"] after line 2 of tRequest
-      else if (tProtocol is "https" and tPort is not ":443" and laUrlProxy[pUrl] is empty) or (tProtocol is "http" and tPort is not ":80") then 
+      else if (tProtocol is "https" and tPort is not ":443" and laUrlProxy[pUrl] is empty) or (tProtocol is "http" and tPort is not ":80") then
          put tPort after line 2 of tRequest
       end if
       ## fill in User-Agent
       if "rev" is in the short name of me then
          put "LiveCode" into tAgent
       else
-         put "Metacard" into tAgent
+         put "OpenXTalk" into tAgent
       end if
       put tAgent && "(" & the platform & ")" after line 3 of tRequest
       if tMethod is among the items of "PUT,POST" then
          put length(laPostdata[pUrl]) into tDataSize
-         
+
          put cr & "Content-Length:" && tDataSize after tRequest
          put cr & "Content-Type:  application/x-www-form-urlencoded" after tRequest
          if tDataSize > laMaxPostWithoutExpect and laMaxPostWithoutExpect <> empty then
@@ -2155,7 +2155,7 @@ function ulBuildHttpRequest pUrl
       if laUrlProxy[pUrl] <> empty then
          _AddProxyAuthToRequest pUrl, tRequest
       end if
-      
+
       ##now server authorization
       if not tHaveServerAuth then
          put keys(laServerAuthTokens) into tAuthKeys
@@ -2164,9 +2164,9 @@ function ulBuildHttpRequest pUrl
                put item 2 of laServerAuthTokens[tAuthKey] into tToken
                put item 1 of laServerAuthTokens[tAuthKey] into tUseAgain
                put "Authorization:" && tToken into tHeader
-               
+
                put return & tHeader after tRequest
-               
+
                if tUseAgain is not true then ##once only
                   delete local laServerAuthTokens[tAuthKey]
                end if
@@ -2175,10 +2175,10 @@ function ulBuildHttpRequest pUrl
          end repeat
       end if
       ------------------------------------
-      
+
       ##customize according to httpHeaders
       if laCurrentHttpHeaders[pUrl] is not empty then
-         
+
          repeat for each line tHeader in laCurrentHttpHeaders[pUrl]
             put lineOffset((word 1 of tHeader),tRequest) into tHeaderLine
             if tHeaderLine is not 0 and word 1 of tHeader = (word 1 of line tHeaderLine of tRequest) then
@@ -2190,7 +2190,7 @@ function ulBuildHttpRequest pUrl
             end if
          end repeat
       end if
-      
+
    end if
    ##set the lastHTTPHeaders##
    set the lastHTTPHeaders of me to tRequest
@@ -2199,7 +2199,7 @@ function ulBuildHttpRequest pUrl
       put  i & crlf after tRequest2
    end repeat
    return tRequest2
-   
+
 end ulBuildHttpRequest
 ###################################################
 ################ FTP LOGIN####################
@@ -2210,7 +2210,7 @@ on ulFtpRequest pUrl
   else if laAction[pUrl] = "postdata" then ##don't handle this
     put "error Post command not handled for FTP" into laUrlErrorStatus[pUrl]
     ulCleanUpFtpLocals pUrl
-    
+
     exit "ulFtpRequest"
   else
     ulFtpSocket pUrl
@@ -2220,7 +2220,7 @@ end ulFtpRequest
 ##set up queue for http load requests
 on ulFtpLoad pUrl
   local tIP,tLoadingKeys,tHaveConnection
-  
+
   put laConnectHost[pUrl] into tIP
   put keys(laLoadQ) into tLoadingKeys
   if tIP is among the lines of tLoadingKeys then
@@ -2230,11 +2230,11 @@ on ulFtpLoad pUrl
   end if
   put pUrl & cr after  laLoadQ[tIP]
   put "queued" into laUrlLoadStatus[pUrl]
-  
+
   if not tHaveConnection then
     ulNextFtpLoadRequest tIP
   end if
-  
+
 end ulFtpLoad
 ------------------------------------------------
 ##dispatch next request
@@ -2248,7 +2248,7 @@ on ulNextFtpLoadRequest pIP
         wait for messages
       end repeat
     end if
-    
+
     ##in case url was "unloaded" during any wait, check that it's still in the queue
     if tUrl is among the lines of keys(laLoadingUrls) then
       delete line 1 of laLoadQ[pIP] ##delete this item ##added for 1.0.8r4
@@ -2281,13 +2281,13 @@ end ulNextFtpLoadRequest
 -------Establishes connection for all ftp calls-------------------
 on ulFtpSocket pUrl
   local tSocket,tReply,tCmd,tErr,tUrlHolder
-  
+
   put empty into laStatus[pUrl] ##set main wait flag here
   put ulWhichSocket(pUrl) into tSocket
   put pUrl into laUrl[tSocket] ##reference the url to the used socket
   put "0" into laStopUnit[tSocket]
   put "0" into laStopSec[tSocket]
-  
+
   if tSocket is not among the lines of the openSockets then
     ulStartTickle ##safeguard routine
     get ulOpenSocket(tSocket)
@@ -2319,7 +2319,7 @@ on ulFtpSocket pUrl
       ulFtpEarlyExit tSocket,pUrl,tReply
       exit  "ulFtpSocket"
     end if
-    
+
   end if
   ----------------------------
   write "PWD"  & crlf to socket tSocket with message "ulFtpStartPoint" ##BRANCH TO ALLOW NON BLOCKING load
@@ -2344,7 +2344,7 @@ on ulFtpEarlyExit pSocket,pUrl,pErr
   ##clean up when exiting before first blocking point
   ####
   local tConnectHost,tLoadReq
-  
+
   put laConnectHost[pUrl] into tConnectHost
   replace "ftpErr," with empty in pErr
   put "error" &&  pErr into laUrlErrorStatus[pUrl]
@@ -2354,7 +2354,7 @@ on ulFtpEarlyExit pSocket,pUrl,pErr
   delete local laSocketUser[pSocket]
   delete local laStopUnit[pSocket]
   delete local laStopSec[pSocket]
-  
+
   put laLoadReq[pUrl] into tLoadReq ##holder
   ulCleanUpFtp pSocket
   if tLoadReq then
@@ -2374,7 +2374,7 @@ end ulFtpSetError
 -------Continues after load calls have passed on-------------------
 on ulFtpStartPoint x
   local tNum,tReply,tLoadStatus,tLoadReq,tUrlHolder,tConnectHost
-  
+
   set the itemdel to "|"
   put item -1 of x into tNum
   set the itemdel to comma
@@ -2393,7 +2393,7 @@ on ulFtpStartPoint x
       put item 2 of tReply into laHome[laUrl[x]]
       set the itemDel to comma
     end if
-    
+
     put "connected" into laUrlErrorStatus[laUrl[x]]
     if laLoadReq[laUrl[x]] then put "connected" into laUrlLoadStatus[laUrl[x]]
     ulSendCallback laUrl[x],"connected"  ##CALLBACK FEATURE
@@ -2408,7 +2408,7 @@ on ulFtpStartPoint x
           delete local laSocketUser[x]
         end if
       end if
-      
+
       ulFtpGet x,tNum
       break
     case laAction[laUrl[x]] is "putData"
@@ -2420,7 +2420,7 @@ on ulFtpStartPoint x
           close socket x
           delete local laSocketUser[x]
         end if
-        
+
       end if
       ulFtpSend x,tNum
       break
@@ -2439,16 +2439,16 @@ on ulFtpStartPoint x
     if lvJumpOut then exit to top
     wait for messages
   end repeat
-  
+
   ## CLEAN UP POINT
   if word 1 of laUrlErrorStatus[laUrl[x]] is "error" then
     ulSendCallback laUrl[x], "error"  ##send CALLBACK here if error
   end if
   -------------------------------------
-  
+
   put laUrlLoadStatus[laUrl[x]] into tLoadStatus
   -------------------------------------
-  
+
   #start timer routine for closing ftp connection
   if laStopUnit[x] = 0 then
     put "1" into laStopUnit[x]
@@ -2469,7 +2469,7 @@ on ulFtpStartPoint x
   put laUrl[x] into tUrlHolder #so we can delete in cleanUp
   put laConnectHost[laUrl[x]] into tConnectHost #holder so we can delete in clean up
   ulCleanUpFtp x
-  
+
   if tLoadReq and laCancelled[tUrlHolder] then
     delete local laLoadedUrls[tUrlHolder]
     delete local laUrlLoadStatus[tUrlHolder]
@@ -2481,13 +2481,13 @@ on ulFtpStartPoint x
   else
     delete local laMessg[tUrlHolder]
   end if
-  
+
   delete local laCancelled[tUrlHolder]
   #change dc 210702
   if tLoadReq then
     send "ulNextFtpLoadRequest" && quote & tConnectHost & quote to me in 1 milliseconds
   end if
-  
+
 end ulFtpStartPoint
 
 
@@ -2496,13 +2496,13 @@ end ulFtpStartPoint
 
 on ulFtpGet x,z
   local tCmd,tReply,tNeedCWDReset,tTempPath,tStatus
-  
+
   if lvFtpMode is "active" then
     put "active" into laMode[laUrl[x]]
   else
     put "passive" into laMode[laUrl[x]]
   end if
-  
+
   put "contacted" into laUrlErrorStatus[laUrl[x]]
   if laLoadReq[laUrl[x]] then put "contacted" into laUrlLoadStatus[laUrl[x]]
   ulSendCallback laUrl[x],"contacted"  ##CALLBACK FEATURE
@@ -2522,7 +2522,7 @@ on ulFtpGet x,z
       put laHome[laUrl[x]] before laLongFileName[laUrl[x]]
     end if
   end if
-  
+
   ##SIZE get file size or CWD if a directory
   put empty into laLength[laUrl[x]] ##set up
   if last char of laLongFileName[laUrl[x]] is not "/" then ##file not directory
@@ -2543,9 +2543,9 @@ on ulFtpGet x,z
         put  it  into laLength[laUrl[x]]
       end if
     end if
-    
+
   else ##need directory listing so we must CWD before getting listing
-    
+
     put laLongFileName[laUrl[x]] into tTempPath
     if the length of tTempPath >1 then
       ##remove final forward slash
@@ -2553,7 +2553,7 @@ on ulFtpGet x,z
     end if
     put "CWD " & tTempPath into tCmd
     put true into tNeedCWDReset
-    
+
     put ulFtpCommand(tCmd,x) into tReply
     if not ulFtpGoodReply(tReply, tCmd) then
       ulFtpSetError x,tReply
@@ -2568,7 +2568,7 @@ on ulFtpGet x,z
   else
     ulTransferPassive x
   end if
-  
+
   if laStatus[laUrl[x]] <> empty then ##failed to set up data connection
     close socket x
     delete local laSocketUser[x]
@@ -2603,7 +2603,7 @@ on ulFtpGet x,z
     ulSendCallback laUrl[x],"requested"  ##CALLBACK FEATURE
   end if
   -------------------------------------
-  
+
   ##blocking point ACTIVE??
   if laMode[laUrl[x]] is "active" then
     repeat while  laFtpDataDone[laUrl[x]] is empty and laStatus[laUrl[x]] is empty
@@ -2611,7 +2611,7 @@ on ulFtpGet x,z
       wait for messages
     end repeat
   end if
-  
+
   ##blocking point PASSIVE??
   if laMode[laUrl[x]] is not "active" then
     read from socket laTransPasvIP[laUrl[x]]  with message "ulGetData"
@@ -2620,7 +2620,7 @@ on ulFtpGet x,z
       wait for messages
     end repeat
   end if
-  
+
   if laStatus[laUrl[x]] is not empty then ##error occurred
     if  laUrlErrorStatus[laUrl[x]] is empty then
       put "error" into laUrlErrorStatus[laUrl[x]]
@@ -2634,9 +2634,9 @@ on ulFtpGet x,z
     close socket x
     delete local laSocketUser[x]
   else
-    
+
     #now check for 226 completion
-  
+
     put ulTransferCompleteResponse(x) into tReply
 
     if char 1 of tReply <> 2 then ## we may have 226 or 200 and treat both as successful
@@ -2648,9 +2648,9 @@ on ulFtpGet x,z
       end if
       close socket x
       delete local laSocketUser[x]
-      
+
     else ## download successful
-       
+
       if tNeedCWDReset then
         ##051202 reset current directory to original
         put "CWD " & laHome[laUrl[x]] into tCmd
@@ -2662,7 +2662,7 @@ on ulFtpGet x,z
           exit "ulFtpGet"
         end if
       end if
-      
+
       put empty into laUrlErrorStatus[laUrl[x]]
       if laFile[laUrl[x]] is empty then
         put "cached" into tStatus
@@ -2671,8 +2671,8 @@ on ulFtpGet x,z
       end if
       if laLoadReq[laUrl[x]] then put tStatus into laUrlLoadStatus[laUrl[x]]
       ulSendCallback laUrl[x],"downloaded"  ##CALLBACK FEATURE
-      
-      
+
+
     end if
     put true into laStatus[laUrl[x]] ##break wait
   end if
@@ -2684,14 +2684,14 @@ on ulTransferPassive x
   set the itemDel to "|"
   put last item of x into y
   set the itemDel to comma
-  
+
   put "PASV"  into tCmd
   put ulFtpCommand(tCmd,x) into tReply
   if not ulFtpGoodReply(tReply, tCmd) then
     ulFtpSetError x,tReply
     exit "ulTransferPassive"
   end if
-  
+
   if last char of tReply is "." then delete last char of tReply
   replace ")" with empty in tReply
   set the itemDel to "("
@@ -2702,7 +2702,7 @@ on ulTransferPassive x
   put (item -2 of n1)*256  into a1
   put item  -1 of n1 into a2
   put a1+a2  into tPort
-  
+
   put transPasvIP  & ":" & tPort & "|" & y into laTransPasvIP[laUrl[x]]
   get ulOpenSocket(laTransPasvIP[laUrl[x]])
   if not it then
@@ -2716,17 +2716,17 @@ end ulTransferPassive
 ####################Send port to server for Active transfer and listen for data###############
 on ulTransferActive x
   local thisIP,tErr,i1,i2,tCmd,tReply
-  
+
   if lvDataPortCount is empty or lvDataPortCount >= 65535  then
     put 6923 into lvDataPortCount
   else
     add 1 to lvDataPortCount
   end if
-  
+
   put x into laControlXLocalMap[lvDataPortCount]
   put hostAddress(x) into thisIP
   replace "." with "," in thisIP
-  
+
   put lvDataPortCount into laTransActvIP[x]
   if laAction[laUrl[x]] is "putData"  then
     accept connections on port  laTransActvIP[x]  with message "ulPortMessageSend"
@@ -2738,10 +2738,10 @@ on ulTransferActive x
     ulFtpSetError x,tErr
     exit "ulTransferActive"
   end if
-  
+
   put  laTransActvIP[x] div 256 into i1
   put  laTransActvIP[x]  mod 256 into i2
-  
+
   put "PORT " & thisIP & "," & i1&","& i2  into tCmd
   put ulFtpCommand(tCmd,x) into tReply
   if not ulFtpGoodReply(tReply, tCmd) then
@@ -2752,7 +2752,7 @@ end ulTransferActive
 ------------------------------------------
 on ulPortMessageGet x,y
   local tControlSock,tReply
-  
+
   ##active transfer message received
   put laControlXLocalMap[y] into tControlSock
   put tControlSock into laControlXDataMap[x]
@@ -2768,7 +2768,7 @@ end ulPortMessageGet
 #################the ftp download routine##################
 on ulGetData x,y
   local mSock,tStatusString
-  
+
   put laControlXDataMap[x] into mSock
   ulStoreData laUrl[mSock],y
   add length(y) to laReadBytes[laUrl[mSock]]
@@ -2788,13 +2788,13 @@ end ulGetData
 
 on ulFtpSend x,z
   local tErr,tNeedCWDReset,tTempPath,tCmd,tReply
-  
+
   if lvFtpMode is "active" then
     put "active" into laMode[laUrl[x]]
   else
     put "passive" into laMode[laUrl[x]]
   end if
-  
+
   put "contacted" into laUrlErrorStatus[laUrl[x]]
   if laLoadReq[laUrl[x]] then put "contacted" into laUrlLoadStatus[laUrl[x]]
   ulSendCallback laUrl[x],"contacted"  ##CALLBACK FEATURE
@@ -2805,14 +2805,14 @@ on ulFtpSend x,z
       put laHome[laUrl[x]] before laLongFileName[laUrl[x]]
     end if
   end if
-  
+
   ## check for valid filename
   if last char of laLongFileName[laUrl[x]] is  "/" or laLongFileName[laUrl[x]] is empty then
     put "File not specified" into tErr
     ulFtpSetError x,tErr
     exit "ulFtpSend"
   end if
-  
+
   ### CWD to directory if it exists
   put false into tNeedCWDReset
   set the itemDel to "/"
@@ -2822,7 +2822,7 @@ on ulFtpSend x,z
     delete char -1 of tTempPath
     put "CWD " & tTempPath into tCmd
     put true into tNeedCWDReset
-    
+
     put ulFtpCommand(tCmd,x) into tReply
     if not ulFtpGoodReply(tReply, tCmd) then
       ulMakeDirectory x,tTempPath,1 ##1 = first try
@@ -2832,9 +2832,9 @@ on ulFtpSend x,z
       end if
     end if
   end if
-  
+
   if tNeedCWDReset then ##RESET working directory
-    
+
     put "CWD " & laHome[laUrl[x]] into tCmd
     put ulFtpCommand(tCmd,x) into tReply
     if not ulFtpGoodReply(tReply, tCmd) then
@@ -2844,7 +2844,7 @@ on ulFtpSend x,z
       exit "ulFtpSend"
     end if
   end if
-  
+
   ----------------------------------------------------------------------
   put "TYPE I" into tCmd
   put ulFtpCommand(tCmd,x) into tReply
@@ -2852,7 +2852,7 @@ on ulFtpSend x,z
     ulFtpSetError x,tReply
     exit "ulFtpSend"
   end if
-  
+
   if laFile[laUrl[x]] is empty then
     put length(laPostData[laUrl[x]]) into laLength[laUrl[x]]
   else
@@ -2868,10 +2868,10 @@ on ulFtpSend x,z
   if laStatus[laUrl[x]] is not empty then ##couldn't make data connection
     exit "ulFtpSend"
   end if
-  
+
   put "STOR "  & laLongFileName[laUrl[x]] into tCmd
-  
-  
+
+
   put ulFtpCommand(tCmd,x) into tReply
   if not ulFtpGoodReply(tReply, tCmd) then
     ulFtpSetError x,tReply
@@ -2880,7 +2880,7 @@ on ulFtpSend x,z
   put "requested" into laUrlErrorStatus[laUrl[x]]
   if laLoadReq[laUrl[x]] then put "requested" into laUrlLoadStatus[laUrl[x]]
   ulSendCallback laUrl[x],"requested"  ##CALLBACK FEATURE
-  
+
   ##Block here while sending data
   if laMode[laUrl[x]] is not "active" then ulSendDataP x
   repeat while laFtpDataDone[laUrl[x]] is empty and laStatus[laUrl[x]] is empty##waiting for write to complete
@@ -2900,9 +2900,9 @@ on ulFtpSend x,z
     delete local laSocketUser[x]
   else
     ##look for 226 response
-    
+
     put ulTransferCompleteResponse(x) into tReply
-   
+
     if char 1 of tReply <> 2 then ## we treat 226 or 200 as successful -- see  ulTransferCompleteResponse
       replace "ftperr," with empty in tReply
       put "error" && tReply into laUrlErrorStatus[laUrl[x]]
@@ -2913,7 +2913,7 @@ on ulFtpSend x,z
       close socket x
       delete local laSocketUser[x]
     else
-      
+
       put empty into laUrlErrorStatus[laUrl[x]]
       if laLoadReq[laUrl[x]] then
         put "uploaded" into laUrlLoadStatus[laUrl[x]]
@@ -2923,21 +2923,21 @@ on ulFtpSend x,z
     end if
     put true into laStatus[laUrl[x]]
   end if
-  
+
 end ulFtpSend
 --------------------------------------------
 on ulMakeDirectory x, pDir
   local tTempPath,tCmd,tReply
-  
+
   -- first we CWD to the parent directory
   set the itemDel to "/"
   put pDir into tTempPath
   delete item -1 of tTempPath ##parent directory
   if tTempPath is empty then put "/" into tTempPath  ## root directory
   put empty into lvNeedDir
-  
+
   put "CWD " & tTempPath into tCmd
-  
+
   put ulFtpCommand(tCmd,x) into tReply
   if not ulFtpGoodReply(tReply, tCmd) then
     if tTempPath = laHome[laUrl[x]] then
@@ -2949,7 +2949,7 @@ on ulMakeDirectory x, pDir
       end if
     end if
   end if
-  
+
   put "MKD " & pDir into tCmd
   put ulFtpCommand(tCmd,x) into tReply
   if not ulFtpGoodReply(tReply, tCmd) then
@@ -2963,23 +2963,23 @@ on ulMakeDirectory x, pDir
       return empty
     end if
   end if
-  
+
 end ulMakeDirectory
 
 ############ACTIVE UPLOAD############
 on ulPortMessageSend x,y
   ##active transfer message received
   local tControlSock,nData,tStatusString
-  
+
   put laControlXLocalMap[y] into tControlSock
   put tControlSock into laControlXDataMap[x]
   put ulNextData(laUrl[tControlSock]) into nData
-  
+
   if nData <> empty then
     add length(nData) to laWriteBytes[laUrl[tControlSock]]
     put "uploading, " & laWriteBytes[laUrl[tControlSock]] & "," & laLength[laUrl[tControlSock]] into tStatusString
     put tStatusString into laUrlErrorStatus[laUrl[tControlSock]]
-    
+
     write nData to  socket x  with  message "ulWriteMoreA"
     if the result <> empty then
       put "error" && the result into laUrlErrorStatus[laUrl[tControlSock]]
@@ -2990,22 +2990,22 @@ on ulPortMessageSend x,y
     ##put false into laStatus[laUrl[tControlSock]]
     ##added on 1.1.5b4
     put true into laFtpDataDone[laUrl[tControlSock]]
-    
+
     put empty into laUrlErrorStatus[laUrl[tControlSock]]
     close socket x
     close socket y  ##local port
     delete local laControlXDataMap[x]
-    
+
   end if
-  
+
 end ulPortMessageSend
 -------------------------------------------
 
 on ulWriteMoreA x
   local tId, nData,tStatusString
-  
+
   put laControlXDataMap[x] into tId
-  
+
   put ulNextData(laUrl[tId]) into nData
   if nData <> empty then
     add length(nData) to laWriteBytes[laUrl[tId]]
@@ -3019,20 +3019,20 @@ on ulWriteMoreA x
     end if
   else
     put true into laFtpDataDone[laUrl[tId]]
-    
+
     put empty into laUrlErrorStatus[laUrl[tId]]
     close socket x
     close socket laTransActvIP[tID]  ##local port
     delete local laControlXDataMap[x]
   end if
-  
+
 end ulWriteMoreA
 
 ##########PASSIVE UPLOAD############
 
 on ulSendDataP x
   local nData,tStatusString
-  
+
   put ulNextData(laUrl[x]) into nData
   if nData <> empty then
     add length(nData) to laWriteBytes[laUrl[x]]
@@ -3049,13 +3049,13 @@ on ulSendDataP x
     delete local laControlXDataMap[laTransPasvIP[laUrl[x]] ]
     put empty into laUrlErrorStatus[laUrl[x]]
     put true into laFtpDataDone[laUrl[x]] #set flag before closing socket
-    
+
   end if
 end ulSendDataP
 ---------------------------------------------------------------------
 on ulWriteMoreP x
   local mSock,nData,tStatusString
-  
+
   put laControlXDataMap[x] into mSock
   put ulNextData(laUrl[mSock]) into nData
   if nData <> empty then
@@ -3082,7 +3082,7 @@ end ulWriteMoreP
 
 on ulFtpDelete x
   local tCmd,tReply,mType
-  
+
   ###########make sure we use the full path
   ##sort out file path
   if laHome[laUrl[x]] is not "/" then ##otherwise laFileName should already be OK
@@ -3090,7 +3090,7 @@ on ulFtpDelete x
       put laHome[laUrl[x]] before laLongFileName[laUrl[x]]
     end if
   end if
-  
+
   if last char of laLongFileName[laUrl[x]] is "/" then
     #delete directory
     put "RMD "  &  laLongFileName[laUrl[x]] into tCmd
@@ -3100,7 +3100,7 @@ on ulFtpDelete x
     put "DELE "  &  laLongFileName[laUrl[x]] into tCmd
     put "file" into mType
   end if
-  
+
   put ulFtpCommand(tCmd,x) into tReply
   if not ulFtpGoodReply(tReply, tCmd) then
     replace "ftpErr," with empty in tReply
@@ -3114,7 +3114,7 @@ end ulFtpDelete
 #########################################################
 on socketClosed x
   local tStatus,tControlSocket
-  
+
   if laSocketClosedByScript[x] then
     ##workaround on OS X where closing a socket produes a socketClosed message
     delete local laSocketClosedByScript[x]
@@ -3125,7 +3125,7 @@ on socketClosed x
   ##need to check whether ftp data port or not
   if x is among the lines of keys(lvSocketToken) then ##trying to open a socket
     put "socket closed" into lvSocketToken[x]
-    
+
   else  if x is lvFtpCommandSocket then ##handling libUrlFtpCommand
     if x is among the lines of keys(laFTPCommandStatus) then ##may be waiting for a server reply
       put "socket closed" into laFTPCommandStatus[x] ##unblock waits
@@ -3143,7 +3143,7 @@ on socketClosed x
         put "socket closed" into laFTPCommandStatus[x] ##unblock waits
       end if
     else if laLength[laUrl[x]] is empty and char 1 to 4 of laUrl[x] is "http" then ##when we don't have a length
-      
+
       -----------------------
       ##assume download completed
       if char 1 of laStatusCode[laUrl[x]] = 2 then
@@ -3159,13 +3159,13 @@ on socketClosed x
         put "error" && laStatusMessage[laUrl[x]] into laUrlErrorStatus[laUrl[x]]
         if  laLoadReq[laUrl[x]] is "true" then put "error" into laUrlLoadStatus[laUrl[x]]
       end if
-      
+
       -----------------------
-      
+
       put true into  laStatus[laUrl[x]] ##unblock waits
       put "true" into  laHttpDataDone[laUrl[x]] ##unblock waits
     end if
-    
+
   else if x is among the lines of keys(laControlXDataMap)then##must be ftp remote data socket
     put laControlXDataMap[x] into tControlSocket
     put true into laFtpDataDone[laUrl[tControlSocket]]
@@ -3183,7 +3183,7 @@ end socketClosed
 
 on socketTimeout x
    local tControlSocket
-   
+
    ulLogit "socket timeout" && x & cr ##LOG
    ##need to check whether data port or not
    if x is among the lines of keys(lvSocketToken) then ##trying to open a socket
@@ -3219,18 +3219,18 @@ on socketTimeout x
    else
       pass socketTimeout
    end if
-   
+
 end socketTimeout
 --------------------------------------------
 on socketError x, pErr
    local tControlSocket
-   
+
    ulLogit "socket error" && x & cr & pErr & cr ##LOG
    ##need to check whether data port or not
    if pErr is empty then put "unknown error" into pErr
    if x is among the lines of keys(lvSocketToken) then ##trying to open a socket
       put pErr into lvSocketToken[x]
-      
+
    else  if x is lvFtpCommandSocket then ##handling libUrlFtpCommand
       if x is among the lines of keys(laFTPCommandStatus) then ##may be waiting for a server reply
          put "socket error" into laFTPCommandStatus[x] ##unblock waits
@@ -3242,19 +3242,19 @@ on socketError x, pErr
       if x is among the lines of keys(laFTPCommandStatus) then ##may be waiting for a server reply
          put pErr into laFTPCommandStatus[x] ##unblock waits
       end if
-      
+
       ## Handle cleanup for load url
       if laLoadReq[laUrl[x]] then
          ulHttpLateCleanUp x
       end if
-        
+
    else if x is among the lines of keys(laControlXDataMap)then##must be ftp passive data socket
       put laControlXDataMap[x] into tControlSocket
       put false into laStatus[laUrl[tControlSocket]] ##unblock waits
       put pErr into laFTPCommandStatus[tControlSocket]
       if laLoadReq[laUrl[tControlSocket]] then put "error" into laUrlLoadStatus[laUrl[tControlSocket]]
       put "error" && pErr into laUrlErrorStatus[laUrl[tControlSocket]]
-      
+
    else if x is a number then##local port for active ftp transfer
       put laControlXLocalMap[x] into tControlSocket
       if tControlSocket <> empty then
@@ -3270,7 +3270,7 @@ end socketError
 ----------------------------------------------
 on libUrlResetAll
   local i
-  
+
   -- CW-2016-06-11: [[ External driver support ]] Call driver specific reset command if external driver is in use.
   if lvExtDriver is not empty then
     ulDeleteLocals
@@ -3280,14 +3280,14 @@ on libUrlResetAll
     repeat for each line i in the openSockets
       close socket i
     end repeat
-    
+
     ulDeleteLocals
     put true into lvJumpOut
     send "ulDeleteLocals" to me in 5 milliseconds
   end if
 end libUrlResetAll
 
-# OK-2008-09-19 : Added for revOnline to allow post commands to be cancelled, 
+# OK-2008-09-19 : Added for revOnline to allow post commands to be cancelled,
 # not sure if this works yet...
 
 command libUrlCancel
@@ -3302,7 +3302,7 @@ end libUrlCancel
 --------------------------------------------
 on ulDeleteLocals
   local e
-  
+
   repeat for each item e in line 3 of the localNames
     -- CW-2016-06-11: [[ External driver support ]] Don't clear locals that determine what driver is in use.
     if e is not "lvExtDriver" then
@@ -3320,7 +3320,7 @@ end resetAll
 -----------------------------------------------
 on ulFtpStopWatch x
   local tCmd
-  
+
   if x is among the lines of the OpenSockets then
     if lvFtpStopTime is empty or lvFtpStopTime is not a number then
       put 15 into lvFtpStopTime
@@ -3351,7 +3351,7 @@ end ulFtpStopWatch
 ----------------------------------------------
 on libUrlFtpUpload pData,pUrl,pMessage
   local newUrl
-  
+
   put false into lvJumpOut
   put ulStripUrl(pUrl) into newUrl
   if lvCount is empty then
@@ -3387,7 +3387,7 @@ on libUrlFtpUpload pData,pUrl,pMessage
       delete local laUrlErrorStatus[newUrl]
       delete local laStatus[newUrl]
       delete local laCancelled[newUrl]
-      
+
     else
       return empty
     end if
@@ -3397,17 +3397,17 @@ end libUrlFtpUpload
 ----------------------------------------------
 on libUrlFtpUploadFile pFile,pUrl,pMessage
   local newUrl
-  
+
   put false into lvJumpOut
   put ulStripUrl(pUrl) into newUrl
-  
+
   #removed from here in 1.1.6b1
   #  open file pFile for binary read
   #  if the result is not empty then
   #    return the result
   #  end if
   #  put newUrl into laUrlByFile[pFile]
-  
+
   if lvCount is empty then
     put "6923" into lvCount
   else
@@ -3420,7 +3420,7 @@ on libUrlFtpUploadFile pFile,pUrl,pMessage
     break
     #case newUrl is not among the lines of  the keys of laLoadedUrls OR laUrlLoadStatus[newUrl] is not "cached"
   default
-    
+
     if pMessage <> empty then
       put ulGetCaller(), pMessage into laMessg[newUrl]
       --put the long id of the target &","& pMessage into laMessg[newUrl]
@@ -3444,7 +3444,7 @@ on libUrlFtpUploadFile pFile,pUrl,pMessage
       delete local laUrlErrorStatus[newUrl]
       delete local laStatus[newUrl]
       delete local laCancelled[newUrl]
-      
+
     else
       return empty
     end if
@@ -3455,10 +3455,10 @@ end libUrlFtpUploadFile
 -----------------------------------------------
 on libUrlDownloadToFile pUrl,pFile,pMessage
   local newUrl
-  
+
   put false into lvJumpOut
   put ulStripUrl(pUrl) into newUrl
-  
+
   ##uncommented for 1.1.6b1 ## now opened elsewhere
   #  open file pFile for binary write
   #  if the result is not empty then
@@ -3486,9 +3486,9 @@ on libUrlDownloadToFile pUrl,pFile,pMessage
     put "getData" into laAction[newUrl]
     put empty into laUrlErrorStatus[newUrl]
     put empty into laUrlLoadStatus[newUrl]
-    
+
     ulGetFormat newUrl,lvCount
-    
+
     if laUrlLoadStatus[newUrl] is "error" and not laCancelled[newUrl] then
       ulSendMessage newUrl ##send message now only if error occurred
       return "error"
@@ -3499,7 +3499,7 @@ on libUrlDownloadToFile pUrl,pFile,pMessage
       delete local laUrlErrorStatus[newUrl]
       delete local laStatus[newUrl]
       delete local laCancelled[newUrl]
-      
+
     else
       return empty
     end if
@@ -3546,7 +3546,7 @@ end libUrlVersion
 ------------------------------
 on libUrlSetLogField pField
   local tField
-  
+
   if word 1 of pField is "field" then
     put pField into tField
   else
@@ -3618,15 +3618,15 @@ end libUrlSetExpect100
 --------------------------
 function libUrlFormData
   local tNumParams,tNumParts,tPart,tFormString,i
-  
+
   put the paramcount into tNumParams
   put tNumParams div 2 into tNumParts
   if tNumParts < 1 then return empty
-  
+
   put 0 into tPart
   put empty into tFormString
   repeat with i = 1 to tNumParams
-    
+
     if i mod 2 = 1 then #stage 1 of part
       add 1 to tPart
       if tPart > tNumParts then exit repeat
@@ -3643,19 +3643,19 @@ end libUrlFormData
 function libUrlMultipartFormData @pFormData, pParam
   local tNumParams,tNumParts,tBoundary,tKeys,tKey,tValue,tPart
   local tFile,tNumFiles,tFilepath,tFilename,tSubBoundary
-  
+
   put the paramcount into tNumParams
   if tNumParams < 1 then return "error Insufficient parameters"
   put (tNumParams - 1) div 2 into tNumParts
-  
+
   put empty into pFormData ##ensure it is empty
-  
+
   ##create initial boundary
   put "__Part__" into tBoundary
   put ulFormBoundary() after tBoundary
-  
+
   put "Content-type: multipart/form-data; boundary=" & quote & tBoundary & quote & return into pFormData
-  
+
   if tNumParams < 2 then
     ## do nothing for now, this will create empty shell for use with libUrlMultipartFormAddPart
   else if tNumParams = 2 then ##treat as array
@@ -3665,7 +3665,7 @@ function libUrlMultipartFormData @pFormData, pParam
       put "--" & tBoundary & CRLF after pFormData
       put "Content-Disposition: form-data; name=" & quote & item 1 of pParam[tKey] & quote after pFormData
       put item 2 to -1 of pParam[tKey] into tValue
-      if char 1 to 6 of tValue = "<file>" then  
+      if char 1 to 6 of tValue = "<file>" then
         put tValue into tFile
         put empty into tValue
         put char 7 to -1 of tFile into tFilepath
@@ -3682,26 +3682,26 @@ function libUrlMultipartFormData @pFormData, pParam
       put CRLF & CRLF after pFormData
       put tValue after pFormData
       put CRLF after pFormData
-      
+
     end repeat
-    
+
   else if tNumParts > 0 then ##treat as key/value pairs
     put 0 into tPart
     repeat with i = 2 to tNumParams
-      
+
       if i mod 2 = 0 then ##stage 1 of part
         add 1 to tPart
         if tPart > tNumParts then exit repeat
         put "--" & tBoundary & CRLF after pFormData
         put "Content-Disposition: form-data; name=" & quote & param(i) & quote after pFormData
-        
+
       else
         put param(i) into tValue
-        
+
         if char 1 to 6 of tValue = "<file>" then
           put tValue into tFile
           put empty into tValue
-          put char 7 to -1 of tFile into tFilepath            
+          put char 7 to -1 of tFile into tFilepath
           set the itemDel to "/"
           put item -1 of tFilepath into tFilename
           set the itemDel to comma
@@ -3717,42 +3717,42 @@ function libUrlMultipartFormData @pFormData, pParam
         put CRLF after pFormData
       end if
     end repeat
-    
+
   end if
-  
+
   put  "--" & tBoundary & "--" after pFormData ##end boundary
   return empty
-  
+
 end libUrlMultipartFormData
 ---------------------------
 function libUrlMultipartFormAddPart @pFormData,pName,pValue,pMimeType,pEncoding
   local tLastLine,tBoundary,tPartData,tFile,tNumFiles,tFilepath,tFilename
   local tSubBoundary,tSubEncodings,tSubMimeTypes
-  
+
   put the number of lines of pFormData into tLastLine
   put line -1 of pFormData into tBoundary
   delete char -2 to -1 of tBoundary ##remove final 2 hyphens
   put tBoundary & CRLF into tPartData
   put "Content-Disposition: form-data; name=" & quote & pName & quote after tPartData
   if char 1 to 6 of pValue is "<file>" then
-    
+
     put   pValue into tFile
     put empty into pValue
     put char 7 to -1 of tFile into tFilepath
-    
+
     set the itemDel to "/"
     put item -1 of tFilepath into tFilename
     set the itemDel to comma
     put ";" && "filename=" & quote & tFilename & quote after tPartData
-    
+
     put url ("binfile:" & tFilepath) into pValue
     if the result <> empty then return "error" && the result
-    
+
     if pMimeType is empty then put "application/octet-stream" into pMimeType
     if pEncoding is empty then
       put "Binary" into pEncoding
     end if
-    
+
   end if
   if pMimeType <> empty then
     put CRLF & "Content-Type:" && pMimeType after tPartData
@@ -3771,7 +3771,7 @@ end libUrlMultipartFormAddPart
 ##new 1.015b2
 on libUrlSetAuthCallback pMethod, pMessage
   local tCount,tLine
-  
+
   put 0 into tCount
   repeat for each line tLine in lvAuthCallbacks
     add 1 to tCount
@@ -3780,23 +3780,23 @@ on libUrlSetAuthCallback pMethod, pMessage
       exit repeat
     end if
   end repeat
-  
+
   if pMessage <> empty then
     put pMethod & "," & pMessage & "," & the long id of the target & return after lvAuthCallbacks
   end if
 end libUrlSetAuthCallback
 -----------------------
 on libUrl_authcb_Resend pUrl
-  
+
   switch  laAction[pUrl]
   case "getData"
     put true into lvAuthBlockBypass
     get url pUrl
-    
+
     break
-    
+
   case "postData"
-    
+
     put true into lvAuthBlockBypass
     post laPostData[pUrl] to url pUrl
     break
@@ -3804,18 +3804,18 @@ on libUrl_authcb_Resend pUrl
     return empty
     break
   end switch
-  
+
   put false into lvAuthBlockBypass
   return 1
 end libUrl_authcb_Resend
 ------------------------
 on libUrl_authcb_SetAuthToken pUrl, pHeaderString, pToken, pUseAgain
   local tRealm, tRegEx,tKey,tKeys,tNeedToAdd,tThisKey,tOldUrl
-  
+
   put "realm=(" & quote & ".+?" & quote & ")" into tRegEx
   get matchText(pHeaderString, tRegEx,tRealm)
   if pUseAgain is not true then put false into pUseAgain ##default to false
-  
+
   if "proxy" is in word 1 of pHeaderString then
     set the itemDel to "|"
     put item 1 of laConnectHost[pUrl] after tKey
@@ -3847,7 +3847,7 @@ on libUrl_authcb_SetAuthToken pUrl, pHeaderString, pToken, pUseAgain
       put pUseAgain & "," & pToken into laServerAuthTokens[tKey]
     end if
   end if
-  
+
 end libUrl_authcb_SetAuthToken
 -----------------------
 function libUrlBasicAuthToken pName, pPass
@@ -3884,7 +3884,7 @@ end libUrlFollowHttpRedirects
 -------------------------
 on ulSendAuthMessage pMethod, pUrl, pHeaderString
   local tCount,tLine,tMessage,tObject
-  
+
   put 0 into tCount
   repeat for each line tLine in lvAuthCallbacks
     add 1 to tCount
@@ -3900,16 +3900,16 @@ on ulSendAuthMessage pMethod, pUrl, pHeaderString
   else
     return empty ##possible problems
   end if
-  
+
 end ulSendAuthMessage
 --------------------------
 on ulSendMessage pUrl
   local xmessg,omessg
-  
+
   ##send any requested message on completion
   if laMessg[pUrl] is not empty then
     if item 2 of laMessg[pUrl] is not quote & "" & quote  then
-      
+
       put item 1 to -2 of laMessg[pUrl] into xmessg  ##modified dc 220905
       put item -1 of laMessg[pUrl] into omessg  ##modified dc 220905
       replace quote with empty in omessg
@@ -3923,13 +3923,13 @@ end ulSendMessage
 ----------------------------
 on ulSendCallback pUrl, pStatus
   local tMessage,tObject,tSendStr
-  
+
   if lvStatusCallback is empty then exit ulSendCallback
   put item 1 of lvStatusCallback into tMessage
 
   put item 2 to -1 of lvStatusCallback into tObject   ##modified dc 220905
   put tMessage && "pURL, pStatus" into tSendStr
-  
+
   if exists(tObject) then
     ## need quotes for the url formatting and the possibility of multiple items in second argument
     send tSendStr to tObject in 0 milliseconds
@@ -3941,7 +3941,7 @@ end ulSendCallback
 -----------------------------
 function ulFileLength pFile
   local tSavedDir,tDir,tFileName,tFileData
-  
+
   if there is a file pFile then
     put the directory into tSavedDir
     put pFile into tDir
@@ -3961,7 +3961,7 @@ end ulFileLength
 ------------------------------
 on ulLogIt pMessage
   local tExp
-  
+
   if exists(lvLogField) then
     put "put pMessage after fld" && word 2 to -1 of lvLogField into tExp
     do tExp
@@ -3969,7 +3969,7 @@ on ulLogIt pMessage
 end ulLogIt
 -------------------------------
 on ulStartTickle
- 
+
   ## safeguard against possible hangs in "wait for messages" loops
   if lvTickle is empty then
     put true into lvTickle
@@ -3995,22 +3995,22 @@ end isIPNumber
 ----------------------------
 on ulCleanUpHttp x #x is socket
   local tlLoadReq,tConnectHost,tempUrl
-  
+
   put laLoadReq[laUrl[x]] into tlLoadReq ##holder
   put laConnectHost[laUrl[x]] into tConnectHost
   ulCleanUpHttpLocals laUrl[x] ## remove url referenced locals
   delete local laLoadReq[laUrl[x]] ##OK here??
   delete local laSocketClosedByScript[x]
-  
+
   -- MM-2014-02-27: [[ HTTPS Proxy ]]
   delete local laSocketSecured[x]
-  
+
   ##delete socket referenced locals
-  
+
   put laUrl[x] into tempUrl
-  
+
   delete local laUrl[x]
-  
+
   --prepare for next request
   if tlLoadReq then
     delete local laLoadingUrls[tempUrl]
@@ -4051,19 +4051,19 @@ on ulCleanUpHttpLocals pUrl
   delete local laReadBytes[pUrl]
   delete local laCurrentHttpHeaders[pUrl]
   delete local laCurrentSSLVerify[pUrl]
-  
+
   -- MM-2014-02-27: [[ HTTPS Proxy]]
   delete local laUrlProxy[pURL]
 end ulCleanUpHttpLocals
 ------------------------------
 on ulCleanUpFtp x
   local tlLoadReq,tempUrl,tConnectHost
-  
+
   put laLoadReq[laUrl[x]] into tlLoadReq ##holder
   put laConnectHost[laUrl[x]] into tConnectHost #holder
   ulCleanUpFtpLocals laUrl[x] ## remove url referenced locals
   delete local laLoadReq[laUrl[x]] ##OK here??
-  
+
   ##close any data ports ##should be closed already, but if error occurred
   if laTransPasvIP[laUrl[x]] is among the lines of the openSockets then
     close socket laTransPasvIP[laUrl[x]]
@@ -4071,19 +4071,19 @@ on ulCleanUpFtp x
   if laTransActvIP[x] is among the lines of the openSockets then ##local port
     close socket laTransActvIP[x]
   end if
-  
+
   delete local  laControlXLocalMap[laTransActvIP[x]]
   delete local  laControlXDataMap[laTransPasvIP[laUrl[x]]]
   delete local laTransPasvIP[laUrl[x]]
   delete local  laTransActvIP[x]
   delete local laSocketClosedByScript[x]
-  
+
   ##delete socket referenced locals
-  
+
   put laUrl[x] into tempUrl
   delete local laUrl[x]
   delete local laFtpCommandStatus[x]
-  
+
   --prepare for next request
   if tlLoadReq then
     delete local laLoadingUrls[tempUrl]
@@ -4091,7 +4091,7 @@ on ulCleanUpFtp x
     if the number of lines of laLoadQ[tConnectHost] = 0 then
       delete local laLoadQ[tConnectHost] ##important
       delete local laConnectID[tConnectHost]
-      
+
     end if
   end if
 end ulCleanUpFtp
@@ -4118,21 +4118,21 @@ end ulCleanUpFtpLocals
 ------------------------------
 on ulCancelRequest pUrl
   local tError
-  
+
   put true into laCancelled[pUrl]
   put "error cancelled" into tError
-  
+
   if lvExtDriver is not empty then
     put tError into laUrlErrorStatus[pUrl]
     ulExtCancelRequest pURL
   else
     ulStopRequest pUrl,tError
-  end if  
+  end if
 end ulCancelRequest
 -----------------------------
 on ulStopRequest pUrl, pErrMessage
   local tSocketKeys,tKey,tItsSocket
-  
+
   put keys(laUrl) into tSocketKeys##test
   repeat for each line tKey in tSocketKeys
     if laUrl[tKey] = pUrl then
@@ -4149,13 +4149,13 @@ on ulStopRequest pUrl, pErrMessage
     put "error" into laUrlLoadStatus[pUrl]
     delete local laData[pUrl]
   end if
-  
+
 end ulStopRequest
 
 -----------------------------
 on ulStoreData pUrl,@pData
   local tErr
-  
+
   if laFile[pUrl] <> empty then
     write pData to file laFile[pUrl]
     if the result is not empty then
@@ -4171,7 +4171,7 @@ end ulStoredata
 -----------------------------
 function ulNextData pUrl
   local tData,tErr
-  
+
   if laFile[pUrl] is empty then
     put char 1 to 4096 of laPostdata[pUrl] into tData
     delete char 1 to 4096 of laPostData[pUrl]
@@ -4190,7 +4190,7 @@ end ulNextData
 function ulStripUrl pUrl
   ## clean out any whitespace before and after url
   local tString
-  
+
   put space & tab & cr into tString
   repeat while char 1 of pUrl is in tString
     delete char 1 of pUrl
@@ -4203,7 +4203,7 @@ end ulStripUrl
 --------------------------------
 function ul_TraceLocals ##DEBUG ROUTINE, used in development
   local e,tRetVal,tDoString,tKeys
-  
+
   repeat for each item e in line 3 of the localNames
     put e & cr after tRetVal
     put "put the keys of" && e && "into tKeys" into tDoString
@@ -4220,12 +4220,12 @@ end ul_TraceLocals
 --------------------------------
 function ul_PrintKeys @pArray, pDimension
    local tKeys, tKey, tText
-   
+
    if pDimension is empty then put 0 into pDimension
-    
+
    put the keys of pArray into tKeys
    sort tKeys numeric
-     
+
    repeat for each line tKey in tKeys
       if pArray[tKey] is an array then
          put _printCharXTimes(space, pDimension * 5) & tKey & cr after tText
@@ -4234,13 +4234,13 @@ function ul_PrintKeys @pArray, pDimension
          put _printCharXTimes(space, pDimension * 5) &  tKey & ":" && line 1 of pArray[tKey] & cr after tText
       end if
    end repeat
-     
+
    return tText
 end ul_PrintKeys
--------------------------------- 
+--------------------------------
 private function _printCharXTimes pChar, pTimes
    local tStr
-     
+
    repeat with i = 1 to pTimes
       put pChar after tStr
    end repeat
@@ -4290,7 +4290,7 @@ on ulGetFtpReply pSocket,pReply
   ##reads data from the command port
   ##generally called by ulFTPCommand, but also by ulFtpWaitResponse
   local tReply,tReplyNum
-  
+
   ulLogIt pReply##LOG
   put line -1 of pReply into tReply ##should only be one line
   get char 1 to 3 of tReply
@@ -4298,52 +4298,52 @@ on ulGetFtpReply pSocket,pReply
     put it into tReplyNum
     if char 4 of tReply <> "-" then
       put tReply into laFTPCommandStatus[pSocket]
-      
+
     else
       read from socket pSocket for 1 line with message "ulGetFtpReply"
       if the result <> empty then
         put "ftpErr," & the result into laFTPCommandStatus[pSocket]
-        
+
       end if
     end if
   else
     read from socket pSocket for 1 line with message "ulGetFtpReply"
     if the result <> empty then
       put "ftpErr," & the result into laFTPCommandStatus[pSocket]
-      
+
     end if
   end if
 end ulGetFtpReply
 -------------------------------
 function ulTransferCompleteResponse pSocket
    local tTimerStart, t226Timeout, tCmd
-   
+
    ## handle 226 responses here
    ## we try to get round a problem for some users
    ## where a 226 response is not received and everything times out
    ## problem may be due to bad routers
    ## we wait for half the socketTimeoutInterval
    ## and if no 226 has been received we "prod" the server with a NOOP command
-   
+
    put empty into laFTPCommandStatus[pSocket]
    read from socket pSocket  for 1 line with message "ulGetFtpReply"
    put the milliseconds into tTimerStart
    put the socketTimeoutInterval div 2 into t226Timeout
-   
+
    local tTimerID
    put the result into tTimerID
    repeat while laFTPCommandStatus[pSocket]  is empty AND (the milliseconds - tTimerStart < t226Timeout)
       if lvJumpOut then exit to top
       wait for messages
    end repeat
-   
+
    if laFTPCommandStatus[pSocket] <> empty then ##normal situation
       return laFTPCommandStatus[pSocket]
    else
       put "NOOP"  into tCmd
-      return ulFtpCommand(tCmd,pSocket) 
+      return ulFtpCommand(tCmd,pSocket)
    end if
-   
+
 end ulTransferCompleteResponse
 -----------------------------------
 
@@ -4352,7 +4352,7 @@ function ulFtpGoodReply pReply, pCommand
   ##compares a reply code against a predetermined list
   ##of "good" reply codes for a particular command
   local tGoodCodes
-  
+
   if item 1 of pReply is "ftpErr" then return false
   put the cFtpGoodCodes[word 1 of pCommand] of me into tGoodCodes
   if word 1 of pReply is among the items of tGoodCodes then
@@ -4365,7 +4365,7 @@ end ulFtpGoodReply
 function libUrlFtpCommand pCommand, pHost, pUser, pPass
    local tHost,tPort,tRegEx,tTempHost,tConnectHost,tDummyUrl,tSocket
    local tLogonReply,tFtpReply
-    
+
    -- CW-2016-06-11: [[ External driver support ]] Call the external driver implementation if it is enabled.
    if lvExtDriver is not empty then
       return ulExtFtpCommand(pCommand, pHost, pUser, pPass)
@@ -4375,21 +4375,21 @@ function libUrlFtpCommand pCommand, pHost, pUser, pPass
    if lvCount is empty then
       put "6923" into lvCount
    end if
-   
+
    ##separate host and port
    put "([^:]*)(.*)" into tRegEx
    if not matchText(pHost,tRegEx,tHost,tPort) then return "error Invalid host address"
-   
+
    put tHost into tTempHost
    if tPort is empty then put ":21" into tPort
-   
+
    ##get IP address
    replace "." with empty in tTempHost
    replace ":" with empty in tTempHost
    if tTempHost  is not a number then
       get hostnameToAddress(tHost)
       if the result is empty then
-         
+
          put line 1 of it & tPort into tConnectHost
       else
          return "error" && the result
@@ -4397,7 +4397,7 @@ function libUrlFtpCommand pCommand, pHost, pUser, pPass
    else
       put tHost & tPort into tConnectHost
    end if
-   
+
    ##set anonymous user if needed
    if pUser is empty then
       put "anonymous" into pUser
@@ -4409,10 +4409,10 @@ function libUrlFtpCommand pCommand, pHost, pUser, pPass
    put pUser into laUser[tDummyUrl]
    put pPass into laPasswd[tDummyUrl]
    ##check no other ftp activity on this account
-   
+
    local tAccountBusy
    put false into tAccountBusy
-   
+
    local tCHKeys
    put keys(laConnectHost) into tCHKeys
    repeat for each line tCHKey in tCHKeys
@@ -4423,7 +4423,7 @@ function libUrlFtpCommand pCommand, pHost, pUser, pPass
    end repeat
    if tAccountBusy then
       return "Error Previous request not completed."
-      
+
    end if
    ##make laConnectHost entry so we can use ulWhichSocket
    ##laConnectHost has format host:port|user
@@ -4435,7 +4435,7 @@ function libUrlFtpCommand pCommand, pHost, pUser, pPass
    delete local laUser[tDummyUrl]
    delete local laPasswd[tDummyUrl]
    delete local laConnectHost[tDummyUrl]
-   
+
    put ulFtpLogon(tSocket, pUser,pPass) into tLogonReply
    if tLogonReply is empty then
       put ulFtpCommand(pCommand, tSocket) into tFtpReply
@@ -4454,7 +4454,7 @@ end libUrlFtpCommand
 
 function ulFtpLogon pSocket, pUser, pPass
   local tReply,tCmd
-  
+
   put "0" into laStopUnit[pSocket]
   put "0" into laStopSec[pSocket]
   ulStartTickle ##safeguard routine
@@ -4488,7 +4488,7 @@ end ulFtpLogon
 ---------------------------------------------------------------
 function ulOpenSocket x
    local tSocketToken
-   
+
    put empty into lvSocketToken[x]
    put the milliseconds into lvSocketOpenStart[x]
    -- MM-2014-02-27: [[ HTTPS Proxy ]] Only create a secure socket if conneting to a HTTPS URL directly.
@@ -4509,7 +4509,7 @@ function ulOpenSocket x
    end if
    send "ulSocketTimeout" && x to me in 500 milliseconds
    put the result into lvSocketOpenMessageID[x]
-   
+
    repeat until lvSocketToken[x] is not empty
       if lvJumpOut then exit to top
       wait for messages
@@ -4546,7 +4546,7 @@ end ulSocketTimeout
 --------------------------------------------
 function ulFormBoundary
   local tBoundary
-  
+
   repeat 25
     put any char of "1234567890abcdefghijklmnopqrstuvwxyz" after tBoundary
   end repeat
@@ -4556,7 +4556,7 @@ end ulFormBoundary
 function ulSubForm @pData, ,pFiles, pSubBoundary, pMimeTypes, pEncodings
   ##creates a set of "sub parts" when including multiple files in one part of a multipart/form-data form
   local tType,tEnc,tCount,tFile,tFilename
-  
+
   put empty into pData
   if pMimeTypes is empty then
     put "application/octet-stream" into tType
@@ -4602,11 +4602,11 @@ end ulGetCaller
 -- MM-2014-02-27: [[ PAC Support ]]
 private function _extractHost pURL
    ## http://bob:jones@www.screensteps.com
-   
+
    local tHost
    put pURL into tHost
    set the itemDelimiter to slash
-   
+
    local tCharNo
    put offset("://", tHost) into tCharNo
    if tCharNo is 0 then
@@ -4614,11 +4614,11 @@ private function _extractHost pURL
    else
       put item 3 of pURL into tHost
    end if
-   
+
    ## strip username/password
    put offset("@", tHost) into tCharNo
    if tCharNo > 0 then delete char 1 to tCharNo of tHost
-   
+
    ## clip port
    put offset(":", tHost) into tCharNo
    if tCharNo > 0 then delete char tCharNo to -1 of tHost
@@ -4630,27 +4630,27 @@ end _extractHost
 private command libURLInitializeProxy
    if the HTTPProxy is not empty or lvProxyInitialized then
       return empty
-   end if   
+   end if
    put true into lvProxyInitialized
-   
+
    local tError
    put empty into tError
-   
+
    if tError is empty then
       _proxyConfig_SetHTTPProxy
       put the result into tError
    end if
-   
+
    if tError is empty then
       _proxyConfig_ConfigureBypassList
       put the result into tError
    end if
-   
+
    return tError
 end libURLInitializeProxy
 
 -- Attempt to autodetect any proxy servers the system has configured.
--- First of all try WPAD and PAC. 
+-- First of all try WPAD and PAC.
 -- If that fails, extract any system proxy settings and if found, set proxy manually.
 --
 -- Returns any errors or empty on success.
@@ -4659,12 +4659,12 @@ private command _proxyConfig_SetHTTPProxy
    local tResult
    _proxyConfig_SetHTTPProxyUsingWPADAndPAC
    put the result into tResult
-   
+
    if tResult is not empty then
       _proxyConfig_SetHTTPProxyManually
       put the result into tResult
    end if
-   
+
    return tResult
 end _proxyConfig_SetHTTPProxy
 
@@ -4674,17 +4674,17 @@ end _proxyConfig_SetHTTPProxy
 --
 private command _proxyConfig_ConfigureBypassList
    local tBypassList
-   switch the platform 
-      
+   switch the platform
+
       case "MacOS"
          -- On Mac, we parse the system prefs using scutil.
          --
          local tExceptionList
          put shell("scutil --proxy") into tExceptionList
          if the result is empty then
-            
+
             local tStartLine, tEndLine
-            set the itemDelimiter to ":"               
+            set the itemDelimiter to ":"
             put lineOffset("ExceptionsList", tExceptionList) into tStartLine
             if tStartLine > 0 then
                put lineOffset("}", tExceptionList, tStartLine) into tEndLine
@@ -4694,13 +4694,13 @@ private command _proxyConfig_ConfigureBypassList
                   repeat for each line tURL in tExceptionList
                      put word 1 to -1 of tURL & cr after tBypassList
                   end repeat
-                  delete the last char of tBypassList                     
-                  libURLSetProxyBypassList tBypassList                     
+                  delete the last char of tBypassList
+                  libURLSetProxyBypassList tBypassList
                end if
             end if
          end if
          break
-         
+
       case "Win32"
          -- On Windows, we check the registry.
          --
@@ -4714,20 +4714,20 @@ private command _proxyConfig_ConfigureBypassList
             get binaryDecode("I*", queryRegistry("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ProxyEnable"), tBoolean)
             if tBoolean is 1 then
                put queryRegistry("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ProxyOverride") into tBypassList
-               replace ";" with cr in tBypassList                  
-               libURLSetProxyBypassList tBypassList                  
+               replace ";" with cr in tBypassList
+               libURLSetProxyBypassList tBypassList
             end if
          end if
          break
-         
+
       case "Linux"
          break
-         
+
    end switch
-   
+
    return empty
 end _proxyConfig_ConfigureBypassList
-   
+
 -- Extracts the systems PAC (Proxy Auto-Configuration) file using WPAD.
 -- If found, libURL is then configured to use the PAC file for determnining the proxy server to use for a URL.
 --
@@ -4735,13 +4735,13 @@ end _proxyConfig_ConfigureBypassList
 --
 private command _proxyConfig_SetHTTPProxyUsingWPADAndPAC
    local tError
-   
+
    if tError is empty then
       if not _proxyConfig_SystemUsesWPAD() then
          put "System does not support WPAD" into tError
       end if
-   end if   
-   
+   end if
+
    local tPacURL
    if tError is empty then
       put _proxyConfig_LocatePACFileUsingWPAD() into tPacURL
@@ -4749,7 +4749,7 @@ private command _proxyConfig_SetHTTPProxyUsingWPADAndPAC
          put "No PAC file configured on system" into tError
       end if
    end if
-   
+
    if tError is empty then
       ulLogIt "pac file that wpad found: " & tPacURL
       _proxyConfig_ProcessPACURL tPacURL
@@ -4776,14 +4776,14 @@ end _proxyConfig_SetHTTPProxyUsingWPADAndPAC
 private function _proxyConfig_SystemUsesWPAD
    local tUseWPADDetection
    put "false" into tUseWPADDetection
-   
-   switch the platform 
-      
-      case "MacOS"         
+
+   switch the platform
+
+      case "MacOS"
          local tSystemProxyConfig, tLineNo, tError
          put shell("scutil --proxy") into tSystemProxyConfig
          put the result into tError
-         
+
          if tError is empty then
             put lineOffset("ProxyAutoConfigEnable", tSystemProxyConfig) into tLineNo
             if tLineNo > 0 then
@@ -4796,19 +4796,19 @@ private function _proxyConfig_SystemUsesWPAD
                   put tAutoConfigURL is "http://wpad/wpad.dat" into tUseWPADDetection
                   set the itemDel to comma
                end if
-            end if            
+            end if
          end if
          break
-         
+
       case "Win32"
          local tType, tBinary
          put queryRegistry("HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Connections\DefaultConnectionSettings", tType) into tBinary
          if tBinary is empty then
             put queryRegistry("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Connections\DefaultConnectionSettings", tType) into tBinary
          end if
-         
+
          ulLogit "registry type for DefaultConnectionSettings is " & tType
-         
+
          local tResult, tValue
          if tType is "binary" then
             put binaryDecode("c*", char 9 of tBinary, tValue) into tResult
@@ -4817,32 +4817,32 @@ private function _proxyConfig_SystemUsesWPAD
             ulLogit "useWPADDetection:" && tUseWPADDetection
          end if
          break
-         
+
       case "Linux"
          put false into tUseWPADDetection
          break
-         
+
    end switch
-   
-   return tUseWPADDetection   
+
+   return tUseWPADDetection
 end _proxyConfig_SystemUsesWPAD
 
 -- Determine the location of the systems PAC file using WPAD.
 --
 -- Returns URL of PAC file or empty if none found.
 --
-private function _proxyConfig_LocatePACFileUsingWPAD   
+private function _proxyConfig_LocatePACFileUsingWPAD
    local tSocketTimeOut, tHostName
    set the wholeMatches to true
    put the socketTimeoutInterval into tSocketTimeOut
-   set the socketTimeoutInterval to 3000   
-   
+   set the socketTimeoutInterval to 3000
+
    -- Fist of all determine the host name of the current system.
    --
    set the itemDelimiter to "."
-   put the hostName into tHostName   
+   put the hostName into tHostName
    switch the platform
-      
+
       case "Win32"
          -- Apend the systems domain to the host name, first of all trying next.exe then the registry.
          --
@@ -4851,22 +4851,22 @@ private function _proxyConfig_LocatePACFileUsingWPAD
          if tDomain is empty or the number of items of tDomain < 2 then
             put queryRegistry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Domain") into tDomain
          end if
-         
+
          if the number of items of tDomain > 1 then
             put "." & tDomain after tHostName
          end if
          break
-         
+
       case "MacOS"
          break
-         
+
       case "Linux"
          break
-         
+
    end switch
-   
+
    ulLogIt "WPAD initial host: " & tHostName
-   
+
    -- Trim items of the host name until we find a valid IP address for host.
    --
    local i
@@ -4874,7 +4874,7 @@ private function _proxyConfig_LocatePACFileUsingWPAD
    put false into tPerformedPreliminaryNetworkTest
    repeat forever
       add 1 to i
-      
+
       -- Do the trimming, stripping out any IP address.
       --
       get item 1 to 4 of tHostName
@@ -4884,13 +4884,13 @@ private function _proxyConfig_LocatePACFileUsingWPAD
       else
          delete item 1 of tHostName
       end if
-      
-      ulLogIt "WPAD host (" & i & "): " & tHostName           
-      
+
+      ulLogIt "WPAD host (" & i & "): " & tHostName
+
       if the number of items of tHostName is 0 then
          exit repeat
       end if
-      
+
       -- Only check network connectivity once. If none, then exit.
       --
       if not tPerformedPreliminaryNetworkTest then
@@ -4900,29 +4900,29 @@ private function _proxyConfig_LocatePACFileUsingWPAD
          end if
          put true into tPerformedPreliminaryNetworkTest
       end if
-      
+
       -- Filter out known suffixes.
       --
       if item 1 of tHostName is among the lines of the cTopLevelDomains of me then
          exit repeat
       end if
-      
+
       -- Check to see if this is a valid host name. If so, then build PAC URL from it.
       --
       local tWPADHostName, tIPAddress
-      put "wpad." & tHostName into tWPADHostName      
-      ulLogIt "WPAD host name (" & i & "): " & tWPADHostName      
+      put "wpad." & tHostName into tWPADHostName
+      ulLogIt "WPAD host name (" & i & "): " & tWPADHostName
       put hostNameToAddress(tWPADHostName) into tIPAddress
       if tIPAddress is not empty then
          put line 1 of tIPAddress into tIPAddress
          put format("http://%s:80/wpad.dat", tIPAddress) into tPacURL
-         ulLogIt "WPAD url (" & i & "): " & tPacURL   
+         ulLogIt "WPAD url (" & i & "): " & tPacURL
          exit repeat
       end if
    end repeat
-   
-   set the socketTimeoutInterval to tSocketTimeOut   
-   return tPacURL   
+
+   set the socketTimeoutInterval to tSocketTimeOut
+   return tPacURL
 end _proxyConfig_LocatePACFileUsingWPAD
 
 -- Process the given PAC URL.
@@ -4932,7 +4932,7 @@ end _proxyConfig_LocatePACFileUsingWPAD
 private command _proxyConfig_ProcessPACURL pURL
    local tError
    put empty into tError
-   
+
    -- If the file is on the local system, the tidy up the URL.
    --
    if pURL begins with "file:" then
@@ -4946,22 +4946,22 @@ private command _proxyConfig_ProcessPACURL pURL
       end if
       ulLogIt "modified 'file:' proxy url:" && pURL
    end if
-   
-   local tHTTPProxy   
+
+   local tHTTPProxy
    put the HTTPProxy into tHTTPProxy
    set the HTTPProxy to empty
-   
+
    -- Extract the contents of the PAC file.
    --
    local tPacFile
    put URL pURL into tPacFile
-   put the result into tError   
+   put the result into tError
    ulLogIt "fetch proxy url result:" && tError
-   
+
    if tError is empty then
       replace numToChar(13) & numToChar(10) with numToChar(10) in tPacFile
       replace numToChar(13) with numToChar(10) in tPacFile
-      
+
       -- Microsoft ins file. Grab the line for AutoConfigJSURL= to determine the actual location of the PAC file.
       --
       if char -4 to -1 of pURL is ".ins" then
@@ -4973,7 +4973,7 @@ private command _proxyConfig_ProcessPACURL pURL
             set the itemDelimiter to "="
             put item 2 to -1 of tURL into tURL
             set the itemDelimiter to ","
-            
+
             put URL tURL into tPacFile
             put the result into tError
             if the result is empty then
@@ -4987,21 +4987,21 @@ private command _proxyConfig_ProcessPACURL pURL
          end if
       end if
    end if
-   
+
    -- Decode, clean up and initialise the PAC file
    --
    if tError is empty then
-      put uniDecode(uniEncode(tPacFile), "UTF8") into tPacFile      
+      put uniDecode(uniEncode(tPacFile), "UTF8") into tPacFile
       put word 1 to -1 of tPacFile into tPacFile
-      if the last char of tPacFile is "=" then 
+      if the last char of tPacFile is "=" then
          delete the last char of tPacFile
       end if
-      
+
       _proxyConfig_InitializePacFile tPacFile
       put the result into tError
    end if
-   
-   set the HTTPProxy to tHTTPProxy   
+
+   set the HTTPProxy to tHTTPProxy
    return tError
 end _proxyConfig_ProcessPACURL
 
@@ -5010,22 +5010,22 @@ end _proxyConfig_ProcessPACURL
 --
 -- Returns any errors or empty on success.
 --
-private command _proxyConfig_InitializePacFile pPacFile, pURL, pHost   
-   ulLogIt "initializing pac file:" & cr & "pURL:" && pURL & cr & "pHost:" && pHost & cr & pPacFile   
+private command _proxyConfig_InitializePacFile pPacFile, pURL, pHost
+   ulLogIt "initializing pac file:" & cr & "pURL:" && pURL & cr & "pHost:" && pHost & cr & pPacFile
    if pURL is empty then
       put "http://127.0.0.1" into pURL
       put "127.0.0.1" into pHost
    end if
-   
+
    local tProxy
    put httpproxyforurl(pURL, pHost, the cPACSupport of me & cr & pPacFile) into tProxy
-   
+
    local tError
    if tProxy is empty then
       put "unable to parse PAC script" into tError
-   end if   
+   end if
    ulLogIt "pac file initialization error:" && tError
-   
+
    return tError
 end _proxyConfig_InitializePacFile
 
@@ -5038,7 +5038,7 @@ private function _proxyConfig_ExtractDomainFromNetExe
       local tOldHideConsoleWindows
       put the hideConsoleWindows into tOldHideConsoleWindows
       set the hideConsoleWindows to true
-      
+
       put shell("net.exe config workstation") into tResult
       if the result is not 0 then
          put tResult into tError
@@ -5046,7 +5046,7 @@ private function _proxyConfig_ExtractDomainFromNetExe
       set the hideConsoleWindows to tOldHideConsoleWindows
    catch tError
    end try
-   
+
    local tDomain
    if tError is empty then
       local tKey, tLineNo
@@ -5057,13 +5057,13 @@ private function _proxyConfig_ExtractDomainFromNetExe
          put line tLineNo of tResult into tLine
          delete char 1 to length(tKey) of tLine
          put word 1 to -1 of tLine into tDomain
-         
-         if tDomain is "(null)" then 
+
+         if tDomain is "(null)" then
             put empty into tDomain
          end if
       end if
    end if
-   
+
    return tDomain
 end _proxyConfig_ExtractDomainFromNetExe
 
@@ -5074,20 +5074,20 @@ end _proxyConfig_ExtractDomainFromNetExe
 private command _proxyConfig_SetHTTPProxyManually
    local tError
    put empty into tError
-   
+
    local tAutoConfigURL, tProxy, tProxyFound
    put false into tProxyFound
-   
+
    switch the platform
-      
+
       case "MacOS"
-         
+
          -- Extract the system proxy settings using scutil
          --
          local tSystemProxyConfig, tLineNo
          put shell("scutil --proxy") into tSystemProxyConfig
          put the result into tError
-         
+
          if tError is empty then
             -- First of all check to see it we have a PAC file set. If so, attempt to use.
             --
@@ -5098,19 +5098,19 @@ private command _proxyConfig_SetHTTPProxyManually
                if tLineNo > 0 then
                   put item 2 to -1 of line tLineNo of tSystemProxyConfig into tAutoConfigURL
                   put word 1 to -1 of tAutoConfigURL into tAutoConfigURL
-                  
+
                   -- "http://wpad/wpad.dat" is for auto discovery. That is done elsewhere.
                   --
                   if tAutoConfigURL is not empty and tAutoConfigURL is not "http://wpad/wpad.dat" then
                      local tPacURLError
                      _proxyConfig_ProcessPACURL tAutoConfigURL
-                     put the result into tPacURLError                        
+                     put the result into tPacURLError
                      put (tPacURLError is empty) into lvUsePACFileForProxy
-                     put (tPacURLError is empty) into tProxyFound                 
-                  end if                
+                     put (tPacURLError is empty) into tProxyFound
+                  end if
                end if
             end if
-            
+
             -- If no PAC file has been set, then check to see if a proxy server has been set directly.
             --
             if not tProxyFound then
@@ -5136,21 +5136,21 @@ private command _proxyConfig_SetHTTPProxyManually
                         end if
                      end if
                   end if
-               end if                  
+               end if
             end if
-            
+
          end if
-         break  
-         
-      case "Win32" 
-         
+         break
+
+      case "Win32"
+
          -- Fist of all check the resgistry to see if a PAC URL has been set.
          --
          put queryRegistry("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\AutoConfigURL") into tAutoConfigURL
          if tAutoConfigURL is empty then
             put queryRegistry("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Internet Settings\AutoConfigURL") into tAutoConfigURL
-         end if            
-         ulLogIt "auto config url:" && tAutoConfigURL         
+         end if
+         ulLogIt "auto config url:" && tAutoConfigURL
          if tAutoConfigURL is not empty then
             _proxyConfig_ProcessPACURL tAutoConfigURL
             put the result into tPacURLError
@@ -5158,7 +5158,7 @@ private command _proxyConfig_SetHTTPProxyManually
             put (tPacURLError is empty) into lvUsePACFileForProxy
             put (tPacURLError is empty) into tProxyFound
          end if
-         
+
          -- If PAC file set up failed then check to see if a proxy server has been set directly in the resistry.
          --
          if not tProxyFound then
@@ -5174,23 +5174,23 @@ private command _proxyConfig_SetHTTPProxyManually
                   put queryRegistry("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ProxyServer") into tProxy
                end if
             end if
-            
+
             if tProxy contains "=" then
-               split tProxy by ";" AND "="                  
+               split tProxy by ";" AND "="
                if tProxy["http"] is not empty then
                   put tProxy["http"] into tProxy
                end if
             end if
-            
+
             ulLogIt "proxy in registry:" && tProxy
          end if
-         break         
-         
-      case "Linux"            
          break
-         
+
+      case "Linux"
+         break
+
    end switch
-   
+
    if not tProxyFound then
       if tError is empty then
          put tPacURLError into tError
@@ -5198,7 +5198,7 @@ private command _proxyConfig_SetHTTPProxyManually
    else if tProxy is not empty then
       put tProxy into lvHTTPProxy
    end if
-   
+
    return tError
 end _proxyConfig_SetHTTPProxyManually
 
@@ -5209,13 +5209,13 @@ private command libURLSetProxyBypassList pList
    put pList into lvProxyBypassList
 end libURLSetProxyBypassList
 
-function libURLURLBypassesProxy pURL   
+function libURLURLBypassesProxy pURL
    if lvProxyBypassList is empty then
       return false
    end if
-   
+
    local theCharNo,theHost,theLine,theList
-   local theRegEx,urlIsBypassed   
+   local theRegEx,urlIsBypassed
    put _extractHost(pURL) into theHost
    put lvProxyBypassList into theList
    put false into urlIsBypassed
@@ -5244,36 +5244,36 @@ end libURLURLBypassesProxy
 --
 private function _proxyForURL pURL
    ulLogIt "_proxyForURL"
-   
+
    libURLInitializeProxy
-   
+
    -- If this URL is on the bypass list then ignore.
    --
    if libURLURLBypassesProxy(pURL) then
       return empty
    end if
-   
+
    -- If the developer has set the HTTPProxy then use this value.
    --
    if the HTTPProxy is not empty then
       ulLogIt "_proxyForURL use _proxyFromHTTPProxy() with HTTPProxy"
       return _proxyfromHTTPProxy(pURL, the HTTPProxy)
    end if
-   
+
    -- If the system has been configured with PAC file, the extract proxy using this method.
    --
-   if lvUsePACFileForProxy then 
+   if lvUsePACFileForProxy then
       ulLogIt "_proxyForURL use _proxyFromPacOfURL()"
       return _proxyFromPacOfURL(pURL)
    end if
-   
+
    -- If the system has a proxy server configured directly, then use.
    --
-   if lvHTTPProxy is not empty then 
+   if lvHTTPProxy is not empty then
       ulLogIt "_proxyForURL use _proxyFromHTTPProxy()"
       return _proxyfromHTTPProxy(pURL, lvHTTPProxy)
    end if
-   
+
    ulLogIt "_proxyForURL end with none found"
    return empty
 end _proxyForURL
@@ -5284,7 +5284,7 @@ private function _proxyfromPACofURL pURL
    set the itemDelimiter to ";"
    get item 1 of it
    put word 2 of it into tProxyHost
-   
+
    if char 1 to 4 of tProxyHost is "ftp:" then
       get item 2 of it
       put word 2 of it into tProxyHost
@@ -5292,11 +5292,11 @@ private function _proxyfromPACofURL pURL
          get empty
       end if
    end if
-   
+
    switch word 1 of it
       case empty
       case "DIRECT"
-         return empty 
+         return empty
       case "PROXY"
          return "http://" & tProxyHost
       default
@@ -5305,14 +5305,14 @@ private function _proxyfromPACofURL pURL
 end _proxyFromPACofURL
 
 private function _proxyfromHTTPProxy pURL, pProxy
-   if pProxy is empty then 
+   if pProxy is empty then
       return empty
    end if
-   
-   if not (pProxy contains "://") then 
+
+   if not (pProxy contains "://") then
       put "http://" before pProxy
    end if
-   
+
    local tCharNo
    put offset("://", pProxy) into tCharNo
    put offset(":", pProxy, tCharNo + 3) into tCharNo

@@ -1,4 +1,4 @@
-﻿script "revExtensionBuilderBehavior"
+﻿script "revExtensionBuilderBehavior" with behavior "revPaletteBehavior"
 local sLoadedExtension
 
 on preOpenStack
@@ -149,8 +149,8 @@ end headerActionEditSource
 
 on headerActionOpenExtension
    answer file "Please select a valid extension file" \ 
-         with type "LiveCode Builder|lcb" \
-         or type "LiveCode Script|livecode,livecodescript"
+         with type "Builder|lcb" \
+         or type "Script|livecode,livecodescript"
    
    if the result is "cancel" then exit headerActionOpenExtension
    if there is not a file it then exit headerActionOpenExtension

@@ -1,0 +1,133 @@
+
+IDE revMenuBar handers:
+
+
+revMenuBarRecentFiles()
+
+put revMenubarItems() -- Toolbar Items
+
+revMenubarMenus()
+
+revIDEDocumentationLoad "API", "Script"
+revIDEDocumentationLoad "API", "Builder" -- doesn't work???
+
+revIDEActionInspectStack
+revIDEActionInspectObjects
+revIDEEditScriptOfObjects pTarget
+revIDEEditScriptOfObjects the behavior of pTarget
+revIDEOpenInspectorForObjects pTarget
+revIDECutObjects pTarget
+revIDECopyObjects pTarget
+revIDEToggleLockLocationOfObjects pTarget
+revIDEGoToObjectAPI pTarget --- example usage: revIDEGoToObjectAPI "Button"
+revIDEShowInProjectBrowser pTarget
+
+revIDEToggleMagnifyOfImage pTarget???
+revIDEMakeImageOriginalSize pTarget
+
+revIDEToggleLockTextOfField pTarget
+
+revIDESaveStack tTargetStack
+
+revIDEPasteOntoStack tTargetStack
+
+scriptprofilerStartProfiler the short name of tTargetStack
+scriptprofilerStopProfiler
+
+revMenubarContextMenuPickTarget item 2 to 3 of pWhich, the long id of this card of tTargetStack
+revMenubarContextMenuPickTarget item 2 to 3 of pWhich, tTargetStack
+
+revIDENewSubstack the long id of the topStack
+
+revIDEActionOpenStack
+revIDECloseStack the long id of the topStack, false
+revIDECloseStack the long id of the topStack, true -- Boolean = Remove From Memory
+revIDESaveStack the long id of the topStack
+revIDEActionSaveStackAs the long id of the topStack
+revIDESaveAsStandalone the long id of the topStack
+revIDEShareStack the long id of the topStack
+revIDEStandaloneSettingsForStack the long id of the topStack
+revIDEMoveSubstackToFile the long id of the topStack
+revIDERevertToSavedStack the long id of the topStack
+
+revIDEPrintPageSetup
+revIDEPrintCurrentCard
+revIDEPrintField the long ID of the selectedobject
+
+revIDEQuit
+
+revIDEActionNewScriptOnlyStack
+
+revIDEActionNewMainstack "Default Size (1024 x 768)"
+
+revIDESetPreference "cRecentStackPaths", empty
+ideMessageSend "ideRecentFilesChanged"
+
+revIDEActionMoveForward
+revIDEActionBringToFront
+revIDEActionMoveBackward
+revIDEActionSendToBack
+
+revIDEActionFlipImage item 2 of pWhich
+revIDEActionFlipGraphic item 2 of pWhich
+
+revIDEActionRotateImageBy
+revIDEActionRotateImage item 2 of pWhich
+revIDEActionRotateGraphicBy
+revIDEActionRotateGraphic item 2 of pWhich
+
+revIDEActionDistributeControls pIsHorixontal, "First to last selected" -- "Edge to edge", "Across card"
+
+revIDEActionAlign "Top" -- Left, Right, Top, Bottom,
+revIDEAlignControls pTarget, item 2 of pWhich
+"alignCenter"
+revIDECenterControls the selectedObjects, "vertical" -- or "horizontal"
+
+repeat for each line X in the selectedObjects; set the left of X to 0; end repeat -- sets all object to left side of card
+repeat for each line X in the selectedObjects; set the top of X to 0; end repeat -- sets all object to top side of card
+repeat for each line X in the selectedObjects; set the right of X to the right of this card; end repeat -- sets all object to right side of card
+repeat for each line X in the selectedObjects; set the bottom of X to the bottom of this card; end repeat -- sets all object to bottom side of card
+
+
+revIDEToggleToolbar pWhich
+
+revIDETogglePaletteView
+revIDETogglePalette "message box"
+
+revIDESendCurrentWindowToBack
+revIDESendWindowToFront pWhich
+
+revIDEOpenPalette "guide"
+revIDEOpenPalette "About"
+
+put the keys of revIDEPlugins()
+revIDEWindowList()
+put revIDEStackIsIDEWindow("revDictionary") -- = true
+
+put revIDEStackScreenRect(the short name of this stack, true)
+
+revIDESetPaletteRectPreference pPaletteShortName
+
+revIDEGetPreference("cREVMenuBarTopLeft")
+
+put revIDEGetPreference("cToolbarIcons") -- Boolean
+put revIDEGetPreference("cToolbarText") is not false into tShowText
+revIDENewIconID()
+revMenubarButtonNameToIconPath(tItem)
+
+revIDEStyleTextPlain
+revIDEStyleTextBold
+revIDEStyleTextItalic
+revIDEStyleTextUnderline
+revIDEStyleTextStrikeout
+revIDEStyleTextBox
+revIDEStyleTextLink
+revIDEStyleText3DBox
+revIDEStyleTextSubscript
+revIDEStyleTextSuperscript
+revIDESetTextFont tPickedParams
+revIDESetTextSize tPickedParams
+revIDESetTextColor tPickedParams
+revIDESetTextAlign tPickedParams
+
+put revInternal__ListLoadedLibraries()

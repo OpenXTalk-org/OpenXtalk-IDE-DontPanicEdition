@@ -3787,6 +3787,7 @@ on revIDEAlignControls pControls, pPosition
 end revIDEAlignControls
 
 on revIDEAlignControlsFromPI pObjects, pProperty, pValue
+   -- put pValue
    switch pProperty
       case "equalize"
          revIDEEqualizeControls pObjects, pValue
@@ -6472,18 +6473,7 @@ end revIDEStandaloneSectionNameToIconName
 on revIDEOpenStack pFilePath
    local tError, tStackName
 
-   if there is not a file pFilePath then
-      return __revIDEError("Specified file does not exist")
-   else
-         open file pFilePath
-         read from file pFilePath for 8 bytes
-         close file pFilePath
-         if it contains "STAK" then
-            handleOpenHyperCardSTAKs pFilePath
-            -- answer error "The file is a HyperCard stack:" && pFilePath & cr & tError
-            exit to top
-         end if
-   end if
+   if there is not a file pFilePath then return __revIDEError("Specified file does not exist")
 
    put empty into tError
    set the cursor to watch
@@ -7874,18 +7864,17 @@ on revIDEActionSaveStackAs pStackID, pSubstackOnly
    put tShortName into tSubstitutions[1]
 
    local tStackFilter, tStack24Filter, tStack27Filter, tStack55Filter, tStack70Filter, tStack80Filter
-   put (revIDELocalise("Stack") & "|oxtstack,stk|STAK") into tStackFilter
-   put (revIDELocalise("Legacy LiveCode Stack (2.4)") & "|livecode,rev|STAK") into tStack24Filter
-   put (revIDELocalise("Legacy LiveCode Stack (2.7)") & "|livecode,rev|STAK") into tStack27Filter
-   put (revIDELocalise("Legacy LiveCode Stack (5.5)") & "|livecode,rev|STAK") into tStack55Filter
-   put (revIDELocalise("Legacy LiveCode Stack (7.0)") & "|livecode,rev|STAK") into tStack70Filter
-   put (revIDELocalise("Legacy LiveCode Stack (8.0)") & "|livecode,rev|STAK") into tStack80Filter
+   put (revIDELocalise("Stack") & "|otxstack,stk|STAK") into tStackFilter
+   put (revIDELocalise("Legacy LiveCode Stack (2.4)") & "|livecode,rev|RSTK") into tStack24Filter
+   put (revIDELocalise("Legacy LiveCode Stack (2.7)") & "|livecode,rev|RSTK") into tStack27Filter
+   put (revIDELocalise("Legacy LiveCode Stack (5.5)") & "|livecode,rev|RSTK") into tStack55Filter
+   put (revIDELocalise("Legacy LiveCode Stack (7.0)") & "|livecode,rev|RSTK") into tStack70Filter
+   put (revIDELocalise("Legacy LiveCode Stack (8.0)") & "|livecode,rev|RSTK") into tStack80Filter
    local tVersion
    switch
       case the scriptOnly of stack tShortName
-
          put "script" into char -5 to -1 of tStackName
-         ask file revIDELocalise("Save script only stack %1 as:", tSubstitutions) with tStackName with type (revIDELocalise("Script Only Stack") & "|oxtscript|STAK")
+         ask file revIDELocalise("Save script only stack %1 as:", tSubstitutions) with tStackName with type (revIDELocalise("Script Only Stack") & "|otxscript|STAK")
          break
 	  case tStackFileType is 8.0
 	     ask file revIDELocalise("Save stack %1 as:", tSubstitutions) with tStackName with type tStack80Filter or type tStackFilter or type tStack70Filter or type tStack55Filter or type tStack27Filter or type tStack24Filter
@@ -7937,11 +7926,12 @@ on revIDEActionSaveStackAs pStackID, pSubstackOnly
 
    # MacOS Auotmatically appends the filetype to the filename
    local tFilePath
-      if the platform is not "MacOS" and not (it ends with ".rev" or it ends with ".livecode" or it ends with ".livecodescript" or it ends with ".oxtscript" or it ends with ".oxtstack") then
+   if the platform is not "MacOS" and not (it ends with ".rev" or it ends with ".livecode" or it ends with ".livecodescript"\
+      or it ends with ".otxscript" or it ends with ".otxstack" ) then
       if the scriptOnly of stack tShortName then
-         put ".oxtscript" after it
+         put ".otxscript" after it
       else
-         put ".oxtstack" after it
+         put ".otxstack" after it
       end if
    end if
    put it into tFilePath
@@ -10370,7 +10360,7 @@ function revIDETutorialInternalResource pRelativePath
 end revIDETutorialInternalResource
 
 function revIDETutorialUserStackPath pStackTag
-   return (revIDESpecialFolderPath("user tutorial") & slash & "Tutorial Data" & slash & sTutorialInfo["course"] & slash & sTutorialInfo["tutorial"] & slash & sTutorialInfo["lesson"] & "-" & pStackTag &".livecode")
+   return (revIDESpecialFolderPath("user tutorial") & slash & "Tutorial Data" & slash & sTutorialInfo["course"] & slash & sTutorialInfo["tutorial"] & slash & sTutorialInfo["lesson"] & "-" & pStackTag &".oxtstack")
 end revIDETutorialUserStackPath
 
 on revIDETutorialSave pTaggedObjects, pStepName

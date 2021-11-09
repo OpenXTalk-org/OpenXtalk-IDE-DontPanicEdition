@@ -108,32 +108,32 @@ command initialize
    if getObjectID() is not empty then
       contextSave
    end if
-   
+
    lock screen
    textInitialize
    call "initialize" to group "Gutter" of me
-   
+
    set the backgroundColor of field "Script" of me to sePrefGet("editor,backgroundcolor")
    setHandlersFieldBackColor
    set the hScrollbar of field "Script" of me to (sePrefGet("editor,hscrollbar") is "true")
-   
+
    -- See bug 16773. Mac likes an odd scrollbarwidth,
    -- Windows requires a scrollbarwidth > 16
    set the scrollbarWidth of field "Script" of me to 17
-   
+
    # OK-2009-03-11 : Bug 7499 - The hilite color was previously not being reset to empty on OS X.
    # At the same time as fixing this issue, I've made the hilite color a preference in case we decide
    # to allow users to configure it in the future.
    set the hiliteColor of field "Script" of me to sePrefGet("editor,hilitecolor")
-   
+
    # OK-2008-07-07 : Bug 6748 - Interactive find not remembering last search
    if sePrefGet("editor,findvisible") then
       call "openControl" to group "Interactive Find" of me
    end if
-   
+
    setObjectID empty
    put 0 into sUniqueId
-   
+
    unlock screen
 end initialize
 
@@ -149,10 +149,10 @@ private command initializeFonts
    local tFont, tFontSize
    put sePrefGet("editor,font") into tFont
    put sePrefGet("editor,fontsize") into tFontSize
-   
+
    if the textFont of field "Script" of me is not tFont or \
          the textSize of field "Script" of me is not tFontSize then
-      
+
       set the textFont of field "Script" of me to tFont
       set the textSize of field "Script" of me to tFontSize
       # It is not possible to set the textSize and textFont of styled text that has already
@@ -161,17 +161,17 @@ private command initializeFonts
       # does have to be done *after* the properties have been set to the value required..
       set the text of field "Script" of me to the text of field "Script" of me
    end if
-   
+
    # Note that the textSize and textFont properties are set on the group overall. The gutter has a
    # numbers field and a template numbers field both of which should inherit this value. Other controls
    # must have their textFont / textSize explicitly set if they need specific values.
    if the textSize of group "Gutter" of me is not tFontSize or \
          the textHeight of group "Gutter" of me is not the effective textHeight of field "Script" of me then
-      
+
       set the textSize of group "Gutter" of me to tFontSize
       set the textHeight of group "Gutter" of me to the effective textHeight of field "Script" of me
    end if
-   
+
 end initializeFonts
 
 # Description
@@ -184,11 +184,11 @@ command reapplyPreferences
    textFormatInitialize
    colorizationUpdate
    scriptColorize "script"
-   
+
    set the backgroundColor of field "Script" of me to sePrefGet("editor,backgroundcolor")
    setHandlersFieldBackColor
    set the hScrollbar of field "Script" of me to (sePrefGet("editor,hscrollbar") is "true")
-   
+
    updateGutterRequest empty, empty, empty, empty, false, false, true
    resize
    unlock screen
@@ -204,7 +204,7 @@ local sLastSelections
 #   the location of the selection is remembered when opening a new tab or after restarting rev.
 private command contextSave
    revMetadataSet getObjectID(), "general", "scripteditorvscroll", the vScroll of field "Script" of me
-   
+
    if the long id of the focusedObject is the long id of field "Script" of me then
       get the selectedChunk
       put word 2 of it & comma & word 4 of it into sLastSelections[getObjectID()]
@@ -216,7 +216,7 @@ end contextSave
 #   Loads the previously saved context for for current object if one was saved.
 private command contextLoad
    local tSelection
-   
+
    if sLastSelections[getObjectID()] is not empty then
       # If there is a last selection stored in memory, this means the user has previously opened this object
       # and is just changing tabs. In this case we remember the entire selection.
@@ -227,29 +227,29 @@ private command contextLoad
       # This information is stored as object metadata. In previous versions of the script editor, both the selection start and end
       # were stored, but this was changed to store only the selection end. This change is what warrants the extra check.
       put revMetadataGet(getObjectID(), "general", "scripteditorselection") into tSelection
-      
+
       # In case the object was last edited with an older version, get rid of any excess selection info.
       if the number of items of tSelection > 1 then
          put item 2 of tSelection into tSelection
       end if
-      
+
       # Form the full selection from what is stored
-      put (tSelection + 1) & comma & tSelection into tSelection   
+      put (tSelection + 1) & comma & tSelection into tSelection
    end if
-   
+
    if tSelection is not empty then
       # Try is used here to allow the IDE to add objects to a script editor before opening it
-      try 
+      try
          select char (item 1 of tSelection) to (item 2 of tSelection) of field "Script" of me
-         
+
          # OK-2009-01-17 : Bug 7601 - Update sLastSelectedChunk here as it will be incorrect until the first selectionChanged message is triggered
          setLastSelectedChunk tSelection
       end try
    end if
-   
+
    local tScroll
    put revMetadataGet(getObjectID(), "general", "scripteditorvscroll") into tScroll
-   
+
    if tScroll is not empty then
       set the vScroll of field "Script" of me to tScroll
    else
@@ -265,19 +265,19 @@ command loadScript
    # in the call to textSetScriptRaw, however this does not update these errors for efficiency reasons
    # so an extra call is made here to make sure the errors are updated.
    send "updateCompilationErrors" to group "Gutter" of me
-   
+
    # OK-2008-07-07 : Bug 6746 - When loading a new script, we clear the handler list, this means that if the newly
    # loaded script cannot be compiled, a empty handler list will be shown instead of the one from the previous object.
    put empty into sHandlerList
    put empty into sLastSelectedHandler
-   
+
    # If the current object is password protected, show dialog and disable script field.
    if scriptProtected() then
       textSetScriptRaw empty
       scriptLock
       exit loadScript
    end if
-   
+
    # If the mode is edit then make sure the script is unlocked.
    local tMode
    revSEGetMode
@@ -285,11 +285,11 @@ command loadScript
    if tMode is "edit" then
       scriptUnlock
    end if
-   
+
    local tCachedScript
    scriptGetCache getObjectID()
    put the result into tCachedScript
-   
+
    lock screen
    if tCachedScript is not empty then
       # If there is a cached script, this means that the user is coming back to this object from another tab.
@@ -297,26 +297,26 @@ command loadScript
    else
       local tScript
       put the script of getObjectID() into tScript
-      
+
       textSetScriptRaw tScript
-      
+
       # OK-2008-07-07 : Bug 6746
       seUpdateCheckSum getObjectID(), tScript
       if tScript is empty then
          select before field "Script" of me
       end if
    end if
-   
+
    # The lock messages is required, because otherwise an exitField is received before the contextLoad
-   # can execute, causing the context to be overwritten just before we load it. Not currently sure why 
+   # can execute, causing the context to be overwritten just before we load it. Not currently sure why
    # this happens...
    lock messages
    contextLoad
    unlock messages
-   
+
    # As we have changed the selection, update the rest of the script editor to reflect this
    --selectionUpdateRequest
-   
+
    # OK-2008-08-14 : In this case, do the selection update immediately, not in time.
    selectionUpdate
 end loadScript
@@ -327,24 +327,24 @@ command selectionUpdate
    if the lockText of field "Script" of me is false then
       deSelectLastGoneToLine
    end if
-    
+
    # Tell the script editor to update its panes. This is called here in particular
    # for the documentation pane to update itself when the user selects a new term.
    paneUpdateRequest
-    
+
    # Update the variables that store the last selected line and handler list
    updateHandlerList
-    
+
    updateSelectedHandler
-   
+
    contextSave
-    
+
    # Update the toolbar so that the handlers list can reflect the new selection. For efficiency we pass
    # a parameter to the update command which tells it that the selected handler can be assumed to be
    # up to date, so it doesn't need to evaluate it again (as we just updated it).
    local tTrueString
    put "true" into tTrueString
-     
+
    # OK-2009-10-05: Optimized this a little. The previous call to update was doing quite a bit of stuff
    # that is not required here. I factored out the stuff that we actually need into a new method, which
    # is now called instead.
@@ -372,7 +372,7 @@ command setObject pObjectId, pDontSendCallbacks
       end if
       exit setObject
    end if
-   
+
    # If we are closing a previous object and the script has not been applied,
    # cache the script of the previous object internally, and save the context
    if getObjectID() is not empty then
@@ -381,22 +381,22 @@ command setObject pObjectId, pDontSendCallbacks
          contextSave
       end if
    end if
-   
+
    lock screen
-   
+
    # It appears that changing the text of the field does not remove all styles,
    # so it is necessary to reset the fonts here, otherwise when changing tabs after the textSize has
    # been changed, the the textSize will appear to revert back to what it was previously.
    initializeFonts
-   
+
    findClearResults
-   
+
    EditorFieldCacheSwap getObjectID(), tRuggedObjectId
    setObjectID tRuggedObjectId
    loadScript
    resize
    unlock screen
-   
+
    if not pDontSendCallbacks then
       seSendCallbacks getObjectID(), the name of stack (revTargetStack(the long id of me))
    end if
@@ -418,20 +418,20 @@ end revertObject
 command setObjectRaw pObjectId
    local tOldObjectId
    put getObjectID() into tOldObjectId
-   
+
    setObjectID pObjectId
-   
+
    if tOldObjectId is empty then
       exit setObjectRaw
    end if
-   
+
    updateObjectID tOldObjectID, getObjectID()
-   
+
    # Find results
    if sLastFindObject is tOldObjectId then
       put getObjectID() into sLastFindObject
    end if
-   
+
    if sFirstFindObject is tOldObjectId then
       put getObjectID() into sFirstFindObject
    end if
@@ -465,10 +465,10 @@ private function handlerContainingLine pLineNumber
    if sHandlerList is empty then
       return empty
    end if
-   
+
    local tHandlers
    put sHandlerList into tHandlers
-   
+
    # Otherwise, calculate the selected handler, and return it.
    local tMatchingHandlerName, tMatchingHandlerType
    repeat for each line tHandler in tHandlers
@@ -478,20 +478,20 @@ private function handlerContainingLine pLineNumber
       if word 4 of tHandler < pLineNumber then
          next repeat
       end if
-      
+
       put word 2 of tHandler into tMatchingHandlerName
       put word 1 of tHandler into tMatchingHandlerType
       exit repeat
    end repeat
-   
+
    if tMatchingHandlerName is empty then
       return empty
    end if
-   
+
    if char 1 of tMatchingHandlerType is "P" then
       delete char 1 of tMatchingHandlerType
    end if
-   
+
    return (tMatchingHandlerType & comma & tMatchingHandlerName)
 end handlerContainingLine
 
@@ -507,15 +507,15 @@ private command updateSelectedHandler
    if tLine is empty or the long id of the focusedObject() is not the long id of getScriptField() then
       exit updateSelectedHandler
    end if
-   
+
    local tMatchingHandler
    put item 2 of handlerContainingLine(tLine) into tMatchingHandler
-   
+
    # For now, if the selection is outside any handler, we don't update the variable.
    if tMatchingHandler is empty then
       exit updateSelectedHandler
    end if
-   
+
    put tMatchingHandler into sLastSelectedHandler
 end updateSelectedHandler
 
@@ -543,7 +543,7 @@ command clearCache pObject, pDontCheckId
       put seGetRuggedId(pObject) into tObject
    end if
    delete variable sLastSelections[tObject]
-   
+
    pass clearCache
 end clearCache
 
@@ -571,17 +571,17 @@ private function scriptProtected
    if getObjectID() is empty then
       return false
    end if
-   
+
    local tStack
    put revTargetStack(getObjectID())  into tStack
-   
+
    # think this may be wrong...
    --   if the passKey of stack tStack is not the password of stack tStack then
    --      return true
    --   else
    --      return false
    --   end if
-   
+
    try
       get the script of stack tStack
       return false
@@ -609,24 +609,24 @@ end setCompilationErrors
 command locateHandler pName, pProposedPosition, pType
    local tScript
    put the text of field "Script" of me into tScript
-   
+
    local tStartLine
    put line pProposedPosition of tScript into tStartLine
-   
+
    local tSyntaxOptions
    put convertTypeCodeToSyntax(pType, pName) into tSyntaxOptions
-   
+
    # Unknown handler type, this is a bug in whatever called this command.
    if tSyntaxOptions is empty then
       return empty
    end if
-   
+
    repeat for each line tSyntax in tSyntaxOptions
       if word 1 to (the number of words of tSyntax) of tStartLine is tSyntax and word (the number of words of tSyntax + 1) of tStartLine is pName then
          return pProposedPosition
       end if
    end repeat
-   
+
    # If we got here, it means the handler was no longer at the location proposed. This is probably because the handler
    # was moved and at the same time the script was made invalid. We search for the handler manually instead.
    # As this case will not happen too often, it is not optimized for now.
@@ -640,7 +640,7 @@ command locateHandler pName, pProposedPosition, pType
       end repeat
       add 1 to tLineNumber
    end repeat
-   
+
    # Could not be found, in this case the script editor will get the wrong line...
    return pProposedPosition
 end locateHandler
@@ -688,17 +688,17 @@ end convertTypeCodeToSyntax
 command scriptCompile pObject
    lock screen
    lock messages
-   
+
    local tOldPreserveVariables, tOldExplicitVariables
    put the preserveVariables into tOldPreserveVariables
    put the explicitVariables into tOldExplicitVariables
    set the preserveVariables to sePrefGet("preserveVariables")
    set the explicitVariables to sePrefGet("explicitVariables")
-   
+
    local tScript
    scriptGet pObject
    put the result into tScript
-   
+
    local tResult
    local tDoUpdateDescription
    set the script of button "revCompileObject" of me to tScript
@@ -711,7 +711,7 @@ command scriptCompile pObject
    else
       put tResult is empty into tDoUpdateDescription
    end if
-   
+
    if tDoUpdateDescription then
       --! TODO remove use of revAvailableHandlers here (quite invasive)
       put the revAvailableHandlers of button "revCompileObject" of me into sHandlerList
@@ -720,11 +720,11 @@ command scriptCompile pObject
          ideAutocompleteUpdateScriptDescription it, the revScriptDescription of button "revCompileObject" of me
       end if
    end if
-   
+
    local tLiveErrors
    put sePrefGet("editor,liveerrors") into tLiveErrors
    put tLiveErrors and not the lockText of field "script" of me into tLiveErrors
-   
+
    local tState
    getDirty pObject
    if the result then
@@ -732,7 +732,7 @@ command scriptCompile pObject
    else
       put "applied" into tState
    end if
-   
+
    if tLiveErrors then
       send "clearErrors" to group "Errors" of the owner of me
       if tResult is empty then
@@ -743,18 +743,18 @@ command scriptCompile pObject
          put "error" into tState
       end if
    end if
-   
+
    seSetObjectState pObject, tState
-   
+
    set the preserveVariables to tOldPreserveVariables
    set the explicitVariables to tOldExplicitVariables
-   
+
    # The script should be unset because it could cause issues with idle handlers
    set the script of button "revCompileObject" of me to empty
-   
+
    unlock messages
    unlock screen
-   
+
    return tResult
 end scriptCompile
 
@@ -796,30 +796,30 @@ end hideInteractiveFind
 #   into account at the moment. Returns empty if no line can be found.
 function nextAvailableBreakpoint pLineNumber
    local tMatchingLineNumber
-   
+
    local tCurrentLineNumber
    put pLineNumber - 1 into tCurrentLineNumber
-   
+
    local tText
    put line pLineNumber to -1 of textGetScript() into tText
-   
+
    repeat for each line tCurrentLine in tText
       add 1 to tCurrentLineNumber
-      
+
       # Detect if the line is a comment or the line is whitespace
       if token 1 of tCurrentLine is empty then
          next repeat
       end if
-      
+
       # Detect if the line is a variable declaration
       if token 1 of tCurrentLine is among the words of "local global" then
          next repeat
       end if
-      
+
       put tCurrentLineNumber into tMatchingLineNumber
       exit repeat
-      
-      
+
+
    end repeat
    return tMatchingLineNumber
 end nextAvailableBreakpoint
@@ -838,7 +838,7 @@ private command colorizationUpdate
    local tClasses, tKeywords
    put seColorizationConfigClasses() into tClasses
    put seColorizationConfigKeywords() into tKeywords
-   
+
    _internal script configure classes tClasses
    _internal script configure keywords tKeywords
 end colorizationupdate
@@ -848,24 +848,24 @@ private function arrayShow pArray
    local tKeys
    put the keys of pArray into tKeys
    sort tKeys
-   
+
    local tText
    repeat for each line tKey in tKeys
       put tKey & tab & pArray[tKey] & return after tText
    end repeat
    delete the last char of tText
-   
+
    return tText
 end arrayShow
 
 command textInitialize
    initializeFonts
    seColorizationInit
-   
+
    colorizationUpdate
-   
+
    EditorFieldCacheFlushAll
-   
+
    pass textInitialize
 end textInitialize
 
@@ -873,7 +873,7 @@ end textInitialize
 #   Updates the gutter according to the specified parameters.
 command updateGutterDo
    local tOffset, tSelectedLine, tOldLines, tNewLines, tTextChanged
-   
+
    local tDetails
    put getUpdateGutterRequestDetails() into tDetails
    put tDetails["offset"] into tOffset
@@ -881,15 +881,15 @@ command updateGutterDo
    put tDetails["oldLines"] into tOldLines
    put tDetails["newLines"] into tNewLines
    put tDetails["textChanged"] into tTextChanged
-   
+
    local tUpdateCompilationErrors
    put tDetails["updateCompilationErrors"] into tUpdateCompilationErrors
-   
+
    local tForceBreakpointRedraw
    put tDetails["forceBreakpointRedraw"] into tForceBreakpointRedraw
-   
+
    send "update tOffset, tSelectedLine, tOldLines, tNewLines, tTextChanged, tUpdateCompilationErrors, tForceBreakpointRedraw" to group "Gutter" of me
-   
+
    # Once an update has been carried out, we reset the sGutterUpdateRequestDetails array
    deleteUpdateGutterRequestDetails
 end updateGutterDo
@@ -900,7 +900,7 @@ end updateGutterDo
 #   Called when the script editor is about to be closed.
 command finalize
    cancelPendingMessages
-   
+
    if there is a getObjectID() then
       contextSave
    end if
@@ -927,11 +927,11 @@ local sLastGoneToLine
 command goLine pLine, pHighlightMode, pPosition
    local tScroll
    put the vScroll of field "Script" of me into tScroll
-   
+
    # OK-2008-08-25 : Bug 7013 - Preserve horizontal scroll
    local tHScroll
    put the hScroll of field "Script" of me into tHScroll
-   
+
    # Select the line according to the value of pHighlight
    lock messages
    if pHighlightMode is "true" or pHighlightMode is "select" then
@@ -948,13 +948,13 @@ command goLine pLine, pHighlightMode, pPosition
       local tEnd
       put item 1 of pPosition into tStart
       put item 2 of pPosition into tEnd
-      
+
       # As typically Revolution errors only have a start char, and every after that gets ignored,
       # if no end is specified, we highlight from the start char to the end of the line.
       if tEnd is empty then
          put the number of chars of line pLine of field "Script" of me into tEnd
       end if
-      
+
       select char tStart to tEnd of line pLine of field "Script" of me
       get the selectedChunk
       put word 2 of it & comma & word 4 of it into sLastSelectedGoneToChunk
@@ -966,7 +966,7 @@ command goLine pLine, pHighlightMode, pPosition
       select before line pLine of field "Script" of me
    end if
    unlock messages
-   
+
    # Scroll until the line is centred (assumes fixed line height)
    if the vScroll of field "Script" of me > tScroll then
       # The field has scrolled down in order to show the selection, therefore
@@ -977,11 +977,11 @@ command goLine pLine, pHighlightMode, pPosition
       # we need to make it scroll up again to centre it.
       set the vScroll of field "Script" of me to the vScroll of field "Script" of me - round(the height of field "Script" of me / 2)
    end if
-   
+
    set the hScroll of field "Script" of me to tHScroll
-   
+
    put pLine into sLastGoneToLine
-   
+
    updateGutterRequest empty, empty, empty, empty, false, false
 end goLine
 
@@ -997,7 +997,7 @@ command deselectLastGoneToLine
    get the selectedChunk
    -- MM-2012-06-20: [[ Bug 10027 ]] Make sure there was a last line selected - causes bugs deselects elsewhere within the IDE.
    if sLastSelectedGoneToChunk is not empty and word 2 of it is item 1 of sLastSelectedGoneToChunk and word 4 of it is item 2 of sLastSelectedGoneToChunk then
-      
+
       lock messages
       local tSelobj
       put revIDESelectedObjects() into tSelobj
@@ -1007,10 +1007,10 @@ command deselectLastGoneToLine
       end if
       set the backgroundColor of char (item 1 of sLastSelectedGoneToChunk) to (item 2 of sLastSelectedGoneToChunk) of field "Script" of me to empty
       unlock messages
-      
+
    end if
    put empty into sLastSelectedGoneToChunk
-   
+
    # We update the gutter here to remove the current line indicator
    updateGutterRequest empty, empty, empty, empty, false, false
    unlock screen
@@ -1024,45 +1024,45 @@ local sDefinitionMatches
 private command prepareContextMenu
    local tSelectedText
    put getClickText() into tSelectedText
-   
+
    local tLine, tSelectedHandler
    put word 2 of the selectedLine into tLine
    if tLine is not empty then
       put handlerContainingLine(tLine) into tSelectedHandler
    end if
-   
+
    local tObject
    getObject
    put the result into tObject
-   
+
    local tMatches
    put seMatchingDefinitions(tSelectedText, tObject, tSelectedHandler) into tMatches
-   
+
    put tMatches into sDefinitionMatches
-   
+
    local tGoToDefinition
    put "Go to definition" into tGoToDefinition
    if tMatches is empty then
       put "(" before tGoToDefinition
    end if
-   
+
    local tText
    put tGoToDefinition & return into tText
    put "Find in" & return after tText
-   
+
    if not revIDEBrowserWidgetUnavailable() then
       put tab & "Docs" & return after tText
    end if
-   
+
    repeat for each item tItem in \
          "Current Tab,All Tabs,Card,Stack,Stack File,Stack File and its stackFiles,All Stack Files,All available stacks"
       put tab & tItem & return after tText
    end repeat
    put "-" & return after tText
-   
+
    put "Set Breakpoint" & return after tText
    put "-" & return after tText
-   
+
    if scriptLocked() then
       put "(Cut" & return & \
              "Copy" & return & \
@@ -1072,18 +1072,18 @@ private command prepareContextMenu
              "Copy" & return & \
              "Paste" after tText
    end if
-   
+
    if the last char of tText is not return then
       put return after tText
    end if
-   
+
    -- Dispatch a hook into the message path to customize the context menu
    local tModifiedText
    dispatch "revHookBuildScriptEditorContextMenu" to me with (the long id of tObject), tSelectedText, tText, tModifiedText
    if it is not "handled" then
       put tText into tModifiedText
    end if
-   
+
    set the text of button "Context Menu" of me to tModifiedText
 end prepareContextMenu
 
@@ -1096,7 +1096,7 @@ on mouseDown pButtonNumber
    if pButtonNumber <> 3 or the long id of the target is not the long id of field "Script" of me then
       pass mouseDown
    end if
-   
+
    prepareContextMenu
    showContextMenu
    pass mouseDown
@@ -1106,45 +1106,45 @@ private command showContextMenu
    popup button "Context Menu" of me
 end showContextMenu
 
-on menuPick pItemName   
+on menuPick pItemName
    if the long id of the target is not the long id of button "Context Menu" of me then
       pass menuPick
    end if
-   
+
    -- Dispatch a hook into the message path to give first action to any customizations
    dispatch "revHookScriptEditorContextMenuPick" to me with pItemName
    if it is "handled" then
       exit menuPick
    end if
-   
+
    set the itemDelimiter to "|"
-   
+
    switch item 1 of pItemName
       case "Set Breakpoint"
          if sLastClickLine is not empty then
             local tScript
             put textGetScript() into tScript
-            
+
             local tLineNumber
             put revDebuggerNextAvailableBreakpoint(tScript, sLastClickLine - 1) into tLineNumber
-            
+
             revDebuggerAddBreakpoint getObjectID(), tLineNumber
             revDebuggerActivateBreakpoint getObjectID(), tLineNumber
             updateGutterRequest empty, empty, empty, empty, false, false, true
          end if
          break
-         
+
       case "Find in"
-         
+
          local tCallback
          put "__FindAllCallback" into tCallback
-         
+
          local tCallbackTarget
          put the long id of me into tCallbackTarget
-         
+
          local tText
          put getClickText() into tText
-         
+
          local tTarget
          switch item 2 of pItemName
             case "Docs"
@@ -1186,38 +1186,38 @@ on menuPick pItemName
       case "Cut"
          actionCut
          break
-         
+
       case "Copy"
          actionCopy
          break
-         
+
       case "Paste"
          actionPaste
          break
-         
+
       case "Go to definition"
          local tMatches
          put sDefinitionMatches into tMatches
          if tMatches is empty then
             exit menuPick
          end if
-         
+
          if the number of lines of tMatches > 1 then
             set the cSymbols of getDisambiguatorObject() to tMatches
             send "update" to getDisambiguatorObject()
             modal getDisambiguatorObject()
-            
+
             local tResult
             put the cResult of getDisambiguatorObject() into tResult
             if tResult is empty then
                exit menuPick
             end if
-            
+
             goMatchingDefinition tResult
          else
             goMatchingDefinition tMatches
          end if
-         
+
          break
    end switch
 end menuPick
@@ -1230,9 +1230,9 @@ end __FindAllCallback
 private command goMatchingDefinition pMatch
    local tObject, tLine
    put item 5 to -1 of pMatch into tObject
-   
+
    put item 4 of pMatch into tLine
-   
+
    revSEGoExecutionPoint tObject, tLine, true, true
 end goMatchingDefinition
 
@@ -1314,10 +1314,10 @@ private function escapeString pString, pUseWildCard
    replace "(" with "\(" in pString
    replace "|" with "\|" in pString
    replace "-" with "\-" in pString
-   
+
    # OK-2009-01-17 : Bug 7611 - Periods must be replaced as they match any char otherwise
    replace "." with "\." in pString
-   
+
    if pUseWildCard then
       replace "*" with ".*" in pString
    else
@@ -1340,16 +1340,16 @@ end findInitialize
 -- if false, only the first available result between (and inclusive) pStartFrom and pEndAt is returned.
 private command findText pText, pGlobal, pStartFrom, pEndAt, pSearch
    local tResult, tRegExp
-   
+
    put empty into sFindUpdateRequired
-   
+
    # Clear previous search results
    findClearResults
-   
+
    if pSearch["query"] is empty then
       return empty
    end if
-   
+
    -- findText works via a regular expression. Thus, anything that comes in is transformed into one.
    if pSearch["regexp"] then
       put "(" & pSearch["query"] & ")" into tRegExp
@@ -1365,11 +1365,11 @@ private command findText pText, pGlobal, pStartFrom, pEndAt, pSearch
       end if
       put pSearch["query"] & ")" after tRegExp
    end if
-   
+
    local tStart, tEnd, tFrom, tTo, tText
-   
+
    put pText into tText
-   
+
    if pStartFrom is empty or pStartFrom <= 1 then
       put 1 into tFrom
    else
@@ -1419,28 +1419,28 @@ end findFinalize
 #   the chunk because of interactive search which finds text as the user types.
 command findMarkResult pStart, pEnd, pInteractive
    set the backgroundColor of char pStart to pEnd of field "Script" of me to sePrefGet("editor,findcolor")
-   
-   # If using interactive search, we can't select the find text, because doing so will take the 
+
+   # If using interactive search, we can't select the find text, because doing so will take the
    # selection away from the search field while the user is probably still typing in it, otherwise this is ok.
    if not pInteractive then
       lock messages
       select char pStart to pEnd of field "Script" of me
       unlock messages
    end if
-   
+
    # As the search results are shown with a backgroundcolor instead of a selection,
    # the field must be automatically scrolled to show the currently hilited result.
    # The field is scrolled by the minimum amount required to bring the current search
    # result fully into view.
    local tHeight
    put the formattedHeight of char 1 to pEnd of field "Script" of me into tHeight
-   
+
    # If tHeight is before the beginning of the visible area then scroll back until its the first line
    local tScroll
    if the vScroll of field "Script" of me > tHeight then
       put tHeight - (the effective textHeight of field "Script" of me + the topMargin of field "Script" of me) into tScroll
    end if
-   
+
    # If tHeight is after the end of the visible area then scroll forward until its the last line
    if the vScroll of field "Script" of me + the height of field "Script" of me < (tHeight + the textHeight of field "Script" of me) then
       local tBottomMargin
@@ -1449,32 +1449,32 @@ command findMarkResult pStart, pEnd, pInteractive
       else
          put the bottomMargin of field "Script" of me into tBottomMargin
       end if
-      
+
       put tHeight - the height of field "Script" of me + (the effective textHeight of field "Script" of me + tBottomMargin) into tScroll
    end if
-   
+
    if tScroll is not empty then
       set the vScroll of field "Script" of me to tScroll
    end if
-   
+
    if sFirstFindObject is empty then
       put getObjectID() into sFirstFindObject
    end if
-   
+
    if sFirstFindLocation is empty or pInteractive then
       put pStart & comma & pEnd into sFirstFindLocation
    end if
-   
+
    # OK-2008-07-28 : Bug 6846 - Showing find results can cause the script editor field to scroll,
    # which can put the line numbers out of sync with the script, in order to fix this we send a gutter
    # update request here.
    updateGutterRequest empty, empty, empty, empty, false, true
-   
+
    # OK-2009-02-20: Bug 7732 - The left bar needs updating as showing a find result can change the current handler.
    local tFalseString
    put false into tFalseString
    send "update tFalseString" to group "Left Bar" of stack (revTargetStack(the long id of me))
-   
+
    put getObjectID() into sLastFindObject
    put pStart & comma & pEnd into sLastFindLocation
 end findMarkResult
@@ -1501,26 +1501,26 @@ private function findObjectList pTarget, pDirection, pCallback, pCallbackTarget,
    if pTarget is "all" then
       revSEGetTargetObjects
       put the result into tObjectList
-      
+
       if the number of lines of tObjectList <> 1 then
          # Sort the object list so that tabs are cycled through in order, starting with current object
          local tLineNumber
          set the wholeMatches to true
          put lineOffset(seGetRuggedId(getObjectID()), tObjectList) into tLineNumber
          set the wholeMatches to false
-         
+
          local tReorderedObjectList
          repeat for each line tObject in line tLineNumber to -1 of tObjectList
             put tObject & return after tReorderedObjectList
          end repeat
-         
+
          repeat for each line tObject in line 1 to (tLineNumber - 1) of tObjectList
             put tObject & return after tReorderedObjectList
          end repeat
          delete the last char of tReorderedObjectList
          put tReorderedObjectList into tObjectList
       end if
-      
+
    else if pTarget is "card" then
       # This will search the card of the script editor's current object. This means the card itself
       # and all objects on it.
@@ -1545,11 +1545,11 @@ private function findObjectList pTarget, pDirection, pCallback, pCallbackTarget,
    else
       put getObjectID() into tObjectList
    end if
-   
+
    if tObjectList is an array then
       combine tObjectList with return as set
    end if
-   
+
    return tObjectList
 end findObjectList
 
@@ -1557,7 +1557,7 @@ private function findGetObjectOwner pObject, pType
    # Start with the object itself
    local tObject
    put revRuggedId(pObject) into tObject
-   
+
    repeat
       # First check if the current object is of the type we want, if so, return it
       if pType is "card" and word 1 of the name of tObject is "card" then
@@ -1566,17 +1566,17 @@ private function findGetObjectOwner pObject, pType
       if pType is "stack" and word 1 of the name of tObject is "stack" then
          return the long id of tObject
       end if
-      
+
       # If the object has no owner we can't continue, this can only happen if the caller requests the card that owns a stack,
       # so is a bug.
       if the owner of tObject is empty then
          exit repeat
       end if
-      
+
       # This means the object was not of the type we wanted, but it does have an owner, so we check its owner.
       put revRuggedId(the long owner of tObject) into tObject
    end repeat
-   
+
    # Should never get here...
 end findGetObjectOwner
 
@@ -1589,7 +1589,7 @@ private function findListObjectsOnCard pObject
    else
       put findGetObjectOwner(pObject, "card") into tCard
    end if
-   
+
    # List the controls owned by the card
    local tList
    get revIDEListSearchObjectTree(tCard, false, empty, false, true, true, tList)
@@ -1605,7 +1605,7 @@ private function findListObjectsOnStack pObject
    else
       put findGetObjectOwner(pObject, "stack") into tStack
    end if
-   
+
    # List the controls owned by the stack
    local tList
    get revIDEListSearchObjectTree(tStack, false, empty, false, true, true, tList)
@@ -1621,30 +1621,30 @@ private function findListObjectsOnStackAndSubstacks pObject, pIncludeStackfiles,
    else
       local tParentStack
       put findGetObjectOwner(pObject, "stack") into tParentStack
-      
+
       if the mainstack of tParentStack is the short name of tParentStack then
          put tParentStack into tMainstack
       else
          put revRuggedId(the long id of stack (the mainstack of tParentStack)) into tMainstack
       end if
    end if
-   
+
    findDispatchCallback pCallback, pCallbackTarget, "Listing: " & revRuggedId(the long id of stack tMainstack)
    if the result is "cancel" then
       put the result into rCancelled
       return empty
    end if
-   
+
    # List the controls owned by the stack and its substacks
    local tList
    get revIDEListSearchObjectTree(tMainstack, false, empty, true, true, true, tList)
-   
+
    # If pIncludeStackFiles is true, list all the stackfiles as well.
    if pIncludeStackFiles then
       repeat for each line tStackFile in the stackFiles of tMainstack
          local tPath
          put resolveStackFilePath(item 2 to -1 of tStackFile, tMainstack) into tPath
-         
+
          lock messages
          if there is a stack tPath then
             findDispatchCallback pCallback, pCallbackTarget, "Listing: " & revRuggedId(the long id of stack tPath)
@@ -1652,14 +1652,14 @@ private function findListObjectsOnStackAndSubstacks pObject, pIncludeStackfiles,
                put the result into rCancelled
                return empty
             end if
-            
+
             get revIDEListSearchObjectTree(the name of stack tPath, false, empty, true, true, true, tList)
          end if
          unlock messages
-         
+
       end repeat
    end if
-   
+
    return tList
 end findListObjectsOnStackAndSubstacks
 
@@ -1707,36 +1707,36 @@ private function findListObjectsOnAllAvailableStacks pCallback, pCallbackTarget,
    # search all stacks in memory.
    local tMainstacks
    put ideMainStacks() into tMainstacks
-   
+
    local tStackFiles
-   
+
    local tList
    repeat for each line tMainstack in tMainstacks
-      
+
       findDispatchCallback pCallback, pCallbackTarget, "Listing: " & revRuggedId(the long id of stack tMainstack)
       if the result is "cancel" then
          put the result into rCancelled
          return empty
       end if
-      
+
       get revIDEListSearchObjectTree(the name of stack tMainstack, false, empty, true, true, true, tList)
-      
+
       # Next search the stackFiles property. Note here that a stack in the stackFiles may also be in the mainstacks
       # if it happens to be open, so we skip these to avoid searching them twice.
       repeat for each line tStackFile in the stackFiles of stack tMainstack
          local tPath
          put resolveStackFilePath(item 2 to -1 of tStackFile, the name of stack tMainstack) into tPath
-         
+
          if tStackFiles[tPath] then
             next repeat
          end if
-         
+
          local tIsInMemory
          put stackFileIsInMemory(tPath, the name of stack tMainstack) into tIsInMemory
          if tIsInMemory then
             next repeat
          end if
-         
+
          lock messages
          if there is a stack tPath then
             findDispatchCallback pCallback, pCallbackTarget, "Listing: " & revRuggedId(the long id of stack tPath)
@@ -1744,17 +1744,17 @@ private function findListObjectsOnAllAvailableStacks pCallback, pCallbackTarget,
                put the result into rCancelled
                return empty
             end if
-            
+
             get revIDEListSearchObjectTree(the name of stack tPath, false, empty, true, true, true, tList)
-            
+
          end if
-         
+
          put true into tStackFiles[tPath]
-         
+
          unlock messages
       end repeat
    end repeat
-   
+
    return tList
 end findListObjectsOnAllAvailableStacks
 
@@ -1763,7 +1763,7 @@ private function findListObjectsOnAllStacksAndSubstacks pCallback, pCallbackTarg
    # search all stacks in memory.
    local tMainstacks
    put ideMainStacks() into tMainstacks
-   
+
    local tList
    repeat for each line tMainstack in tMainstacks
       findDispatchCallback pCallback, pCallbackTarget, "Listing: " & revRuggedId(the long id of stack tMainstack)
@@ -1771,10 +1771,10 @@ private function findListObjectsOnAllStacksAndSubstacks pCallback, pCallbackTarg
          put the result into rCancelled
          return empty
       end if
-      
+
       get revIDEListSearchObjectTree(the name of stack tMainstack, false, empty, true, true, true, tList)
    end repeat
-   
+
    return tList
 end findListObjectsOnAllStacksAndSubstacks
 
@@ -1784,14 +1784,14 @@ private function findDefaultSearch
    if tQuery is empty then
       return empty
    end if
-   
+
    local tSearch
    put tQuery into tSearch["query"]
    put not sePrefGet("find,casesensitive") into tSearch["ignorecase"]
    put sePrefGet("find,wholematches") into tSearch["wholematches"]
    put sePrefGet("find,regularexpressions") into tSearch["regexp"]
    put true into tSearch["wildcard"]
-   
+
    return tSearch
 end findDefaultSearch
 
@@ -1805,14 +1805,14 @@ end findDefaultSearch
 #   in the script local sFindQuery.
 private function findBuildSearch pQuery, pIsRegExp, pUseWildcard, pWholeMatch, pIgnoreCase, pInteractive, pTarget, pDirection, @pScript
    if pQuery is empty then
-      
+
       # OK-2008-08-12 : Bug 6893 - If no search string was specified then check to see if one of the two search fields are active.
       local tFocusedObject
       put the long id of the focusedObject into tFocusedObject
-      
+
       local tStack
       put revTargetStack(tFocusedObject) into tStack
-      
+
       if tStack is "revSEFind" then
          send "getSearchString" to stack "revSEFind"
          put the result into sFindQuery["query"]
@@ -1823,11 +1823,11 @@ private function findBuildSearch pQuery, pIsRegExp, pUseWildcard, pWholeMatch, p
          put findDefaultSearch() into sFindQuery
          return sFindQuery
       end if
-      
+
       # OK-2009-06-19 : Bug 8111 - Changing the case does not have to reset the search completely,
       # instead we just check here to make sure we are searching using the current preference setting.
       put not sePrefGet("find,casesensitive") into sFindQuery["ignorecase"]
-      
+
    else
       put pQuery into sFindQuery["query"]
       put pIsRegExp into sFindQuery["regexp"]
@@ -1835,20 +1835,20 @@ private function findBuildSearch pQuery, pIsRegExp, pUseWildcard, pWholeMatch, p
       put pWholeMatch into sFindQuery["wholematches"]
       put pIgnoreCase into sFindQuery["ignorecase"]
    end if
-   
+
    # Calculate the initial start and end for the search.
    local tLastFindLocation
    if sLastFindObject is not empty and seGetRuggedId(sLastFindObject) is seGetRuggedId(getObjectID()) then
       put sLastFindLocation into tLastFindLocation
    end if
-   
+
    # OK-2008-10-22 : Bug 7343 - Use getLastSelectedChunk instead of the actual selectedChunk,
    # because by the time we reach this point, the user is probably typing in the search field, so
    # the selectedChunk will not relate to the correct field anymore.
    local tLastSelectedChunk
    getLastSelectedChunk
    put the result into tLastSelectedChunk
-   
+
    if pDirection is "forward" then
       # Starts the search from the selection point if there was no previous search
       # to continue.
@@ -1871,11 +1871,11 @@ private function findBuildSearch pQuery, pIsRegExp, pUseWildcard, pWholeMatch, p
             put item 1 of tLastFindLocation + 1 into tSearchStart
          end if
       end if
-      
+
       local tEnd
       put the number of chars of pScript into tEnd
    end if
-   
+
    if pDirection is "backward" then
       -- Problem: regular expression matching goes from left to right :(.
       -- So, at least for the time being (or if time is a problem) we implement this
@@ -1893,21 +1893,21 @@ private function findBuildSearch pQuery, pIsRegExp, pUseWildcard, pWholeMatch, p
          # OK-2009-10-12 : Bug 8331 - Searching backwards was broken for words less than 3 letters due to the error below.
          --put item 1 of sLastFindLocation + 1 into tEnd
          put item 1 of sLastFindLocation - 1 into tEnd
-         
+
       end if
-      
+
       put 1 into tSearchStart
    end if
-   
+
    put tEnd into sFindQuery["end"]
    put tSearchStart into sFindquery["start"]
-   
+
    # Store the initial start of the search separately so we can check if the search
    # loops back on itself.
    if (not pInteractive and pQuery is not empty) or (pInteractive and sFindQuery["initialstart"] is empty) then
       put tSearchStart into sFindQuery["initialstart"]
    end if
-   
+
    return sFindQuery
 end findBuildSearch
 
@@ -1931,19 +1931,19 @@ end findBuildSearch
 command showNextFindResult pQuery, pIsRegExp, pUseWildCards, pWholeMatch, pIgnoreCase, pInteractive, pTarget
    local tObjectList, tCancelled
    put findObjectList(pTarget, "forward", empty, empty, tCancelled) into tObjectList
-   
+
    local tScript
    put textGetScript() into tScript
-   
+
    local tSearch
    put findBuildSearch(pQuery, pIsRegExp, pUseWildcards, pWholeMatch, pIgnoreCase, pInteractive, pTarget, "forward", tScript) into tSearch
    if tSearch["query"] is empty then
       goInteractiveFind
       exit showNextFindResult
    end if
-   
+
    seFindHistoryAdd "find", tSearch["query"]
-   
+
    lock screen
    local tStart
    repeat for each line tObject in tObjectList
@@ -1967,36 +1967,36 @@ command showNextFindResult pQuery, pIsRegExp, pUseWildCards, pWholeMatch, pIgnor
             end if
          end if
       end if
-      
+
       local tResult
       findText tScript, false, tStart, tSearch["end"], tSearch
       if the result is not empty then
          put the result into tResult
          unlock screen
-         
+
          if tResult is sFirstFindLocation and getObjectID() is sFirstFindObject then
             --beep
          end if
-         
+
          findMarkResult item 1 of tResult, item 2 of tResult, pInteractive
          exit repeat
       end if
    end repeat
-   
+
    if tResult is empty then
       revSESetCurrentObject (line 1 of tObjectList), empty, true
    end if
-   
+
    if tResult is empty and tSearch["start"] > 1 then
       # If we found no results, but the search did not start at the beginning of the text, then
       # we do another search from the beginning up to where we started the previous one.
       findText textGetScript(), false, 1, tSearch["start"], tSearch
       put the result into tResult
-      
+
       if tResult is sFirstFindLocation and getObjectID() is sFirstFindObject then
          --beep
       end if
-      
+
       if tResult is not empty then
          findMarkResult item 1 of tResult, item 2 of tResult, pInteractive
       else
@@ -2016,15 +2016,15 @@ end showNextFindResult
 command showPreviousFindResult pQuery, pIsRegExp, pUseWildCards, pWholeMatch, pIgnoreCase, pTarget
    local tScript
    put textGetScript() into tScript
-   
+
    local tSearch
    put findBuildSearch(pQuery, pIsRegExp, pUseWildcards, pWholeMatch, pIgnoreCase, false, pTarget, "backward", tScript) into tSearch
    if tSearch["query"] is empty then
       exit showPreviousFindResult
    end if
-   
+
    seFindHistoryAdd "find", tSearch["query"]
-   
+
    local tResult
    findText tScript, true, tSearch["start"], tSearch["end"], tSearch
    if the result is not empty then
@@ -2047,13 +2047,13 @@ private command findDispatchCallback pCallback, pCallbackTarget, pMessage
    if pCallback is empty then
       return empty
    end if
-   
+
    local tResult
    try
       send pCallback && "pMessage" to pCallbackTarget
       put the result into tResult
    end try
-   
+
    return tResult
 end findDispatchCallback
 
@@ -2062,17 +2062,17 @@ command showAllFindResults pQuery, pIsRegExp, pUseWildCards, pWholeMatches, pIgn
    if the result is "cancel" then
       exit showAllFindResults
    end if
-   
+
    local tOldMainstacks
    put ideMainStacks() into tOldMainstacks
-   
+
    # Calculate the list of objects to search in
    local tObjectList, tCancelled
    put findObjectList(pTarget, "forward", pCallback, pCallbackTarget, tCancelled) into tObjectList
    if tCancelled then
       exit showAllFindResults
    end if
-   
+
    # Note that with a global search we don't build a search using findBuildSearch. This is because global
    # searches cannot be continued, so we don't want to save the search or allow a previous one to be started.
    local tSearch
@@ -2081,18 +2081,18 @@ command showAllFindResults pQuery, pIsRegExp, pUseWildCards, pWholeMatches, pIgn
    put pUseWildcards into tSearch["wildcard"]
    put pWholeMatches into tSearch["wholematches"]
    put pIgnoreCase into tSearch["ignorecase"]
-   
+
    if tSearch["query"] is empty then
       exit showAllFindResults
    end if
-   
+
    seFindHistoryAdd "find", tSearch["query"]
-   
+
    local tFormattedResults
-   
+
    # Format the results for display
    put pQuery & return into tFormattedResults
-   
+
    local tDescription
    switch pTarget
       case "all"
@@ -2122,12 +2122,12 @@ command showAllFindResults pQuery, pIsRegExp, pUseWildCards, pWholeMatches, pIgn
       default
          put "current" into tDescription
    end switch
-   
+
    put tDescription & return after tFormattedResults
-   
+
    local tObjectCount = 0
    local tFoundCount = 0
-   
+
    local tTotalObjects
    put the number of lines of tObjectList into tTotalObjects
    # Execute the search
@@ -2138,7 +2138,7 @@ command showAllFindResults pQuery, pIsRegExp, pUseWildCards, pWholeMatches, pIgn
       if there is no tObject then
          next repeat
       end if
-      
+
       if pCallback is not empty then
          # Pass the rugged id to the callback, as this form is quite compact, despite not being the most readable.
          add 1 to tObjectCount
@@ -2149,11 +2149,11 @@ command showAllFindResults pQuery, pIsRegExp, pUseWildCards, pWholeMatches, pIgn
             exit showAllFindResults
          end if
       end if
-      
+
       local tScript
       scriptGet tObject
       put the result into tScript
-      
+
       findText tScript, true, 1, the number of chars of tScript, tSearch
       put the result into tResults
       if tResults is not empty then
@@ -2165,20 +2165,20 @@ command showAllFindResults pQuery, pIsRegExp, pUseWildCards, pWholeMatches, pIgn
          end repeat
       end if
    end repeat
-   
+
    send "expandCurrentPane" to group "Panes" of seStackId()
    send "refreshCurrentPane" to group "Panes" of seStackId()
-   
+
    local tNewMainstacks
    put ideMainStacks() into tNewMainstacks
-   
+
    if pCallback is not empty then
-      findDispatchCallback pCallback, pCallbackTarget, "Total results found:" && tFoundCount 
+      findDispatchCallback pCallback, pCallbackTarget, "Total results found:" && tFoundCount
    end if
-   
+
    sePrefSet "editor,lastsearchresults", tFormattedResults & tGlobalResults
    send "setCurrentTab Search Results" to group "Pane Tabs" of seStackId() in 0
-   
+
    repeat for each line tStack in tNewMainstacks
       if tStack is not among the lines of tOldMainstacks then
          lock messages
@@ -2192,19 +2192,19 @@ command replaceOnce pString
    local tFrom, tTo
    put item 1 of sLastFindLocation into tFrom
    put item 2 of sLastFindLocation into tTo
-   
+
    if tFrom is empty or tTo is empty then
       exit replaceOnce
    end if
-   
+
    seFindHistoryAdd "replace", pString
-   
+
    local tAt, tLength
    put tFrom into tAt
-   
+
    textBeginGroup "Replace"
    textReplace tAt, char tFrom to tTo of textGetScript(), pString, , , true
-   
+
    # OK-2009-02-16 : Bug 7712 - Return information about the replaced text so that in a the context of replaceOnceAndFind, we can ensure
    # that the replaced text does not get searched.
    return (tFrom + the length of pString)
@@ -2216,11 +2216,11 @@ command replaceOnceAndFind pQuery, pString, pIsRegExp, pUseWildCards, pWholeMatc
    local tLastReplacedChar
    replaceOnce pString
    put the result into tLastReplacedChar
-   
+
    # We should be able to move the start of the search by changing the sLastFindLocation script local,
    # this is clearly a bit of a hack, but hopefully doing is this way will minimize the risk.
    put tLastReplacedChar + 1 & comma & tLastReplacedChar into sLastFindLocation
-   
+
    showNextFindResult pQuery, pIsRegExp, pUseWildCards, pWholeMatch, pIgnoreCase, false, pTarget
 end replaceOnceAndFind
 
@@ -2233,23 +2233,23 @@ command replaceAll pQuery, pString, pIsRegExp, pUseWildCards, pWholeMatch, pIgno
       # Search cancelled before any replacements carried out
       return 0
    end if
-   
+
    local tSearch
    put pQuery into tSearch["query"]
    put pIsRegExp into tSearch["regexp"]
    put pUseWildcards into tSearch["wildcard"]
    put pWholeMatch into tSearch["wholematches"]
    put pIgnoreCase into tSearch["ignorecase"]
-   
+
    if tSearch["query"] is empty then
       exit replaceAll
    end if
-   
+
    seFindHistoryAdd "replace", pString
-   
+
    local tReplacementCount
    put 0 into tReplacementCount
-   
+
    repeat for each line tObject in tObjectList
       if pCallback is not empty then
          findDispatchCallback pCallback, pCallbackTarget, "Replacing: " & revRuggedId(the long id of tObject)
@@ -2257,24 +2257,24 @@ command replaceAll pQuery, pString, pIsRegExp, pUseWildCards, pWholeMatch, pIgno
             return tReplacementCount
          end if
       end if
-      
+
       local tScript
       scriptGet tObject
       put the result into tScript
-      
+
       local tResults
       findText tScript, true, 1, "", tSearch
       put the result into tResults
-      
+
       # Move to next object if no search results found
       if tResults is empty then
          next repeat
       end if
-      
+
       # Build the replacements into a single operation so it can be undone
       local tAt, tNewText, tOldText
       replaceBuildSingleOperation tScript, tResults, pString, tAt, tNewText, tOldText
-      
+
       # Perform the replacement operation on the object. There are three options here:
       # 1. tObject is the current script being edited. In this case we replace using the standard undo system and flag the script as modified
       # 2. tObject is open in the script editor, but non-current. Here we do a raw replacmenet on the object's cached script and synthesize the undo information
@@ -2291,7 +2291,7 @@ command replaceAll pQuery, pString, pIsRegExp, pUseWildCards, pWholeMatch, pIgno
          local tReplaceScript
          put the script of tObject into tReplaceScript
          textReplaceRawInVariable tReplaceScript, tAt, tOldText, tNewText
-         
+
          # Setting the script may fail if the object is executing code or has some property set that doesn't allow this.
          # If it fails, we simply skip past this one without incrementing the replacement count.
          try
@@ -2300,7 +2300,7 @@ command replaceAll pQuery, pString, pIsRegExp, pUseWildCards, pWholeMatch, pIgno
          end try
       end if
    end repeat
-   
+
    # OK-2009-03-03 : Bug 7538 - Return the number of replacements made so that the calling dialog can display it
    return tReplacementCount
 end replaceAll
@@ -2319,19 +2319,19 @@ private command replaceBuildSingleOperation pScript, pResults, pString, @rAt, @r
    local tResults
    put pResults into tResults
    sort tResults numeric descending by item 1 of each
-   
+
    # The resulting operation starts at the beginning of the first result
    put item 1 of line -1 of tResults into rAt
-   
+
    # The old text is from rAt to the end of the last match
    put char rAt to (item 2 of line 1 of tResults) of pScript into rOldText
-   
+
    local tNewText
    put rOldText into tNewText
    repeat for each line tResult in tResults
       put pString into char (item 1 of tResult - rAt + 1) to (item 2 of tResult -rAt + 1) of tNewText
    end repeat
-   
+
    put tNewText into rNewText
 end replaceBuildSingleOperation
 
@@ -2370,13 +2370,13 @@ command tooltipUpdate
    if tMode is not "debug" then
       exit tooltipUpdate
    end if
-   
+
    local tLine
    put word 2 of the mouseLine into tLine
-   
+
    local tHandler
    put handlerContainingLine(tLine) into tHandler
-   
+
    # Get the list of variables available for either the handler the mouse is in, or the script.
    local tVariables
    if tHandler is empty then
@@ -2384,44 +2384,44 @@ command tooltipUpdate
    else
       put the revAvailableVariables[tHandler] of getObjectID() into tVariables
    end if
-   
+
    # "Flatten" the list of variables- we don't care if they are locals, parameters, globals etc.
    replace return with comma in tVariables
    put replaceText(tVariables, ",+", ",") into tVariables
-   
+
    # From the mouseChunk, work out the possible name of the variable the mouse is over
    local tMouseVariable
    put getSelectedVariable(word 2 of the mouseChunk, word 4 of the mouseChunk) into tMouseVariable
-   
+
    # Check that tMouseVariable is one of the available variable names
    if tMouseVariable is empty or tMouseVariable is not among the items of tVariables then
       exit tooltipUpdate
    end if
-   
+
    # There is a special case here if gREVDevelopment is true.  In this case the debugger only filters out debug contexts
-   # that are in the debugger, or called by the debugger. However the current context, i.e. this handler is are neither of these things, 
-   # and so is not filtered out. However because it calls debugger functions,  we have to manually adjust the context here 
+   # that are in the debugger, or called by the debugger. However the current context, i.e. this handler is are neither of these things,
+   # and so is not filtered out. However because it calls debugger functions,  we have to manually adjust the context here
    # to make sure its correct.
    global gREVDevelopment
    if gREVDevelopment then
       local tContexts
       put revDebuggerContexts() into tContexts
-      
+
       # Note that the calls here to revDebuggerGetcontext() and revDebuggerContexts() in the IF condition
       # have to be on the same line otherwise they won't match properly (because the line number will have changed).
       if revDebuggerGetContext() is line 1 of revDebuggerContexts() then
          revDebuggerSetContext line 2 of revDebuggerContexts()
       end if
    end if
-   
+
    local tContext
    put seGetDebugContext() into tContext
-   
+
    # Find out if the variable is an array
    local tKeys
    put revDebuggerGetKeys(tMouseVariable, tContext) into tKeys
-   
-   # Get its value in the curent debug context from the debugger. Truncate to make sure we don't try and 
+
+   # Get its value in the curent debug context from the debugger. Truncate to make sure we don't try and
    # display very large variables and format it for the tooltip.
    local tValue
    if tKeys is empty then
@@ -2436,14 +2436,14 @@ command tooltipUpdate
       end repeat
       delete the last char of tValue
    end if
-   
+
    local tTooltip
    put tMouseVariable & ": " into tTooltip
    if the number of lines of tValue > 1 then
       put return after tTooltip
    end if
    put tValue after tTooltip
-   
+
    # Display the tooltip
    tooltipDisplay tTooltip
 end tooltipUpdate
@@ -2460,26 +2460,26 @@ private function tooltipTruncateValue pValue, pLines, pChars
    if pLines is not empty and the number of lines of pValue > pLines then
       put true into tTruncationNeeded
    end if
-   
+
    if pChars is not empty and the number of chars of line 1 to pLines of pValue > (pChars - 3) then
       put true into tTruncationNeeded
    end if
-   
+
    local tValue
    if pLines is not empty then
       put line 1 to pLines of pValue into tValue
    else
       put pValue into tValue
    end if
-   
+
    if pChars is not empty then
       put char 1 to (pChars - 3) of tValue into tValue
    end if
-   
+
    if tTruncationNeeded then
       put "..." after tValue
    end if
-   
+
    return tValue
 end tooltipTruncateValue
 
@@ -2503,7 +2503,7 @@ private function getSelectedVariable pStart, pEnd
    if pStart is empty then
       return empty
    end if
-   
+
    # Expand the start of the chunk backwards until a non-valid char is found
    local tStart
    put pStart into tStart
@@ -2514,7 +2514,7 @@ private function getSelectedVariable pStart, pEnd
          exit repeat
       end if
    end repeat
-   
+
    # Expand the end forwards until a non-valid char is found
    local tEnd
    put pEnd into tEnd
@@ -2525,7 +2525,7 @@ private function getSelectedVariable pStart, pEnd
          exit repeat
       end if
    end repeat
-   
+
    return char tStart to tEnd of field "Script" of me
 end getSelectedVariable
 
@@ -2541,25 +2541,25 @@ private function charAllowedInVariableName pChar
    if pChar is a number then
       return true
    end if
-   
+
    local tAsciiValue
    put charToNum(pChar) into tAsciiValue
-   
+
    # Upper case letters
    if tAsciiValue >= 65 and tAsciiValue <= 90 then
       return true
    end if
-   
+
    # Lower case letters
    if tAsciiValue >= 97 and tAsciiValue <= 122 then
       return true
    end if
-   
+
    # And finally the punctuators
    if pChar is among the chars of kVariablePunctuators then
       return true
    end if
-   
+
    return false
 end charAllowedInVariableName
 
@@ -2724,20 +2724,20 @@ end EditorFieldCacheSwap
 #   If pRootObject is any other control, the list is pRootObject.
 function revIDEListSearchObjectTree pRootObject, pObeyDontSearch, pMarked, pIncludeSubstacks, pIgnorePasswordProtected, pScriptsOnly, @xList
    --delete variable sAddedObjects
-   
+
    # Put the root object into the list first. If this is not possible because to dontSearch or card marking then
    # return an error and put empty into the list. What might also happen is that one of the child objects
    # as its dontSearch set to true. In this case, we'll return a partial list.
    if pObeyDontSearch and word 1 of the name of pRootObject is among the words of "field group card" and the dontSearch of pRootObject then
       return "dontSearch of root object set"
    end if
-   
+
    # Set the HCAddressing property of the owning stack of pRootObject to false, as this will mess
    # up everything otherwise.
    local tOldHCAddressing
    put the hcAddressing of stack revTargetStack(pRootObject) into tOldHCAddressing
    set the hcAddressing of stack revTargetStack(pRootObject) to false
-   
+
    # If the root object is a mainstack, we add the stack itself, then all its substacks if applicable
    local tResult
    switch word 1 of pRootObject
@@ -2745,7 +2745,7 @@ function revIDEListSearchObjectTree pRootObject, pObeyDontSearch, pMarked, pIncl
          if the mainstack of pRootObject is the short name of pRootObject and pIncludeSubstacks then
             addStack pRootObject, pObeyDontSearch, pMarked, pIgnorePasswordProtected, xList, pScriptsOnly
             put the result into tResult
-            
+
             repeat for each line tSubstack in the substacks of pRootObject
                local tSubstackResult
                addStack the name of stack tSubstack, pObeyDontSearch, pMarked, pIgnorePasswordProtected, xList, pScriptsOnly
@@ -2758,7 +2758,7 @@ function revIDEListSearchObjectTree pRootObject, pObeyDontSearch, pMarked, pIncl
             # If its not a mainstack, or we're not adding substacks, just add the stack
             addStack pRootObject, pObeyDontSearch, pMarked, pIgnorePasswordProtected, xList, pScriptsOnly
             put the result into tResult
-         end if 
+         end if
          break
       case "card"
          # If its a card then add the card and all its controls
@@ -2776,9 +2776,9 @@ function revIDEListSearchObjectTree pRootObject, pObeyDontSearch, pMarked, pIncl
          put the result into tResult
          break
    end switch
-   
+
    set the hcAddressing of stack revTargetStack(pRootObject) to tOldHCAddressing
-   
+
    return tResult
 end revIDEListSearchObjectTree
 
@@ -2786,18 +2786,18 @@ private command addObject pObject, pObeyDontSearch, @xList, pScriptsOnly
    if pObeyDontSearch and word 1 of the name of pObject is among the words of "card group field" and the dontSearch of pObject then
       return "dontSearch set on object"
    end if
-   
+
    if not pScriptsOnly or the script of pObject is not empty then
       put true into xList[the long id of pObject]
    end if
-   
+
    local tBehavior
    put the behavior of pObject into tBehavior
    repeat while exists(tBehavior)
       put true into xList[the long id of tBehavior]
       put the behavior of tBehavior into tBehavior
    end repeat
-   
+
    return empty
 end addObject
 
@@ -2805,12 +2805,12 @@ private command addCard pCard, pObeyDontSearch, pMarked, @xList, pScriptsOnly
    if pMarked is not empty and pMarked is not the mark of pCard then
       return "marked mismatch"
    end if
-   
+
    # Add the card itself
    local tResult
    addObject pCard, pObeyDontSearch, xList, pScriptsOnly
    put the result into tResult
-   
+
    # Add the non-grouped controls
    local tObjectResult
    local tControlID
@@ -2819,20 +2819,20 @@ private command addCard pCard, pObeyDontSearch, pMarked, @xList, pScriptsOnly
       if word 1 of the name of control id tControlID of pCard is among the words of "group bkgnd" then
          next repeat
       end if
-      
+
       # Don't add grouped controls
       if the owner of control id tControlID of pCard is not empty and word 1 of the name of the owner of control id tControlID of pCard is among the words of "group bkgnd" then
          next repeat
       end if
-      
+
       addObject the long id of control id tControlID of pCard, pObeyDontSearch, xList, pScriptsOnly
       put the result into tObjectResult
-      
+
       if tResult is empty then
          put tObjectResult into tResult
       end if
    end repeat
-   
+
    # Add any groups.
    local tGroup, tGroupResult
    local tID
@@ -2841,17 +2841,17 @@ private command addCard pCard, pObeyDontSearch, pMarked, @xList, pScriptsOnly
       if the sharedBehavior of tGroup then
          next repeat
       end if
-      
+
       # Note that if a group on the card does not have its backgroundBehavior set, but is placed on multiple cards,
       # it will be duplicated in the list. I'm not sure if this is correct or not...
       addGroup tGroup, pObeyDontSearch, xList, pScriptsOnly
       put the result into tGroupResult
-      
+
       if tResult is empty then
          put tGroupResult into tResult
       end if
    end repeat
-   
+
    return tResult
 end addCard
 
@@ -2859,28 +2859,28 @@ private command addGroup pGroup, pObeyDontSearch, @xList, pScriptsOnly
    if pObeyDontSearch and the dontSearch of pGroup then
       return "dontSearch set on group"
    end if
-   
+
    local tResult
    addObject pGroup, pObeyDontSearch, xList, pScriptsOnly
    put the result into tResult
-   
+
    local tObjectResult
    local tControlID
    repeat for each line tControlID in the controlIDs of pGroup
       addObject the long id of control id tControlID of pGroup, pObeyDontSearch, xList, pScriptsOnly
       put the result into tObjectResult
-      
+
       if tResult is empty then
          put tObjectResult into tResult
       end if
    end repeat
-   
+
    return tResult
 end addGroup
 
 private command addStack pStack, pObeyDontSearch, pMarked, pIgnorePasswordProtected, @xList, pScriptsOnly
    local tResult
-   
+
    if pIgnorePasswordProtected then
       try
          get the script of pStack
@@ -2888,34 +2888,34 @@ private command addStack pStack, pObeyDontSearch, pMarked, pIgnorePasswordProtec
          return "Stack password protected"
       end try
    end if
-   
+
    # The stack itself
    addObject pStack, pObeyDontSearch, xList, pScriptsOnly
    put the result into tResult
-   
+
    # All shared groups groups on the stack
    local tSharedGroupResult
    local tGroupID
    repeat for each line tGroupID in the sharedGroupIDs of pStack
       addGroup the long id of control id tGroupID of pStack, pObeyDontSearch, xList, pScriptsOnly
       put the result into tSharedGroupResult
-      
+
       if tResult is empty then
          put tSharedGroupResult into tResult
       end if
    end repeat
-   
+
    # All the cards on the stack
    local tCardResult
    local tCardID
    repeat for each line tCardID in the cardIDs of pStack
       addCard the long id of card id tCardID of pStack, pObeyDontSearch, pMarked, xList, pScriptsOnly
       put the result into tCardResult
-      
+
       if tResult is empty then
          put tCardResult into tResult
       end if
    end repeat
-   
+
    return tResult
 end addStack

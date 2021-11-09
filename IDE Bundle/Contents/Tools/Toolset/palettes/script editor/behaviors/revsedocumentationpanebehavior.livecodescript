@@ -21,27 +21,28 @@ local sMetrics
 
 command paneOpenControl
    metricsInit
-   
+
    # The default stack must be changed here because the create command will only create objects
    # in the default stack, even when the "create in me" form is used.
    local tOldDefaultStack
    put the defaultStack into tOldDefaultStack
    set the defaultStack to revTargetStack(the long id of me)
-   
+
    lock messages
    # Main view Field
    reset the templateField
    set the name of the templateField to "View"
    set the lockText of the templateField to true
    set the traversalOn of the templateField to true
-   set the backgroundColor of the templateField to "255,255,255"
+
+   -- set the backgroundColor of the templateField to "255,255,255"
    set the showBorder of the templateField to false
    set the lockLocation of the templateField to true
    set the margins of the templateField to sMetrics["viewFieldMargins"]
    create field in me
    reset the templateField
    set the cDocPaneObject of field "View" of me to true
-   
+
    # Toggle button for viewing mode
    reset the templateButton
    set the name of the templateButton to "FullMode"
@@ -59,7 +60,7 @@ command paneOpenControl
    create button in me
    reset the templateButton
    set the cDocPaneObject of button "FullMode" of me to true
-   
+
    # Button to launch docs
    reset the templateButton
    set the name of the templateButton to "LaunchDocs"
@@ -69,11 +70,11 @@ command paneOpenControl
    create button in me
    reset the templateButton
    set the cDocPaneObject of button "LaunchDocs" of me to true
-   
+
    unlock messages
-   
+
    set the defaultStack to tOldDefaultStack
-   
+
    # Resize the controls
    paneResizeControl
 end paneOpenControl
@@ -93,12 +94,12 @@ command paneResizeControl
    split tRect by comma
    set the rect of field "View" of me to tRect[1], tRect[2], tRect[3], \
          tRect[4] - sMetrics["bottombarHeight"]
-   set the bottomRight of button "FullMode" of me to \ 
+   set the bottomRight of button "FullMode" of me to \
          tRect[3] + sMetrics["toggleButtonMargin"], tRect[4]
-   set the width of button "LaunchDocs" of me to \ 
-         the formattedWidth of button "LaunchDocs" of me + \ 
+   set the width of button "LaunchDocs" of me to \
+         the formattedWidth of button "LaunchDocs" of me + \
          sMetrics["launchButtonPadding"]
-   set the bottomLeft of button "LaunchDocs" of me to tRect[1] + \ 
+   set the bottomLeft of button "LaunchDocs" of me to tRect[1] + \
          sMetrics["launchButtonMargin"], tRect[4] - 1
    scrollbarCheck
 end paneResizeControl
@@ -108,11 +109,11 @@ end paneResizeControl
 #   Causes the documentation viewer to re-render whatever its last chosen document was. And resize itself.
 command update
    paneResizeControl
-   
+
    put sePrefGet("documentation,lastLoadedDoc") into sLastFoundDoc
    put sePrefGet("documentation,lastMatchingSearch") into sDoc
    put sePrefGet("documentation,lastLoadedAlternativeDocs") into sAlternativeDocs
-   
+
    if sLastFoundDoc is empty then
       put empty into sDoc
       renderEmpty
@@ -130,7 +131,7 @@ end update
 private function renderDocDataShort pData, pIndex
    local tData
    put pData[pIndex] into tData
-   
+
    local tName, tSyntax, tSummary, tType
    put tData["display name"] into tName
    put tData["syntax"] into tSyntax
@@ -139,28 +140,28 @@ private function renderDocDataShort pData, pIndex
       put tData["description"] into tSummary
    end if
    put tData["type"] into tType
-   
+
    local tResult
    # Build the html to display it
    put "<p>" & return into tResult
-   
+
    # Documentation library: returns html, eg a font tag
    put tType & return after tResult
-   
+
    # Documentation library: returns html ending tags
    put "<b><font size=" & quote & "25" & quote && "color=" & quote & "#606060" & quote & ">" after tResult
    put tName & "</font></b>" & return after tResult
-   
+
    if the number of elements in pData > 1 then
       put " (also " & renderDocAlternatives(pData, pIndex) & ")" after tResult
    end if
-   
+
    put "</p><p />" & return after tResult
-   
+
    put "<p>" & return after tResult
    put removeAngleBrackets(tSummary) & return after tResult
    put "</p><p />" & return after tResult
-   
+
    repeat for each element tElement in tSyntax
       repeat for each line tLine in tElement
          put "<p>" & return after tResult
@@ -168,7 +169,7 @@ private function renderDocDataShort pData, pIndex
          put "</p>" & return after tResult
       end repeat
    end repeat
-   
+
    return tResult
 end renderDocDataShort
 
@@ -204,7 +205,7 @@ end fontTag
 private function renderElement pKey, pData, pIndex
    local tData
    put pData[pIndex] into tData
-   
+
    local tHtml, tTag, tContent
    put "<p><b>" & fontTag() into tTag
    put pKey & "</font></b>" & return after tTag
@@ -266,7 +267,7 @@ private function renderDocData pData, pIndex, pFull
    if not pFull then
       return renderDocDataShort(pData, pIndex)
    end if
-   
+
    local tHtml, tElements
    put docsElementsFull() into tElements
 
@@ -281,12 +282,12 @@ private command renderDoc pType, pLib
       renderEmpty
       exit renderDoc
    end if
-   
+
    # Documentation library: Retrieve the summary from the docs database
    local tHTML
    put renderDocDictionary(sDoc, pType, pLib) into tHTML
    set the htmlText of field "View" of me to tHTML
-   
+
    scrollbarCheck
 end renderDoc
 
@@ -299,11 +300,11 @@ private function removeAngleBrackets pText, pIsSyntax
       put char 1 to tStart - 2 of pText after tNewText
       if pIsSyntax then
          put "<i>" after tNewText
-      end if	
+      end if
       put char tStart to tEnd of pText into tReplacement
       if item 2 of tReplacement is not empty then
          put item 2 of tReplacement into tReplacement
-      end if	
+      end if
       put tReplacement after tNewText
       if pIsSyntax then
          put "</i>" after tNewText
@@ -317,20 +318,20 @@ end removeAngleBrackets
 # Returns HTML of that doc in the form required for this component
 private function renderDocDictionary pTag, pType, pLib
    local tResult, tData
-   
+
    # Get the required info from the doc
    put ideDocsFetchScriptData(pTag) into tData
-   
+
    if pType is empty then
       put sTypesA[pTag] into pType
    end if
    if pLib is empty then
       put sLibsA[pTag] into pLib
    end if
-   
+
    put pType into sTypesA[pTag]
    put pLib into sLibsA[pTag]
-   
+
    repeat for each key tIndex in tData
       if pType is not empty and \
             tData[tIndex]["type"] is pType and \
@@ -339,11 +340,11 @@ private function renderDocDictionary pTag, pType, pLib
          return renderDocEntry(tData, tIndex)
       end if
    end repeat
-   
+
    put tData[1]["type"] into sTypesA[pTag]
    put tData[1]["library"] into sLibsA[pTag]
    return renderDocEntry(tData, 1)
-end renderDocDictionary 
+end renderDocDictionary
 
 private function renderDocEntry pData, pIndex
    if prefGet("viewMode") is "Full" then
@@ -362,11 +363,11 @@ function renderDocAlternatives pAlternatives, pCurIndex
       if tAlternativeIndex is pCurIndex then
          next repeat
       end if
-      
+
       put "<a>" & pAlternatives[tAlternativeIndex]["library"] && \
             "-" && pAlternatives[tAlternativeIndex]["type"] & "</a>" \
             into tAlternative
-      
+
       if tFormattedAlternatives is empty then
          put tAlternative into tFormattedAlternatives
       else
@@ -403,7 +404,7 @@ on mouseUp
       case "FullMode"
          renderDoc
          break
-         
+
       case "LaunchDocs"
          revIDEGoToLCSDictionaryEntry sDoc, sTypesA[sDoc], sLibsA[sDoc]
          break
@@ -418,7 +419,7 @@ private command metricsInit
    put 12 into sMetrics["launchButtonPadding"]
    put 26 into sMetrics["bottombarHeight"]
    put 1 into sMetrics["launchButtonMargin"]
-   
+
    # OK-2008-06-29 : Bug 6566 - On Macs, the "Full Document" toggle button is overlapped by the stack resizer triangle,
    # add a platform specific margin setting to fix this.
    if seGetPlatform() is "MacOS" then

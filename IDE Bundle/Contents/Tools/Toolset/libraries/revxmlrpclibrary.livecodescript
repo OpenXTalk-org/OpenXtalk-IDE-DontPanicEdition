@@ -17,7 +17,7 @@ end extensionFinalize
 /*
 * Version history :
 * -----------------
-* 
+*
 * Date      Who  Version  Comments
 * --------  ---  -------  ------------------------------------------------------------------
 * 20040516  js   2.3a3    first alpha version of the library
@@ -28,7 +28,7 @@ end extensionFinalize
 *                         added SetPort, DeleteDocument and DeleteAllDocuments handlers
 * 20040803  js   2.3b2    added Documents function
 * 20110523 mw 4.6.1-dp-1    changed Revolution to LiveCode
-* 
+*
 */
 
 constant kXMLRPC_SimpleTypes = "base64,boolean,dateTime.iso8601,double,i4,int,string"
@@ -170,7 +170,7 @@ function revXMLRPC_GetParam pXMLRPCDocID, pParamNumber, pType
   put "/" & revXMLRootNode(pXMLRPCDocID) & "/params/param[" & pParamNumber & "]/value" into tValueNode
   put revXMLChildNames(pXMLRPCDocID,tValueNode,return,,false) into tValueType
   put tValueNode & "/" & tValueType into tDataNode
-  
+
   local tParamData
   if pType is "xml" or pType is empty then
     put revXMLText(pXMLRPCDocID,tDataNode) into tParamData
@@ -298,7 +298,7 @@ function revXMLRPC_Execute pXMLRPCDocID
   if tProtocol is empty then put kXMLRPC_DefaultProtocol into tProtocol
   -- prepare the POST payload and HTTP headers
   put revXMLText(pXMLRPCDocID) into tPayload
-  put "User-Agent: LiveCode/" & revAppVersion() && "(" & the platform & ")" & return & \
+  put "User-Agent: OpenXTalk/" & revAppVersion() && "(" & the platform & ")" & return & \
       "Host:" && tHost & return & \
       "Content-Type: text/xml" & return & \
       "Content-Length:" && length(tPayload) into tHTTPHeaders
@@ -344,10 +344,10 @@ function revXMLRPC_Execute pXMLRPCDocID
     put it into tResponseData
     if the result is not empty then
        put the result into sXMLRPC_Data[pXMLRPCDocID,"error"]
-       
+
        # OK-2009-06-19 : Bug 8121 - Ensure httpHeaders global property is not changed by failed execution
        set the httpheaders to tSaveHTTPHeaders
-       
+
       return sXMLRPC_Data[pXMLRPCDocID,"error"]
     end if
     -- don't forget to fetch the remote HTTP headers

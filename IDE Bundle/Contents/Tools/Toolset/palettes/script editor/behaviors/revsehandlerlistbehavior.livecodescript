@@ -2,12 +2,12 @@
 command initialize
    lock screen
    update
-   
+
    focus on field "Handlers" of me
 
    local tLineNumber
    put 1 into tLineNumber
-   
+
    local tMatchingLineNumber
    repeat for each line tHandler in the cHandlers of field "Handlers" of me
       if word 2 of tHandler is the cSelectedHandler of me then
@@ -16,7 +16,7 @@ command initialize
       end if
       add 1 to tLineNumber
    end repeat
-      
+
    if tMatchingLineNumber is empty then
       select line 1 of field "Handlers" of me
    else
@@ -35,10 +35,10 @@ command updateSelectedHandler
       set the hilitedLines of field "Handlers" of me to empty
       exit updateSelectedHandler
    end if
-   
+
    local tLineNumber
    put 1 into tLineNumber
-   
+
    local tMatchingLineNumber
    repeat for each line tHandler in the cHandlers of field "Handlers" of me
       if word 2 of tHandler is the cSelectedHandler of me then
@@ -47,7 +47,7 @@ command updateSelectedHandler
       end if
       add 1 to tLineNumber
    end repeat
-   
+
    if tMatchingLineNumber is empty then
       set the hilitedLines of field "Handlers" of me to empty
    else
@@ -72,11 +72,11 @@ end updateSelectedHandler
 private function getIcon pTag, pIsPrivate
    local tTag
    put "handler" into tTag
-   
+
    if pIsPrivate then
       put "Private" after tTag
    end if
-   
+
    switch pTag
       case "C"
          put "Command" after tTag
@@ -100,7 +100,7 @@ private function getIcon pTag, pIsPrivate
          put "After" after tTag
          break
    end switch
-   
+
    return seGetIcon(tTag)
 end getIcon
 
@@ -124,12 +124,13 @@ function handlerTypeSortCallback pItem
       case "S"
          return 6
          break
-      default 
+      default
          return 7
    end switch
 end handlerTypeSortCallback
 
-constant kDefaultHandlerTextColor = "#777777"
+--constant kDefaultHandlerTextColor = "#777777"
+constant kDefaultHandlerTextColor = "#8F2FFF"
 
 # Description
 #   Called when the group might need to be updated. Updates the handler list. Also resizes the group.
@@ -138,13 +139,13 @@ command update
    local tHandlers
    call "revSEGetHandlerList" to the cCaller of me
    put the result into tHandlers
-   
+
    local tDefaultHandlers, tIndex
    if sePrefGet("editor,showDefaultHandlers") then
       put revSEDefaultHandlers() into tDefaultHandlers
    end if
    set the wholematches to false
-   
+
    local tCanAdd
    repeat for each line tLine in tDefaultHandlers
       if lineOffset(tLine, tHandlers) is not 0 then
@@ -156,9 +157,9 @@ command update
          put return & tLine after tCanAdd
       end if
    end repeat
-   
+
    filterHandlerNames tHandlers
-   
+
    if sePrefGet("editor,sortHandlerList") is "alphabetical" then
       sort tHandlers by word 2 of each
    else if sePrefGet("editor,sortHandlerList") is "order-of-appearence" then
@@ -171,34 +172,34 @@ command update
       # function here.
       sort tHandlers by handlerTypeSortCallback(word 1 of each) & word 2 of each
    end if
-   
+
    if tHandlers is not empty then
       put return & return & return after tHandlers
    end if
    put tCanAdd after tHandlers
-   
+
    # Populate the handlers field with the formatted list of handlers
    local tText, tIcon
    repeat for each line tHandler in tHandlers
       local tParseHandler, tHandlerExists
       put true into tHandlerExists
       put word 1 to 2 of tHandler into tParseHandler
-      
+
       if the number of words in tHandler is 1 then
          put false into tHandlerExists
          -- Existing handler names have a space after the icon
          put " " before tParseHandler
       end if
-      
+
       put "<p>" after tText
-      
+
       local tIsPrivate
       put false into tIsPrivate
       if tHandlerExists and char 1 of tParseHandler is "P" then
          put true into tIsPrivate
          delete char 1 of tParseHandler
       end if
-      
+
       if tHandlerExists then
          put getIcon(char 1 of tParseHandler, tIsPrivate) into tIcon
          if tIcon is not empty then
@@ -207,30 +208,30 @@ command update
       else
          put the id of image "icon-add.png" of stack "revIcons" into tIcon
       end if
-      
+
       if tIcon is not empty then
          put merge("<sup shift=2><img src=[[tICon]]></img></sup>") after tText
       end if
-      
+
       if not tHandlerExists then
          put merge("<font color='[[kDefaultHandlerTextColor]]'>[[tParseHandler]]</font>") \
                into tParseHandler
       end if
-      
+
       put tParseHandler & "</p>" after tText
    end repeat
-   
+
    if tText is empty then
       put "<p></p>" into tText
    end if
-   
+
    # OK-2008-08-18: Bug 6936 - The handler list object should take its text size from the main script editor preference.
    set the textSize of field "Handlers" of me to sePrefGet("editor,fontsize")
    set the textFont of field "Handlers" of me to sePrefGet("editor,font")
-   
+
    set the htmlText of field "Handlers" of me to tText
    set the cHandlers of field "Handlers" of me to tHandlers
-   
+
    # Shrink or grow the stack if the handlers list doesn't fit, but don't let it become bigger than its maxHeight or maxWidth.
    if the formattedHeight of field "Handlers" of me > the cMaxHeight of me then
       set the height of field "Handlers" of me to the cMaxHeight of me
@@ -239,7 +240,7 @@ command update
    else
       set the height of field "Handlers" of me to the formattedHeight of field "Handlers" of me
    end if
-   
+
    if the formattedWidth of field "Handlers" of me > the cMaxWidth of me then
       set the width of field "Handlers" of me to the cMaxWidth of me
    else if the formattedWidth of field "Handlers" of me < the cMinWidth of me then
@@ -247,12 +248,12 @@ command update
    else
       set the width of field "Handlers" of me to the formattedWidth of field "Handlers" of me
    end if
-   
+
    # The topLeft of the group will be set by whatever invokes it, so we have to restore this after
    # we have changed the width and height.
    local tOldTopRight
    put the topRight of me into tOldTopRight
-   
+
    set the vScrollbar of field "Handlers" of me to (the formattedHeight of field "Handlers" of me > the height of field "Handlers" of me)
    set the width of me to the width of field "Handlers" of me
    set the height of me to the height of field "Handlers" of me
@@ -272,15 +273,15 @@ end resize
 command jumpToHandler pHandler, pAdded
    local tLineNumber
    put word 3 of pHandler into tLineNumber
-   
-   # OK-2009-03-03: Bug 7450 - Also return the handler type, this will allow us to detect 
-   # if the handler line number is wrong (due to uncompiling script). 
+
+   # OK-2009-03-03: Bug 7450 - Also return the handler type, this will allow us to detect
+   # if the handler line number is wrong (due to uncompiling script).
    set the cChoice of me to tLineNumber & comma & word 2 of pHandler & comma & word 1 of pHandler
-   
+
    if the cCallback of me is not empty then
       send the cCallback of me && pAdded to the cCallbackTarget of me
    end if
-   
+
    hideGroup
 end jumpToHandler
 
@@ -298,7 +299,7 @@ command handlerPicked pHandler
       select line tLine of field "Handlers" of me
       put line tLine of the cHandlers of field "Handlers" of me into pHandler
    end if
-   
+
    -- Select the (now) extant handler
    jumpToHandler pHandler, tAdded
 end handlerPicked
@@ -317,7 +318,7 @@ command closeReject
    if the cCallback of me is not empty then
       send the cCallback of me to the cCallbackTarget of me
    end if
-   
+
    hideGroup
    unlock screen
 end closeReject
@@ -329,7 +330,7 @@ end hideGroup
 on mouseMove
    local tLineNumber
    put word 2 of the mouseLine into tLineNumber
-   
+
    local tVisibleWidth
    if the vScrollbar of field "Handlers" of me then
       put the width of field "Handlers" of me - the scrollbarWidth of field "Handlers" of me into tVisibleWidth
@@ -338,7 +339,7 @@ on mouseMove
    end if
    subtract the leftMargin of field "Handlers" of me from tVisibleWidth
    subtract the rightMargin of field "Handlers" of me from tVisibleWidth
-   
+
    if the formattedWidth of line tLineNumber of field "Handlers" of me >= tVisibleWidth then
       set the toolTip of field "Handlers" of me to line (word 2 of the mouseLine) of the text of field "Handlers" of me
    else
