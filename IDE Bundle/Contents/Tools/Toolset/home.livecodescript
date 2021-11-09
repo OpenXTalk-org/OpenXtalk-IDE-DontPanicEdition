@@ -22,6 +22,8 @@ on startup
       revInternal__SetupPreferences -- checks and loads the prefs file and tacks additional line on to Home's stack files
       revInternal__SetupCustomizationPath -- sets up IDE user's customization directory for add ons and such
       revInternal__SetupExternals -- loads Externals from IDE path /Tools/Ext/ and user's directory (see above) /Externals
+      revInternal__Log "Leave", "Pre-Open Stack"
+      
    catch tError
       revInternal__Log "Error", tError
    end try
@@ -125,8 +127,6 @@ on preOpenStack
    revInternal__Log "Enter", "Pre-Open Stack"
    
    revInternal__InitialiseDefaults -- sets up some basic IDE app behavior depending on the platform
-   
-   revInternal__Log "Leave", "Pre-Open Stack"
 end preOpenStack
 
 on openStack
@@ -137,7 +137,7 @@ on openStack
    
    //send "revInternal__openStack" to me in 0 millisecs
    revInternal__openStack -- does all of the rest of loading the IDE
-   
+
    revInternal__Log "Leave", "Open Stack"
 end openStack
 
@@ -268,7 +268,7 @@ on revInternal__openStack
    catch tError
       revInternal__Log "Error", tError
    end try
-   
+
    set the cREVLaunching of stack "Home" to false
    
    if not tSuccess then
@@ -748,208 +748,209 @@ on revInternal__openStack
       palette stack "revSplash"
    end revInternal__SetupSplash
    
-   command revInternal__ResetPreferences
-      -- clear the preferences stack
-      set the customKeys of stack "revPreferences" to empty
-      set the customPropertySets of stack "revPreferences" to empty
-      
-      local tPropsArray
-      -- default custom property set
-      put "true" into tPropsArray["cREVToolsPaintToolsVisible"]
-      put "false" into tPropsArray["cDestroyStack"]
-      put "false" into tPropsArray["cRevPopups"]
-      put "417,113" into tPropsArray["cREVMsgTabRectGlobalProperties"]
-      put "155" into tPropsArray["cREVPlayerWidth"]
-      put "23" into tPropsArray["cButtonHeight"]
-      put "true" into tPropsArray["cShowProfileEditor"]
-      put "200" into tPropsArray["cScrollbarwidth"]
-      put "false" into tPropsArray["cREVMsgShowUIMessages"]
-      put "false" into tPropsArray["cSEHidePalettes"]
-      put "120" into tPropsArray["cREVImageWidth"]
-      put "500" into tPropsArray["tooltip delay"]
-      put "417,72" into tPropsArray["cREVMsgTabRectSingle Line"]
-      put "false" into tPropsArray["cREVMsgShowUIBackScripts"]
-      put "539,432" into tPropsArray["cREVGeoTopLeft"]
-      put "70378" into tPropsArray["cREVDBCode"]
-      put "276" into tPropsArray["cREVScriptHeight"]
-      put "2" into tPropsArray["cGridSize"]
-      put "483,214,1015,476" into tPropsArray["cVariableWatcherRect"]
-      put "false" into tPropsArray["cShowrevProps"]
-      put "Pixels" into tPropsArray["cREVRulerMeasurement"]
-      put "100" into tPropsArray["cMacOSScrollbarWidth"]
-      put "1,2,3,4,5,7" into tPropsArray["cControlTabs"]
-      put "500" into tPropsArray["cREVToolTipDelay"]
-      put "250" into tPropsArray["cTabButtonwidth"]
-      put "true" into tPropsArray["cGoAlign"]
-      put "0" into tPropsArray["cREVRotatePrev2"]
-      put "993,712" into tPropsArray["cREVPropertyPaletteTopLeft"]
-      put "true" into tPropsArray["cLiveColor"]
-      put "modification date" into tPropsArray["cRecentSort"]
-      put "true" into tPropsArray["cDocsFirstRun"]
-      put "86400" into tPropsArray["cUpdate,MaxAutoPopupFrequency"]
-      put "true" into tPropsArray["cREVExtension"]
-      put "102" into tPropsArray["cMenuWidth"]
-      put "417,72" into tPropsArray["cREVMsgTabRectcard id 1147"]
-      put "468,131" into tPropsArray["cAppearanceTopLeft"]
-      put "false" into tPropsArray["cREVDefaultMenubar"]
-      put "417,113" into tPropsArray["cREVMsgTabRectbackScripts"]
-      put "true" into tPropsArray["cGrid"]
-      put "30" into tPropsArray["cNumRecent"]
-      put "false" into tPropsArray["cShowAsHandlers"]
-      put "false" into tPropsArray["revDocsAlreadySeen"]
-      put "120" into tPropsArray["cREVImageHeight"]
-      put "82" into tPropsArray["cButtonWidth"]
-      put "true" into tPropsArray["cREVProfileReadOnlyWarning"]
-      put "6,7,9" into tPropsArray["cCardTabs"]
-      put "16" into tPropsArray["cMacOSScrollbarHeight"]
-      put "true" into tPropsArray["cFirstRun"]
-      put "14" into tPropsArray["cMacOSProgressScrollbarHeight"]
-      put "mouseMove" into tPropsArray["suppressedMessages"]
-      put "true" into tPropsArray["cAutoFormat"]
-      put "true" into tPropsArray["cREVScriptShortcut"]
-      put "false" into tPropsArray["cShowRevolutionStacks"]
-      put "22" into tPropsArray["cMenuHeight"]
-      put "1067,251,1882,827" into tPropsArray["cRevDocsRect"]
-      put "Gray88" into tPropsArray["cBackDropColor"]
-      put "Gray88" into tPropsArray["cBackdrop"]
-      put "false" into tPropsArray["cREVMsgShowUIFrontScripts"]
-      put "false" into tPropsArray["revstack"]
-      put "100" into tPropsArray["cMacOSProgressScrollbarWidth"]
-      put "false" into tPropsArray["cREVUIScriptShortcut"]
-      put "60,27" into tPropsArray["cREVMenuBarTopLeft"]
-      put "322" into tPropsArray["cREVFieldFirstTabHeight"]
-      put "500" into tPropsArray["cTraceDelay"]
-      put "0" into tPropsArray["cREVRotatePrev1"]
-      put "250" into tPropsArray["cFieldWidth"]
-      put "16" into tPropsArray["cScrollbarHeight"]
-      put "true" into tPropsArray["cToolbarIcons"]
-      put "true" into tPropsArray["cShowAudioclipsclips"]
-      put "1,2,3,4,5" into tPropsArray["cAudioclipTabs"]
-      put "620,235" into tPropsArray["cREVMsgTabRectSingleLine"]
-      put "Sections List" into tPropsArray["revHelpDefaultSection"]
-      put "false" into tPropsArray["cCaseSensitive"]
-      put "auto" into tPropsArray["cLargeFonts"]
-      put "Yellow" into tPropsArray["yellow"]
-      put "417,113" into tPropsArray["cREVMsgTabRectGlobalVariables"]
-      put "417,113" into tPropsArray["cREVMsgTabRectpendingMessages"]
-      put "Property Inspector" into tPropsArray["cABCommandDoubleClick"]
-      put "1" into tPropsArray["cREVTipNumber"]
-      put "417,113" into tPropsArray["cREVMsgTabRectstacksInUse"]
-      put format("blue\nbrown\ndarkorange\nred") into tPropsArray["cBuiltInColors"]
-      put "don't remove" into tPropsArray["cASKDestroy"]
-      put "Gray50" into tPropsArray["cSelectionHandle"]
-      put "128,103" into tPropsArray["cREVMaximizedScriptEditorTopLeft"]
-      put "true" into tPropsArray["suppressIDE"]
-      put "Property Inspector" into tPropsArray["cABOptionDoubleClick"]
-      put "45" into tPropsArray["cREVRotatePrev5"]
-      put "170,131" into tPropsArray["cPaletteTopLeft"]
-      put "false" into tPropsArray["cNOPICTWarning"]
-      put "470,460" into tPropsArray["cREVMsgTopLeft"]
-      put format("cButtonWidth,100\ncButtonHeight,20\ncTabButtonwidth,250\ncTabButtonHeight,160\ncMenuWidth,130\ncMenuHeight,20\ncFieldWidth,250\ncFieldHeight,160\ncLabelFieldWidth,100\ncLabelFieldHeight,20\ncMacOSScrollbarHeight,16\ncMacOSProgressScrollbarHeight,14\ncScrollbarWidth,200\ncScrollbarHeight,20\ncREVGraphicWidth,120\ncREVGraphicHeight,120\ncREVImageWidth,120\ncREVImageHeight,120\ncREVPlayerWidth,320\ncREVPlayerHeight,256") into tPropsArray["New Field 2"]
-      put "120" into tPropsArray["cREVGraphicHeight"]
-      put "Dictionary" into tPropsArray["cRevDocsCurrentCard"]
-      put "385" into tPropsArray["cREVScriptWidth"]
-      put "487" into tPropsArray["cREVUnmaximizedScriptWidth"]
-      put "false" into tPropsArray["cREVDontMaximizeScriptEditor"]
-      put "true" into tPropsArray["cDontWrap"]
-      put "false" into tPropsArray["cVariableChecking"]
-      put "302" into tPropsArray["cAppBrowserWidgetLeft"]
-      put "true" into tPropsArray["cUngroupWarning"]
-      put "false" into tPropsArray["resizeable"]
-      put "false" into tPropsArray["cNavigationArrows"]
-      put "457,430,853,680" into tPropsArray["cMessageWatcherRect"]
-      put "287,261" into tPropsArray["cREVMsgTabRectrevbasic"]
-      put "true" into tPropsArray["cSort"]
-      put "false" into tPropsArray["cREVMsgAutoRefresh"]
-      put "true" into tPropsArray["cVariablePreservation"]
-      put "100" into tPropsArray["cLabelFieldWidth"]
-      put "false" into tPropsArray["cREVMsgShowUIVariables"]
-      put "false" into tPropsArray["cHandlerList"]
-      put "red" into tPropsArray["red"]
-      put "selectedObject" into tPropsArray["cREVMsgIntelligenceObject"]
-      put "false" into tPropsArray["cSEHideErrors"]
-      put "56" into tPropsArray["cFieldHeight"]
-      put "300" into tPropsArray["cREVUnmaximizedScriptHeight"]
-      put "13,125" into tPropsArray["cToolsTopLeft"]
-      put "--" into tPropsArray["cCommentCharacter"]
-      put "97,92,657,440" into tPropsArray["cScriptEditorRect"]
-      put "11" into tPropsArray["cREVRotatePrev4"]
-      put "530,564" into tPropsArray["cREVMsgTabRectrevscript"]
-      put "146,123,800,408" into tPropsArray["cAppBrowserRect"]
-      put "true" into tPropsArray["cREVAutoCreateProfilesWarning"]
-      put "false" into tPropsArray["cREVSaveStacksAfterMoving"]
-      put "false" into tPropsArray["cREVAutoCreateProfiles"]
-      put "417,113" into tPropsArray["cREVMsgTabRectGlobal Variables"]
-      put "118" into tPropsArray["cREVPlayerHeight"]
-      put "true" into tPropsArray["cShowVideoclips"]
-      put "false" into tPropsArray["cWholeMatches"]
-      put "false" into tPropsArray["cVerboseDebug"]
-      put "417,99" into tPropsArray["cREVMsgTabRectMultipleLines"]
-      put "true" into tPropsArray["cBreakPoints"]
-      put "false" into tPropsArray["cREVGeoOpen"]
-      put "462,120" into tPropsArray["cREVAOTopLeft"]
-      put "blackgreen" into tPropsArray["cCustomColorsList"]
-      put "Penguin" into tPropsArray["revHelpUnixReligion"]
-      put format("cButtonWidth,82\ncButtonHeight,23\ncTabButtonwidth,250\ncTabButtonHeight,160\ncMenuWidth,102\ncMenuHeight,22\ncFieldWidth,250\ncFieldHeight,56\ncLabelFieldWidth,100\ncLabelFieldHeight,21\ncMacOSScrollbarHeight,16\ncMacOSProgressScrollbarHeight,14\ncScrollbarWidth,200\ncScrollbarHeight,16\ncREVGraphicWidth,120\ncREVGraphicHeight,120\ncREVImageWidth,120\ncREVImageHeight,120\ncREVPlayerWidth,155\ncREVPlayerHeight,118") into tPropsArray["cDefaultSizes"]
-      put "false" into tPropsArray["cSelectGrouped"]
-      put "false" into tPropsArray["cSEHideMessageBox"]
-      put "1,2,3,4,5" into tPropsArray["cVideoclipTabs"]
-      put "true" into tPropsArray["cREVMacOSMenubar"]
-      put "false" into tPropsArray["cREVProfileReadOnly"]
-      put "Yellow" into tPropsArray["revHelpHiliteColor"]
-      put "true" into tPropsArray["cToolbarText"]
-      put "true" into tPropsArray["cREVScriptDebugMode"]
-      put "21" into tPropsArray["cLabelFieldHeight"]
-      put "120" into tPropsArray["cREVGraphicWidth"]
-      put "417,99" into tPropsArray["cREVMsgTabRectMultiple Lines"]
-      put "30" into tPropsArray["Num Recent Files"]
-      put "568,259" into tPropsArray["cREVProfileEditorTopLeft"]
-      put "417,113" into tPropsArray["cREVMsgTabRectfrontScripts"]
-      put "11" into tPropsArray["cREVRotatePrev3"]
-      put "338" into tPropsArray["cREVButtonSecondTabHeight"]
-      put "true" into tPropsArray["cREVHelpText"]
-      put "160" into tPropsArray["cTabButtonHeight"]
-      put "287,261" into tPropsArray["cREVMsgTabRectrevstack"]
-      put "417,113" into tPropsArray["cREVMsgTabRectGlobal Properties"]
-      put "true" into tPropsArray["cShowAudioclipclips"]
-      put "revolutionli" into tPropsArray["cREVDBName"]
-      put "true" into tPropsArray["cDocsQuickLinksVisible"]
-      put "true" into tPropsArray["cStartPageShow"]
-      put "278" into tPropsArray["cREVErrorsPaletteExpandedHeight"]
-      put "true" into tPropsArray["cShowAudioclips"]
-      put "filtering" into tPropsArray["revHelpListMethod"]
-      set the customProperties[""] of stack "revPreferences" to tPropsArray
-      delete variable tPropsArray
-      
-      -- cABDoubleClick
-      put "Play" into tPropsArray["videoclips"]
-      put "Toplevel" into tPropsArray["stacks"]
-      put "Property Inspector" into tPropsArray["controls"]
-      put "Play" into tPropsArray["audioclips"]
-      put "Go" into tPropsArray["cards"]
-      set the customProperties["cABDoubleClick"] of stack "revPreferences" to tPropsArray
-      delete variable tPropsArray
-      
-      -- cABCommandDoubleClick
-      put "Edit Script" into tPropsArray["videoclips"]
-      put "Edit Script" into tPropsArray["stacks"]
-      put "Edit Script" into tPropsArray["controls"]
-      put "Edit Script" into tPropsArray["audioclips"]
-      put "Edit Script" into tPropsArray["cards"]
-      set the customProperties["cABCommandDoubleClick"] of stack "revPreferences" to tPropsArray
-      delete variable tPropsArray
-      
-      -- cABOptionDoubleClick
-      put "Property Inspector" into tPropsArray["videoclips"]
-      put "Property Inspector" into tPropsArray["stacks"]
-      put "Property Inspector" into tPropsArray["controls"]
-      put "Property Inspector" into tPropsArray["audioclips"]
-      put "Property Inspector" into tPropsArray["cards"]
-      set the customProperties["cABOptionDoubleClick"] of stack "revPreferences" to tPropsArray
-      delete variable tPropsArray
-      
-      revInternal__SavePreferences
-   end revInternal__ResetPreferences
+command revInternal__ResetPreferences
+   -- clear the preferences stack
+   set the customKeys of stack "revPreferences" to empty
+   set the customPropertySets of stack "revPreferences" to empty
+   
+   local tPropsArray
+   -- default custom property set
+   put "true" into tPropsArray["cREVToolsPaintToolsVisible"]
+   put "false" into tPropsArray["cDestroyStack"]
+   put "false" into tPropsArray["cRevPopups"]
+   put "417,113" into tPropsArray["cREVMsgTabRectGlobalProperties"]
+   put "155" into tPropsArray["cREVPlayerWidth"]
+   put "23" into tPropsArray["cButtonHeight"]
+   put "true" into tPropsArray["cShowProfileEditor"]
+   put "200" into tPropsArray["cScrollbarwidth"]
+   put "false" into tPropsArray["cREVMsgShowUIMessages"]
+   put "false" into tPropsArray["cSEHidePalettes"]
+   put "120" into tPropsArray["cREVImageWidth"]
+   put "500" into tPropsArray["tooltip delay"]
+   put "417,72" into tPropsArray["cREVMsgTabRectSingle Line"]
+   put "false" into tPropsArray["cREVMsgShowUIBackScripts"]
+   put "539,432" into tPropsArray["cREVGeoTopLeft"]
+   put "70378" into tPropsArray["cREVDBCode"]
+   put "276" into tPropsArray["cREVScriptHeight"]
+   put "2" into tPropsArray["cGridSize"]
+   put "483,214,1015,476" into tPropsArray["cVariableWatcherRect"]
+   put "false" into tPropsArray["cShowrevProps"]
+   put "Pixels" into tPropsArray["cREVRulerMeasurement"]
+   put "100" into tPropsArray["cMacOSScrollbarWidth"]
+   put "1,2,3,4,5,7" into tPropsArray["cControlTabs"]
+   put "500" into tPropsArray["cREVToolTipDelay"]
+   put "250" into tPropsArray["cTabButtonwidth"]
+   put "true" into tPropsArray["cGoAlign"]
+   put "0" into tPropsArray["cREVRotatePrev2"]
+   put "993,712" into tPropsArray["cREVPropertyPaletteTopLeft"]
+   put "true" into tPropsArray["cLiveColor"]
+   put "modification date" into tPropsArray["cRecentSort"]
+   put "true" into tPropsArray["cDocsFirstRun"]
+   put "86400" into tPropsArray["cUpdate,MaxAutoPopupFrequency"]
+   put "false" into tPropsArray["cDarkMode"] -- Added Dark Mode Setting 11/8/2021 - Paul McClernan
+   put "true" into tPropsArray["cREVExtension"]
+   put "102" into tPropsArray["cMenuWidth"]
+   put "417,72" into tPropsArray["cREVMsgTabRectcard id 1147"]
+   put "468,131" into tPropsArray["cAppearanceTopLeft"]
+   put "false" into tPropsArray["cREVDefaultMenubar"]
+   put "417,113" into tPropsArray["cREVMsgTabRectbackScripts"]
+   put "true" into tPropsArray["cGrid"]
+   put "30" into tPropsArray["cNumRecent"]
+   put "false" into tPropsArray["cShowAsHandlers"]
+   put "false" into tPropsArray["revDocsAlreadySeen"]
+   put "120" into tPropsArray["cREVImageHeight"]
+   put "82" into tPropsArray["cButtonWidth"]
+   put "true" into tPropsArray["cREVProfileReadOnlyWarning"]
+   put "6,7,9" into tPropsArray["cCardTabs"]
+   put "16" into tPropsArray["cMacOSScrollbarHeight"]
+   put "true" into tPropsArray["cFirstRun"]
+   put "14" into tPropsArray["cMacOSProgressScrollbarHeight"]
+   put "mouseMove" into tPropsArray["suppressedMessages"]
+   put "true" into tPropsArray["cAutoFormat"]
+   put "true" into tPropsArray["cREVScriptShortcut"]
+   put "false" into tPropsArray["cShowRevolutionStacks"]
+   put "22" into tPropsArray["cMenuHeight"]
+   put "1067,251,1882,827" into tPropsArray["cRevDocsRect"]
+   put "Gray88" into tPropsArray["cBackDropColor"]
+   put "Gray88" into tPropsArray["cBackdrop"]
+   put "false" into tPropsArray["cREVMsgShowUIFrontScripts"]
+   put "false" into tPropsArray["revstack"]
+   put "100" into tPropsArray["cMacOSProgressScrollbarWidth"]
+   put "false" into tPropsArray["cREVUIScriptShortcut"]
+   put "60,27" into tPropsArray["cREVMenuBarTopLeft"]
+   put "322" into tPropsArray["cREVFieldFirstTabHeight"]
+   put "500" into tPropsArray["cTraceDelay"]
+   put "0" into tPropsArray["cREVRotatePrev1"]
+   put "250" into tPropsArray["cFieldWidth"]
+   put "16" into tPropsArray["cScrollbarHeight"]
+   put "true" into tPropsArray["cToolbarIcons"]
+   put "true" into tPropsArray["cShowAudioclipsclips"]
+   put "1,2,3,4,5" into tPropsArray["cAudioclipTabs"]
+   put "620,235" into tPropsArray["cREVMsgTabRectSingleLine"]
+   put "Sections List" into tPropsArray["revHelpDefaultSection"]
+   put "false" into tPropsArray["cCaseSensitive"]
+   put "auto" into tPropsArray["cLargeFonts"]
+   put "Yellow" into tPropsArray["yellow"]
+   put "417,113" into tPropsArray["cREVMsgTabRectGlobalVariables"]
+   put "417,113" into tPropsArray["cREVMsgTabRectpendingMessages"]
+   put "Property Inspector" into tPropsArray["cABCommandDoubleClick"]
+   put "1" into tPropsArray["cREVTipNumber"]
+   put "417,113" into tPropsArray["cREVMsgTabRectstacksInUse"]
+   put format("blue\nbrown\ndarkorange\nred") into tPropsArray["cBuiltInColors"]
+   put "don't remove" into tPropsArray["cASKDestroy"]
+   put "Gray50" into tPropsArray["cSelectionHandle"]
+   put "128,103" into tPropsArray["cREVMaximizedScriptEditorTopLeft"]
+   put "true" into tPropsArray["suppressIDE"]
+   put "Property Inspector" into tPropsArray["cABOptionDoubleClick"]
+   put "45" into tPropsArray["cREVRotatePrev5"]
+   put "170,131" into tPropsArray["cPaletteTopLeft"]
+   put "false" into tPropsArray["cNOPICTWarning"]
+   put "470,460" into tPropsArray["cREVMsgTopLeft"]
+   put format("cButtonWidth,100\ncButtonHeight,20\ncTabButtonwidth,250\ncTabButtonHeight,160\ncMenuWidth,130\ncMenuHeight,20\ncFieldWidth,250\ncFieldHeight,160\ncLabelFieldWidth,100\ncLabelFieldHeight,20\ncMacOSScrollbarHeight,16\ncMacOSProgressScrollbarHeight,14\ncScrollbarWidth,200\ncScrollbarHeight,20\ncREVGraphicWidth,120\ncREVGraphicHeight,120\ncREVImageWidth,120\ncREVImageHeight,120\ncREVPlayerWidth,320\ncREVPlayerHeight,256") into tPropsArray["New Field 2"]
+   put "120" into tPropsArray["cREVGraphicHeight"]
+   put "Dictionary" into tPropsArray["cRevDocsCurrentCard"]
+   put "385" into tPropsArray["cREVScriptWidth"]
+   put "487" into tPropsArray["cREVUnmaximizedScriptWidth"]
+   put "false" into tPropsArray["cREVDontMaximizeScriptEditor"]
+   put "true" into tPropsArray["cDontWrap"]
+   put "false" into tPropsArray["cVariableChecking"]
+   put "302" into tPropsArray["cAppBrowserWidgetLeft"]
+   put "true" into tPropsArray["cUngroupWarning"]
+   put "false" into tPropsArray["resizeable"]
+   put "false" into tPropsArray["cNavigationArrows"]
+   put "457,430,853,680" into tPropsArray["cMessageWatcherRect"]
+   put "287,261" into tPropsArray["cREVMsgTabRectrevbasic"]
+   put "true" into tPropsArray["cSort"]
+   put "false" into tPropsArray["cREVMsgAutoRefresh"]
+   put "true" into tPropsArray["cVariablePreservation"]
+   put "100" into tPropsArray["cLabelFieldWidth"]
+   put "false" into tPropsArray["cREVMsgShowUIVariables"]
+   put "false" into tPropsArray["cHandlerList"]
+   put "red" into tPropsArray["red"]
+   put "selectedObject" into tPropsArray["cREVMsgIntelligenceObject"]
+   put "false" into tPropsArray["cSEHideErrors"]
+   put "56" into tPropsArray["cFieldHeight"]
+   put "300" into tPropsArray["cREVUnmaximizedScriptHeight"]
+   put "13,125" into tPropsArray["cToolsTopLeft"]
+   put "--" into tPropsArray["cCommentCharacter"]
+   put "97,92,657,440" into tPropsArray["cScriptEditorRect"]
+   put "11" into tPropsArray["cREVRotatePrev4"]
+   put "530,564" into tPropsArray["cREVMsgTabRectrevscript"]
+   put "146,123,800,408" into tPropsArray["cAppBrowserRect"]
+   put "true" into tPropsArray["cREVAutoCreateProfilesWarning"]
+   put "false" into tPropsArray["cREVSaveStacksAfterMoving"]
+   put "false" into tPropsArray["cREVAutoCreateProfiles"]
+   put "417,113" into tPropsArray["cREVMsgTabRectGlobal Variables"]
+   put "118" into tPropsArray["cREVPlayerHeight"]
+   put "true" into tPropsArray["cShowVideoclips"]
+   put "false" into tPropsArray["cWholeMatches"]
+   put "false" into tPropsArray["cVerboseDebug"]
+   put "417,99" into tPropsArray["cREVMsgTabRectMultipleLines"]
+   put "true" into tPropsArray["cBreakPoints"]
+   put "false" into tPropsArray["cREVGeoOpen"]
+   put "462,120" into tPropsArray["cREVAOTopLeft"]
+   put "blackgreen" into tPropsArray["cCustomColorsList"]
+   put "Penguin" into tPropsArray["revHelpUnixReligion"]
+   put format("cButtonWidth,82\ncButtonHeight,23\ncTabButtonwidth,250\ncTabButtonHeight,160\ncMenuWidth,102\ncMenuHeight,22\ncFieldWidth,250\ncFieldHeight,56\ncLabelFieldWidth,100\ncLabelFieldHeight,21\ncMacOSScrollbarHeight,16\ncMacOSProgressScrollbarHeight,14\ncScrollbarWidth,200\ncScrollbarHeight,16\ncREVGraphicWidth,120\ncREVGraphicHeight,120\ncREVImageWidth,120\ncREVImageHeight,120\ncREVPlayerWidth,155\ncREVPlayerHeight,118") into tPropsArray["cDefaultSizes"]
+   put "false" into tPropsArray["cSelectGrouped"]
+   put "false" into tPropsArray["cSEHideMessageBox"]
+   put "1,2,3,4,5" into tPropsArray["cVideoclipTabs"]
+   put "true" into tPropsArray["cREVMacOSMenubar"]
+   put "false" into tPropsArray["cREVProfileReadOnly"]
+   put "Yellow" into tPropsArray["revHelpHiliteColor"]
+   put "true" into tPropsArray["cToolbarText"]
+   put "true" into tPropsArray["cREVScriptDebugMode"]
+   put "21" into tPropsArray["cLabelFieldHeight"]
+   put "120" into tPropsArray["cREVGraphicWidth"]
+   put "417,99" into tPropsArray["cREVMsgTabRectMultiple Lines"]
+   put "30" into tPropsArray["Num Recent Files"]
+   put "568,259" into tPropsArray["cREVProfileEditorTopLeft"]
+   put "417,113" into tPropsArray["cREVMsgTabRectfrontScripts"]
+   put "11" into tPropsArray["cREVRotatePrev3"]
+   put "338" into tPropsArray["cREVButtonSecondTabHeight"]
+   put "true" into tPropsArray["cREVHelpText"]
+   put "160" into tPropsArray["cTabButtonHeight"]
+   put "287,261" into tPropsArray["cREVMsgTabRectrevstack"]
+   put "417,113" into tPropsArray["cREVMsgTabRectGlobal Properties"]
+   put "true" into tPropsArray["cShowAudioclipclips"]
+   put "revolutionli" into tPropsArray["cREVDBName"]
+   put "true" into tPropsArray["cDocsQuickLinksVisible"]
+   put "true" into tPropsArray["cStartPageShow"]
+   put "278" into tPropsArray["cREVErrorsPaletteExpandedHeight"]
+   put "true" into tPropsArray["cShowAudioclips"]
+   put "filtering" into tPropsArray["revHelpListMethod"]
+   set the customProperties[""] of stack "revPreferences" to tPropsArray
+   delete variable tPropsArray
+   
+   -- cABDoubleClick
+   put "Play" into tPropsArray["videoclips"]
+   put "Toplevel" into tPropsArray["stacks"]
+   put "Property Inspector" into tPropsArray["controls"]
+   put "Play" into tPropsArray["audioclips"]
+   put "Go" into tPropsArray["cards"]
+   set the customProperties["cABDoubleClick"] of stack "revPreferences" to tPropsArray
+   delete variable tPropsArray
+   
+   -- cABCommandDoubleClick
+   put "Edit Script" into tPropsArray["videoclips"]
+   put "Edit Script" into tPropsArray["stacks"]
+   put "Edit Script" into tPropsArray["controls"]
+   put "Edit Script" into tPropsArray["audioclips"]
+   put "Edit Script" into tPropsArray["cards"]
+   set the customProperties["cABCommandDoubleClick"] of stack "revPreferences" to tPropsArray
+   delete variable tPropsArray
+   
+   -- cABOptionDoubleClick
+   put "Property Inspector" into tPropsArray["videoclips"]
+   put "Property Inspector" into tPropsArray["stacks"]
+   put "Property Inspector" into tPropsArray["controls"]
+   put "Property Inspector" into tPropsArray["audioclips"]
+   put "Property Inspector" into tPropsArray["cards"]
+   set the customProperties["cABOptionDoubleClick"] of stack "revPreferences" to tPropsArray
+   delete variable tPropsArray
+   
+   revInternal__SavePreferences
+end revInternal__ResetPreferences
    
    --------------------------------------------------------------------------------
    -- Internal Utility Functions
@@ -1509,75 +1510,82 @@ on revInternal__openStack
       return true
    end revInternal__InitialiseDefaults
    
-   command revInternal__InitialiseOptions
-      revInternal__Log "Enter", "Options Initialisation"
-      
-      set the selectGroupedControls to the cSelectGrouped of stack "revPreferences"
-      set the tooltipDelay to the cREVToolTipDelay of stack "revPreferences"
-      set the grid to the cGrid of stack "revPreferences"
-      set the scriptTextFont to the cREVScriptFont of stack "revPreferences"
-      set the scriptTextSize to the cREVScriptSize of stack "revPreferences"
-      
-      if the cHttpProxy of stack "revPreferences" is not empty then
-         set the httpProxy to the cHttpProxy of stack "revPreferences"
-      end if
-      
-      set the gridSize to the cGridSize of stack "revPreferences"
-      
-      if the cSelectionHandleColor of stack "revPreferences" is empty then
-         set the selectionHandleColor to "Gray50"
-      else
-         set the selectionHandleColor to the cSelectionHandleColor of stack "revPreferences"
-      end if
-      
-      set the navigationArrows to the cNavigationArrows of stack "revPreferences"
-      
-      global gREVShowStacks, gREVDevelopment
-      if gREVDevelopment then
-         put true into gREVShowStacks
-      else if the cShowRevolutionStacks of stack "revPreferences" is empty then
-         put false into gREVShowStacks
-      else
-         put the cShowRevolutionStacks of stack "revPreferences" into gREVShowStacks
-      end if
-      
-      global gREVLanguageNames
-      put the cLanguageNames of card 1 of stack "revPreferences" into gREVLanguageNames
-      
-      revInternal__Log "Message", "Obtained preference languageNames = " & gREVLanguageNames
-      
-      global gREVPopups
-      put the cRevPopups of stack "revPreferences" into gREVPopups
-      
-      global gREVAutoFormat
-      put the cAutoFormat of stack "revPreferences" into gREVAutoFormat
-      
-      global gREVUIScriptShortcut
-      put the cREVUIScriptShortcut of stack "revPreferences" into gREVUIScriptShortcut
-      
-      global gREVScriptShortcut
-      put the cREVScriptShortcut of stack "revPreferences" into gREVScriptShortcut
-      
-      global gREVCommentCharacter
-      if the cCommentCharacter of stack "revPreferences" is not empty then
-         put the cCommentCharacter of stack "revPreferences" into gREVCommentCharacter
-      else
-         put "--" into gREVCommentCharacter
-      end if
-      
-      global gREVTemplateMasterName
-      put the cREVTemplateMasterName of stack "revPreferences" into gREVTemplateMasterName
-      
-      global gREVAutoCreateProfiles
-      put the cREVAutoCreateProfiles of stack "revPreferences" into gREVAutoCreateProfiles
-      
-      global gREVProfileReadOnly
-      put the cREVProfileReadOnly of stack "revPreferences" into gREVProfileReadOnly
-      
-      revInternal__Log "Leave", "Options Initialisation"
-      
-      return true
-   end revInternal__InitialiseOptions
+command revInternal__InitialiseOptions
+   revInternal__Log "Enter", "Options Initialisation"
+   
+   set the selectGroupedControls to the cSelectGrouped of stack "revPreferences"
+   set the tooltipDelay to the cREVToolTipDelay of stack "revPreferences"
+   set the grid to the cGrid of stack "revPreferences"
+   set the scriptTextFont to the cREVScriptFont of stack "revPreferences"
+   set the scriptTextSize to the cREVScriptSize of stack "revPreferences"
+   
+   if the cHttpProxy of stack "revPreferences" is not empty then
+      set the httpProxy to the cHttpProxy of stack "revPreferences"
+   end if
+   
+   set the gridSize to the cGridSize of stack "revPreferences"
+   
+   if the cSelectionHandleColor of stack "revPreferences" is empty then
+      set the selectionHandleColor to "Gray50"
+   else
+      set the selectionHandleColor to the cSelectionHandleColor of stack "revPreferences"
+   end if
+   
+   set the navigationArrows to the cNavigationArrows of stack "revPreferences"
+   
+   global gREVShowStacks, gREVDevelopment
+   if gREVDevelopment then
+      put true into gREVShowStacks
+   else if the cShowRevolutionStacks of stack "revPreferences" is empty then
+      put false into gREVShowStacks
+   else
+      put the cShowRevolutionStacks of stack "revPreferences" into gREVShowStacks
+   end if
+   
+   global gREVLanguageNames
+   put the cLanguageNames of card 1 of stack "revPreferences" into gREVLanguageNames
+   
+   revInternal__Log "Message", "Obtained preference languageNames = " & gREVLanguageNames
+   
+   global gREVPopups
+   put the cRevPopups of stack "revPreferences" into gREVPopups
+   
+   global gREVAutoFormat
+   put the cAutoFormat of stack "revPreferences" into gREVAutoFormat
+   
+   global gREVUIScriptShortcut
+   put the cREVUIScriptShortcut of stack "revPreferences" into gREVUIScriptShortcut
+   
+   global gREVScriptShortcut
+   put the cREVScriptShortcut of stack "revPreferences" into gREVScriptShortcut
+   
+   global gREVCommentCharacter
+   if the cCommentCharacter of stack "revPreferences" is not empty then
+      put the cCommentCharacter of stack "revPreferences" into gREVCommentCharacter
+   else
+      put "--" into gREVCommentCharacter
+   end if
+   
+   global gREVTemplateMasterName
+   put the cREVTemplateMasterName of stack "revPreferences" into gREVTemplateMasterName
+   
+   global gREVAutoCreateProfiles
+   put the cREVAutoCreateProfiles of stack "revPreferences" into gREVAutoCreateProfiles
+   
+   global gREVProfileReadOnly
+   put the cREVProfileReadOnly of stack "revPreferences" into gREVProfileReadOnly
+   
+   get the cDarkMode of stack "revPreferences"
+   if it is true then 
+      setAllToDarkMode
+   else
+      setAllToLightMode
+   end if
+   
+   revInternal__Log "Leave", "Options Initialisation"
+   
+   return true
+end revInternal__InitialiseOptions
    
    command revInternal__InitialiseUserLibraries
       local tEnvironmentIcons, tUserIcons, tList

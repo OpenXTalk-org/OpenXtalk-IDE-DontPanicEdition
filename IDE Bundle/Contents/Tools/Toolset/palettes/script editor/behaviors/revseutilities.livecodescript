@@ -20,7 +20,7 @@ on closeStackRequest
    if the cMutable of the owner of the target then
       send "revSEDeleteSubStack the long id of the owner of the target" to me in 0 milliseconds
    end if
-   
+
    pass closeStackRequest
 end closeStackRequest
 
@@ -35,7 +35,7 @@ command revSEDeleteSubstack pStack
    if pStack is empty or there is no pStack then
       exit revSEDeleteSubStack
    end if
-   
+
    # BB-2014-07-25 : Bug 9598 - Catch an error being thrown when LiveCode IDE is shutting down
    # Fix courtesy of Mark Wieder
    try
@@ -44,8 +44,8 @@ command revSEDeleteSubstack pStack
       end if
    catch e
    end try
-   
-   # OK-2008-12-16 : Bug 7542 - If there are no script editors left open, ensure that the find and replace palette 
+
+   # OK-2008-12-16 : Bug 7542 - If there are no script editors left open, ensure that the find and replace palette
    # is not left showing on its own.
    if the number of lines of revListScriptEditors() = 0 then
       close stack "revSEFind"
@@ -77,12 +77,12 @@ command revSEGetDefaultPreference pPreference
    local tPrefs
    sePrefGetDefaults
    put the result into tPrefs
-   
+
    if pPreference is not among the keys of tPrefs then
       --throw "invalid_preference"
       return empty
    end if
-   
+
    return tPrefs[pPreference]
 end revSEGetDefaultPreference
 
@@ -93,28 +93,28 @@ end revSEGetDefaultPreference
 command revSEGetPreference pPreference
    local tPropname
    put "cScriptEditor," & pPreference into tPropname
-   
+
    local tValue
    put revIDEGetPreference(tPropname) into tValue
    if tValue is not empty then
       return tValue
    end if
-   
+
    local tDefaultValue
    revSEGetDefaultPreference pPreference
    put the result into tDefaultValue
-   
+
    return tDefaultValue
 end revSEGetPreference
 
 # Description
-#   Called when Revolution is about to be quit. Makes a list of all scripts with unsaved changes and 
+#   Called when Revolution is about to be quit. Makes a list of all scripts with unsaved changes and
 #   pops up a dialog asking the user if they should be applied or not. Returns empty if the result
 #   of this is that Revolution should quit, and returns "cancel" otherwise.
 command revSEQuitCheck
    local tEditors
    put revListScriptEditors() into tEditors
-   
+
    # Get a list of all objects with unsaved scripts currently open
    local tModifiedObjects
    repeat for each line tEditor in tEditors
@@ -126,7 +126,7 @@ command revSEQuitCheck
       end if
    end repeat
    delete the last char of tModifiedObjects
-   
+
    # Bring up a dialog listing all these objects and find out if the user wants to quit or not
    local tResult
    revSEWarnBeforeClosing tModifiedObjects
@@ -147,15 +147,15 @@ command revSEObjectNameChanged pTarget, pOldName, pNewName
       local tStackId
       put revRuggedId(pTarget) into tStackId
       put quote & pOldName & quote into word 2 of tStackId
-      
+
       put listAffectedEditors(tStackId) into tEditors
-      
+
       repeat for each line tEditor in tEditors
          send "revSEObjectRuggedIdChanged pTarget, tStackId" to tEditor
       end repeat
    else
       put listAffectedEditors(pTarget) into tEditors
-      
+
       repeat for each line tEditor in tEditors
          send "revSERefreshObjectnames" to tEditor
       end repeat
@@ -168,20 +168,20 @@ end revSEObjectNameChanged
 #   Sent just before pObject is deleted. Removes pObject from any script editor
 #   that may be editing it, gives no warning if the script is not saved etc. Note
 #   this is different to the old script editor behavior, where the "Copy and close" dialog
-#   was shown. The idea here is that the IDE should ask the user before deleting an object 
-#   with script rather than copy the script to the clipboard afterwards. 
+#   was shown. The idea here is that the IDE should ask the user before deleting an object
+#   with script rather than copy the script to the clipboard afterwards.
 command revSEObjectDeleted pObject
    local tObject
    put revRuggedId(pObject) into tObject
-   
+
    local tEditors
    put listAffectedEditors(tObject) into tEditors
-   
+
    local tTargetObjects
    repeat for each line tEditor in tEditors
       send "revSEGetTargetObjects" to tEditor
       put the result into tTargetObjects
-      
+
       repeat for each line tTargetObject in tTargetObjects
          if tTargetObject is tObject or seRuggedObjectContainsObject(tObject, tTargetObject) then
             send "revSERemoveTargetObject tTargetObject, true" to tEditor
@@ -189,7 +189,7 @@ command revSEObjectDeleted pObject
       end repeat
    end repeat
 end revSEObjectDeleted
-  
+
 # Parameters
 #   pObject : a valid object rugged id. Does not have to be a valid object reference, i.e it may be an id of a deleted / renamed object.
 # Returns
@@ -198,16 +198,16 @@ end revSEObjectDeleted
 private function listAffectedEditors pObject
    local tEditors
    put revListScriptEditors() into tEditors
-   
+
    local tAffectingObject
    put pObject into tAffectingObject
-   
+
    local tAffectedEditors
    repeat for each line tEditor in tEditors
       local tObjects
       send "revSEGetTargetObjects" to tEditor
       put the result into tObjects
-      
+
       repeat for each line tObject in tObjects
          if tObject is tAffectingObject or seRuggedObjectContainsObject(tAffectingObject, tObject) then
             put tEditor & return after tAffectedEditors
@@ -216,7 +216,7 @@ private function listAffectedEditors pObject
       end repeat
    end repeat
    delete the last char of tAffectedEditors
-   
+
    return tAffectedEditors
 end listAffectedEditors
 
@@ -225,7 +225,7 @@ end listAffectedEditors
 #   pOldId : the object's old id
 #   pNewId : the object's new id
 # Description
-#   Called when an object's id is changed, updates script editor's as appropriate. 
+#   Called when an object's id is changed, updates script editor's as appropriate.
 #   Note that only images can have their ids changed.
 command revSEObjectIdChanged pObject, pOldId, pNewId
    # Work out what the old object id was, do this by getting its current
@@ -234,24 +234,24 @@ command revSEObjectIdChanged pObject, pOldId, pNewId
    local tOldObject
    put seGetRuggedId(pObject) into tOldObject
    put pOldId into word 3 of tOldObject
-   
-   # We can't use the normal method for looking up a script editor revScriptEditor() 
+
+   # We can't use the normal method for looking up a script editor revScriptEditor()
    # because it requires the object to exist, so we have to look up the editor manually.
    local tEditors
    put revListScriptEditors() into tEditors
-   
+
    local tFoundEditor
    repeat for each line tEditor in tEditors
       local tObjects
       send "revSEGetTargetObjects" to tEditor
       put the result into tObjects
-      
+
       if tOldObject is among the lines of tObjects then
          put tEditor into tFoundEditor
          exit repeat
       end if
    end repeat
-   
+
    # Now we send a message to the editor to let it know the id has changed.
    #send "revSEObjectIdChanged pObject, pOldId, pNewId" to tEditor
    if tFoundEditor is not empty then
@@ -277,30 +277,30 @@ command revSEMainstackChanged pStack, pOldStackName, pNewStackName
          set the wholeMatches to true
          put char 2 to -2 of word (wordOffset("stack", tObject) + 1) of tObject into tOwningStack
          set the wholeMatches to false
-         
+
          if tOwningStack is not the short name of pStack then
             next repeat
          end if
-         
+
          # Work out what the new rugged id of the object will be
          local tNewObject
          put tObject into tNewObject
-         
+
          # If the stack was previously a mainstack and is now a substack, we need to add its new mainstack
          if pOldStackName is the short name of pStack and pNewStackName is not pOldStackName then
             put " of stack " & quote & pNewStackName & quote after tNewObject
          end if
-         
+
          # If the stack was previously a substack and is now a mainstack we need to remove the old mainstack
          if pOldStackName is not the short name of pStack and pNewStackname is the short name of pStack then
             delete word -3 to -1 of tNewObject
          end if
-         
+
          # If the stack was previously a substack and is still a substack, but of a different stack, we just replace
          if pOldStackName is not the short name of pStack and pNewStackName is not the short name of pStack and pOldStackName <> pNewStackName then
             put " of stack " & quote & pNewStackName & quote into word -3 to -1 of tNewObject
          end if
-         
+
          # We should now have a working reference to the object
          if there is a tNewObject then
             send "revSEObjectRuggedIdChanged tNewObject, tObject" to tEditor
@@ -318,7 +318,7 @@ end revSEMainstackChanged
 command revSESuspendEditors
    local tEditors
    put revListScriptEditors() into tEditors
-   
+
    repeat for each line tEditor in tEditors
       send "revSESuspend" to tEditor
    end repeat
@@ -329,7 +329,7 @@ end revSESuspendEditors
 command revSERestoreEditors
    local tEditors
    put revListScriptEditors() into tEditors
-   
+
    repeat for each line tEditor in tEditors
       send "revSERestore" to tEditor
    end repeat
@@ -341,7 +341,7 @@ end revSERestoreEditors
 command revSEUpdateEditors pPrefsChanged
    local tEditors
    put revListScriptEditors() into tEditors
-   
+
    repeat for each line tEditor in tEditors
       send " revSEUpdate pPrefsChanged" to tEditor
    end repeat
@@ -380,17 +380,17 @@ end revSERegisterObjectCallback
 command seSendCallbacks pObject, pScriptEditor
    local tCallbacks
    put sObjectCallbacks[pObject] into tCallbacks
-   
+
    local tCallback, tCallbackTarget
    repeat for each line tLine in tCallbacks
       put item 1 of tLine into tCallback
       put item 2 to -1 of tLine into tCallbackTarget
-      
+
       try
          send tCallback && "pObject,pScriptEditor" to tCallbackTarget
       end try
    end repeat
-   
+
    delete variable sObjectCallbacks[pObject]
 end seSendCallbacks
 
@@ -436,32 +436,32 @@ command sePrefInit
    local tPrefs
    sePrefGetDefaults
    put the result into tPrefs
-   
+
    # Loop through the default preferences array, and for each setting,
-   # look in the Revolution preferences stack for a user defined value. 
+   # look in the Revolution preferences stack for a user defined value.
    # If there is one, then replace the value in the preferences array,
    # otherwise leave the default in there.
    repeat for each key tKey in tPrefs
       local tPropname
       put "cScriptEditor," & tKey into tPropname
-      
+
       local tValue
       put revIDEGetPreference(tPropname) into tValue
       if tValue is not empty then
          put tValue into tPrefs[tKey]
       end if
    end repeat
-   
-   
+
+
    ## Check the print shortcut, the default had a typo pre v8
    ## If the print shortcut has a typo replace it
    if tPrefs["shortcuts,Print"] is "command p'" then
       put "command p" into tPrefs["shortcuts,Print"]
    end if
-   
+
    # The colorization settings need to be loaded
    seColorizationLoadScheme tPrefs["colorization,scheme"], tPrefs
-   
+
    # Put the completed array into the script local sPrefs for use by the script editor.
    put tPrefs into sPrefs
    seColorizationInit
@@ -473,11 +473,11 @@ command sePrefSave
    local tDefaults
    sePrefGetDefaults
    put the result into tDefaults
-   
+
    local tPropname
    repeat for each key tKey in sPrefs
       put "cScriptEditor," & tKey into tPropname
-      
+
       revIDESetPreference tPropName, sPrefs[tKey]
    end repeat
 end sePrefSave
@@ -504,11 +504,11 @@ function printArrayGetText pArray pIndent
          put pIndent & tKey & return after tText
          put printArrayGetText(pArray[tKey], (pIndent & tab)) & return after tText
       end if
-      
+
    end repeat
    return tText
 end printArrayGetText
-  
+
   # Parameters
 #   pTag : a descriptive tag for the icon
 # Returns
@@ -522,7 +522,7 @@ end seGetIcon
 function seIconStack
    return the name of stack "revIcons"
 end seIconStack
-  
+
 function seGetPlatform
    return the platform
 end seGetPlatform
@@ -530,7 +530,7 @@ end seGetPlatform
 function seGetSystemVersion
    return the systemVersion
 end seGetSystemVersion
-   
+
 # Returns
 #  An array containing the default settings for all available script editor preferences.
 #  The array returned by this function is the definitive list of script editor preferences.
@@ -539,7 +539,7 @@ end seGetSystemVersion
 #  values to make available to the user, some of them don't make sense to allow the user to change.
 command sePrefGetDefaults
    local tPrefs
-   
+
    # General preferences
    put "false" into tPrefs["explicitVariables"]
    put "true" into tPrefs["preserveVariables"]
@@ -551,24 +551,24 @@ command sePrefGetDefaults
    put "true" into tPrefs["editShowToolbars"]
    put "true" into tPrefs["debugShowToolbars"]
    put 100 into tPrefs["leftSplit"]
-   
+
    # Variable watcher preferences
    put seGetIcon("variablesBackground") into tPrefs["variables,background"]
    put "false" into tPrefs["variables,showglobals"]
    put "false" into tPrefs["variables,showenvvars"]
-   
+
    # Documentation pane preferences
    put empty into tPrefs["documentation,lastLoadedDoc"]
    put empty into tPrefs["documentation,lastMatchingSearch"]
    put empty into tPrefs["documentation,lastLoadedAlternativeDocs"]
-   
+
    put "Variables" into tPrefs["debug,lastSelectedPane"]
    put "Documentation" into tPrefs["edit,lastSelectedPane"]
-   
+
    # Colorization preferences
    put "default" into tPrefs["colorization,scheme"]
    seColorizationLoadScheme "default", tPrefs
-   
+
    # Editor preferences
    put 500 into tPrefs["editor,paneupdatedelay"]
    put "false" into tPrefs["editor,findvisible"]
@@ -584,13 +584,13 @@ command sePrefGetDefaults
    put "255,255,255" into tPrefs["editor,debugBackgroundcolor"]
    put "true" into tPrefs["editor,hscrollbar"]
    put "false" into tPrefs["editor,useInteractiveFind"]
-   
+
    # Gutter preferences
    put "true" into tPrefs["gutter,linenumbers"]
-   
+
    # Panes preferences
    put empty into tPrefs["panes,visiblelist"]
-   
+
    # Find preferences
    put false into tPrefs["find,casesensitive"]
    put false into tPrefs["find,wholematches"]
@@ -598,7 +598,7 @@ command sePrefGetDefaults
    put empty into tPrefs["find,lastsearch"]
    put empty into tPrefs["find,findhistory"]
    put empty into tPrefs["find,replacehistory"]
-   
+
    # Keyboard shortcuts. Each shortcut can be be associated with a single action,
    # only the name of the action should be used to identify it, not the whole command name.
    put "enter" & return & "command return" into tPrefs["shortcuts,ApplyAndClose"]
@@ -618,7 +618,7 @@ command sePrefGetDefaults
    put "command '" into tPrefs["shortcuts,SendWindowToBack"]
    put "command p" into tPrefs["shortcuts,Print"]
    put "command option f" into tPrefs["shortcuts,FindSelection"]
-   
+
    # The default shortcuts need to be different on OS X due to stuff like expose etc.
    if seGetPlatform() is "macos" then
       put "command w" into tPrefs["shortcuts,CloseTab"]
@@ -651,20 +651,20 @@ command sePrefGetDefaults
       put "f9" into tPrefs["shortcuts,ToggleBreakpoint"]
       put "178,180,191" into tPrefs["editor,hilitecolor"]
    end if
-   
+
    # Action contexts. These define which actions are associated with which script editor components.
    # If there is no context associated with a given action, it is assumed to be global to the script editor.
    --put "editor" into tPrefs["actioncontext,Cut"]
    put "editor" into tPrefs["actioncontext,Paste"]
-   
+
    # OK-2008-08-25: Bug 7024 - undo and redo should be specific to the editor group
    --put "editor" into tPrefs["actioncontext,Undo"]
    --put "editor" into tPrefs["actioncontext,Redo"]
-   
+
    put 7 into tPrefs["print,textSize"]
-   
+
    put true into tPrefs["editor,showDefaultHandlers"]
-   
+
    put true into tPrefs["editor,liveerrors"]
    put true into tPrefs["editor,bracketcompletion"]
    put true into tPrefs["editor,brackethighlighting"]
@@ -673,14 +673,14 @@ command sePrefGetDefaults
    put true into tPrefs["editor,autocomplete"]
    -- autocomplete is completions list
    put true into tPrefs["editor,providercompletion"]
-   
+
    return tPrefs
 end sePrefGetDefaults
- 
+
 command revSESetupPrintTemplate
    local tField
    put revSEGetPrintTemplate() into tField
-   
+
    set the textFont of tField to sePrefGet("editor,font")
    set the textSize of tField to sePrefGet("print,textSize")
    set the dontWrap of tField to true
@@ -690,11 +690,11 @@ end revSESetupPrintTemplate
 function revSEGetPrintTemplate
    return the long id of field "Print Template" of revScriptEditorMain()
 end revSEGetPrintTemplate
- 
- 
+
+
 local sColorizationClasses
 local sColorizationKeywords
- 
+
 # Description
 #   Called when the colorization needs to be initialized. This can happen
 #   when the script editor is opened, or when a colorization preference has changed.
@@ -708,7 +708,7 @@ end seColorizationInit
 #   pScheme : the name of the colorization scheme to load
 #   pPreferencesArray : reference to the preferences array to set the scheme on.
 # Description
-#   Places the appropriate settings for the specified colorization scheme into 
+#   Places the appropriate settings for the specified colorization scheme into
 #   the sPrefs array. To apply the newly loaded scheme, call seColorizationInit
 #   after the scheme has been loaded.
 command seColorizationLoadScheme pScheme, @pPreferencesArray
@@ -746,7 +746,7 @@ command seColorizationLoadScheme pScheme, @pPreferencesArray
                "keyword next bold 0,0,0" & return & \
                "keyword exit bold 0,0,0" & return into pPreferencesArray["colorization,config"]
          break
-         
+
       case "revolution classic"
          put "group commands none 0,0,255" & return & \
                "group properties none 255,0,0" & return & \
@@ -778,7 +778,7 @@ command seColorizationLoadScheme pScheme, @pPreferencesArray
                "keyword default none 152,5,23" & return & \
                "keyword finally none 152,5,23" into pPreferencesArray["colorization,config"]
          break
-         
+
       case "no colorization"
          put "group commands none 0,0,0" & return & \
                "group properties none 0,0,0" & return & \
@@ -813,12 +813,12 @@ end seColorizationLoadScheme
 # Parameters
 #   pSettingsString : a string describing the colorization settings, format outlined below.
 # Returns
-#   Two arrays are placed into the rClasses and rKeywords parameters, these are in the 
+#   Two arrays are placed into the rClasses and rKeywords parameters, these are in the
 #   format required by the _internal script configure classes command and the _internal script configure keywords command.
 # Description
 #   The settings string is a list of settings, one per line. Each setting has the following format.
 #   <type> <name> <attributes> <color>
-#   
+#
 #   type - either "group", "class" or "keyword"
 #   name - the name of the group, class or keyword
 #   attributes - a list of text styles, eg bold,italic,none etc (I think)
@@ -861,7 +861,7 @@ private command colorizationBuildSettings pSettingsString, @rClasses, @rKeywords
       end repeat
     end if
   end repeat
-  
+
   put tClasses into rClasses
   put tKeywords into rKeywords
 end colorizationBuildSettings
@@ -883,8 +883,8 @@ end seColorizationConfigKeywords
 #   pObject : either a valid reference to an object, or a long id of an object.
 # Returns
 #   The "rugged id" of the object used by the script editor to refer to it. Currently the rugged id
-#   is a valid object reference in a slightly different form to the long id, however it may be changed 
-#   at some point to be a handle of some sort. To access an object from its rugged id, use the 
+#   is a valid object reference in a slightly different form to the long id, however it may be changed
+#   at some point to be a handle of some sort. To access an object from its rugged id, use the
 #   revAccessObject function in revBackscript.
 function seGetRuggedId pObject
    return revRuggedId(pObject)
@@ -899,7 +899,7 @@ end seGetRuggedId
 function seObjectIsContainer pObject
 --   local tObject
 --   put revRuggedId(pObject) into tObject
-   
+
    switch word 1 of pObject
       case "stack"
          return true
@@ -924,7 +924,7 @@ function seObjectContainsObject pContainingObject, pContainedObject
    if not seObjectIsContainer(pContainingObject) then
       return false
    end if
-   
+
    # We rely on the two parameters being valid long ids to avoid having to refer to the object
    # as this could be broken by edit group mode.
    if pContainedObject ends with pContainingObject and pContainingObject is not pContainedObject then
@@ -943,7 +943,7 @@ function seRuggedObjectContainsObject pContainingObject, pContainedObject
    if not seObjectIsContainer(pContainingObject) then
       return false
    end if
-   
+
    # We rely on the two parameters being valid long ids to avoid having to refer to the object
    # as this could be broken by edit group mode.
    if pContainedObject ends with pContainingObject and pContainingObject is not pContainedObject then
@@ -963,7 +963,7 @@ constant kHistorySize = 20
 #   The history of the specified action type, one per line with most recent coming first.
 function seFindHistoryGet pType
    historyClean
-   
+
    if pType is "find" then
       return sFindHistory
    else if pType is "replace" then
@@ -997,7 +997,7 @@ end seFindHistoryAdd
 #   history growing too big and removes duplicates.
 private command historyClean
    local tCleanedHistory
-   
+
    repeat for each line tTerm in sFindHistory
       if tTerm is not among the lines of tCleanedHistory then
          put tTerm & return after tCleanedHistory
@@ -1005,7 +1005,7 @@ private command historyClean
    end repeat
    delete the last char of tCleanedHistory
    put line 1 to kHistorySize of tCleanedHistory into sFindHistory
-   
+
    put empty into tCleanedHistory
    repeat for each line tTerm in sReplaceHistory
       if tTerm is not among the lines of tCleanedHistory then
@@ -1042,21 +1042,21 @@ command revSEColorizeField pField, pStart, pEnd
    if pStart is empty then
       put 1 into pStart
    end if
-   
+
    if pEnd is empty then
       put the number of chars in the text of pField into pEnd
    end if
-   
+
    sePrefInit
    local tConfig
    put sePrefGet("colorization,config") into tConfig
-   
+
    _internal script configure classes sColorizationClasses
    _internal script configure keywords sColorizationKeywords
-   
+
    _internal script colorize char pStart to pEnd of pField
 end revSEColorizeField
-   
+
    # Colorizes pScript and returns it as revHTML
 command revSEColorize pScript, pScheme
    local tOldScheme, tConfig
@@ -1067,22 +1067,22 @@ command revSEColorize pScript, pScheme
    else
       put sePrefGet("colorization,config") into tConfig
    end if
-   
+
    local tClasses, tKeywords
    colorizationBuildSettings tConfig, tClasses, tKeywords
-   
+
    _internal script configure classes tClasses
    _internal script configure keywords tKeywords
-   
+
    local tFormattedScript
    send "revSEFormatSnippet pScript" to stack "revSETemplate"
    put the result into tFormattedScript
-   
+
    local tField
    put the long id of field "revColourizationObject" of card 2 of stack "revSETemplate" into tField
    set the text of tField to tFormattedScript
    _internal script colorize char 1 to (the number of chars of the text of tField) of tField
-   
+
    local tHtmlText
    put the htmlText of tField into tHtmlText
    set the text of tField to empty
@@ -1095,12 +1095,12 @@ end revSEColorize
 private function getFirstIndentLevel
   local tTabDepth
   put sePrefGet("editor,tabdepth") into tTabDepth
-  
+
   local tIndent
   repeat tTabDepth times
     put space after tIndent
   end repeat
-  
+
   return tIndent
 end getFirstIndentLevel
 
@@ -1126,7 +1126,7 @@ function seDefaultScript pObjectType, pStyle
          if pStyle is among the items of "scale,scrollbar" then
             return "local sStartValue" & return & return & "on mouseDown --save the initial value" & return &\
             tIndent & "put the thumbPos of me into sStartValue" & return & "end mouseDown" & return & return &\
-            "on scrollbarDrag newValue -- save the final value" & return & tIndent & return & "end scrollbarDrag" 
+            "on scrollbarDrag newValue -- save the final value" & return & tIndent & return & "end scrollbarDrag"
           end if
           break
       case "widget"
@@ -1159,6 +1159,6 @@ function seDefaultScriptSelection pObjectType, pStyle
   default
     return empty
   end switch
-  
+
   return tStart & comma & tEnd
 end seDefaultScriptSelection
