@@ -1,4 +1,4 @@
-## The OpenXTalk DON'T PANIC Edition! Inegrated Development Environment
+## The OpenXTalk DON'T PANIC Edition! Integrated Development Environment
 
 This project is part of an effort to maintain and improve a fork of the legacy open source (GPL3) LiveCode Community Edition code base.
 LiveCode Ltd. has dropped support for opensource builds (LCC 6.0.1 to 9.6.3) entirely. 
