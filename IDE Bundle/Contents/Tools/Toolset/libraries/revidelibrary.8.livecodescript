@@ -1078,12 +1078,20 @@ function __readStructureOfStack @pData
    dispatch function "__readPropertiesOfControl" to the target with sStackPropertiesToRead, pData
 
    # 2) Process any cards
-   repeat with x = 1 to the number of cards of the target
+   #repeat with x = 1 to the number of cards of the target
+	# 2023.06.06 MDW
+	local x
+	local tCards
+
+	put the cardIDs of the target into tCards
+	put 1 into x
+	repeat for each line tCardID in tCards
       # a) Get basic properties for the card
       dispatch function "__readPropertiesOfControl" to card x of the target with sCardPropertiesToRead, pData["cards"][x]
 
       # b) Process the card container for all its controls
       dispatch function "__readStructureOfContainer" to card x of the target with pData["cards"][x]["controls"]
+		add 1 to x
    end repeat
 
    # 3) Process any subsctacks
@@ -1095,22 +1103,25 @@ end __readStructureOfStack
 function __readStructureOfContainer @pData
    local tControlsProcessedInContainer
 
-   # 1) Repeat for each control in the container
-   repeat with x = 1 to the number of controls of the target
-      # read the properties of the control
+	# 2023.06.06 MDW fast_stack_introspection
+	local x, tControls
+
+	put the childControlIDs of the target into tControls
+	put 1 into x
+	repeat for each line tCardID in tControls
+		# read properties of the control
       dispatch function "__readPropertiesOfControl" to control x of the target with sControlPropertiesToRead, pData[x]
-
-      --local tName
-      --put the name of control x of the target into tName
-
       #  if the control is a group
       if the name of control x of the target begins with "group" then
-
          dispatch function "__readStructureOfContainer" to control x of the target with pData[x]["controls"]
          put the result into tControlsProcessedInContainer
          add the number of elements of pData[x]["controls"] to tControlsProcessedInContainer
          add tControlsProcessedInContainer to x
       end if
+		add 1 to x
+		if x > the number of lines in tControls then
+			exit repeat
+		end if
    end repeat
 
    return tControlsProcessedInContainer
@@ -1124,15 +1135,22 @@ on __readGroupedPropertiesOfControl pGroupsA, @pDataA
       end repeat
    end repeat
 
+	# 2023.06.06 MDW feature_fast_stack_introspection
+	local tObjID
+	put the long id of the target into tObjID
+
+	local tProperties
+	put _classicObjectProperties(tObjID) into tProperties
+
    local tDataA
    set the itemdelimiter to ";"
    repeat for each key tKey in tPropMappingA
       if the number of items in tKey > 1 then
          repeat for each item tRealProp in tKey
-            __fetchPropertyOfControl tRealProp, tDataA[tKey]
+            __fetchPropertyOfControl tRealProp, tDataA[tKey], tProperties
          end repeat
       else
-         __fetchPropertyOfControl tKey, tDataA
+         __fetchPropertyOfControl tKey, tDataA, tProperties
       end if
    end repeat
 
@@ -1167,18 +1185,23 @@ private command __fetchPropertyCustomGetter pGetter, pObject, pProperty, @xPropA
    end if
 end __fetchPropertyCustomGetter
 
-private on __fetchPropertyOfControl pProp, @xData
+private on __fetchPropertyOfControl pProp, @xData, pProperties
    local tError
    put empty into tError
 
    local tObjID
-   put the long id of the target into tObjID
+   --put the long id of the target into tObjID
 
-   local tProperties
-   put __classicObjectProperties(tObjID) into tProperties
+   --local tProperties
+   --put __classicObjectProperties(tObjID) into tProperties
 
-   if tProperties["properties"][pProp]["getter"] is not empty then
-      __fetchPropertyCustomGetter tProperties["properties"][pProp]["getter"], \
+	if pProperties is empty then
+		put the long id of the target into tObjID
+		put _classicObjectProperties(tObjID) into pProperties
+	end if
+
+   if pProperties["properties"][pProp]["getter"] is not empty then
+      __fetchPropertyCustomGetter pProperties["properties"][pProp]["getter"], \
             tObjId, pProp, xData
       exit __fetchPropertyOfControl
    end if
@@ -1237,21 +1260,27 @@ private on __fetchPropertyOfControl pProp, @xData
    end if
 end __fetchPropertyOfControl
 
-# Used internall but not private. This function is dispatched to the object and reads the properties
+# Used internally but not private. This function is dispatched to the object and reads the properties
 # In the list. Sending it to the object allows the use of the target which reduces the lookup time
 # for each of the properties
 function __readPropertiesOfControl pList, @pData
-   local tError
+   --local tError
+	local tObjID
+	put the long id of the target into tObjID
+
+	local tProperties
+	put __classicObjectProperties(tObjID) into tProperties
+
    set the itemdelimiter to ";"
    repeat for each line tProp in pList
       -- If this pseudo-property is actually multiple properties,
       -- the value is an array with keys the real property names
       if the number of items in tProp > 1 then
          repeat for each item tRealProp in tProp
-            __fetchPropertyOfControl tRealProp, pData[tRealProp]
+            __fetchPropertyOfControl tRealProp, pData[tRealProp], tProperties
          end repeat
       else
-         __fetchPropertyOfControl tProp, pData
+         __fetchPropertyOfControl tProp, pData, tProperties
       end if
    end repeat
 end __readPropertiesOfControl
