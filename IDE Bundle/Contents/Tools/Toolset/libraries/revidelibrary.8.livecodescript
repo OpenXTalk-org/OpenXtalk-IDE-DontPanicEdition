@@ -10030,10 +10030,10 @@ on revIDESendCurrentWindowToBack
    then put tWindows2 & return & tWindows into tWindows
 
    repeat for each line l in tWindows
-      -- delete char 1 to 2 of l
-      if the mode of stack l is 1 or the mode of stack l is 2 then toplevel l
-      else if the mode of stack l is 3 then modeless l
-      show stack l
+		if the visible of stack l then
+			if the mode of stack l is 1 or the mode of stack l is 2 then toplevel l
+			else if the mode of stack l is 3 then modeless l
+		end if
    end repeat
    unlock messages
 end revIDESendCurrentWindowToBack
