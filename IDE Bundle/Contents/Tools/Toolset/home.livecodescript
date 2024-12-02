@@ -2447,16 +2447,17 @@ on IDEToLightMode
          --- for macOS ---
          setAppToLightMode
          -- setWindowToLightMode
-         set the backGroundColor of stack "revTools" to empty -- "Gray30"
-         set the foreGroundColor of stack "revTools" to empty -- "White"
+         -- set the backGroundColor of stack "revTools" to empty -- "Gray30"
+         -- set the foreGroundColor of stack "revTools" to empty -- "White"
+		dispatch "darkMode" to stack "revTools" with false, isMac
          -- set the opaque of group "widget" of stack "revTools" to false
-         set the foreGroundColor of group "widget" of stack "revTools" to  "Black"
-         set the backgroundColor of group "widget" of stack "revTools" to empty -- "Gray50"
-         set the foreGroundColor of group "background" of stack "revTools" to "White"
+         -- set the foreGroundColor of group "widget" of stack "revTools" to  "Black"
+         -- set the backgroundColor of group "widget" of stack "revTools" to empty -- "Gray50" ? mdw
+         -- set the foreGroundColor of group "background" of stack "revTools" to "White"
 
          -- set the opaque of group "classic" of stack "revTools" to true
          -- set the foreGroundColor of group "classic" of stack "revTools" to "White"
-         set the backgroundColor of group "classic" of stack "revTools" to empty -- "Gray60"
+         -- set the backgroundColor of group "classic" of stack "revTools" to empty -- "Gray60" ? mdw
 
          -- set the opaque of group "graphictoolscontrols" of stack "revTools" to true
          -- set the backgroundColor of group "graphictoolscontrols" of stack "revTools" to "Gray25"
@@ -2474,12 +2475,13 @@ on IDEToLightMode
          set the backgroundColor of stack "revPreferencesGUI" to "White"
          set the foreGroundColor of stack "revPreferencesGUI" to "Black"
       else
-         set the foreGroundColor of stack "revTools" to "Black"
-         set the backGroundColor of stack "revTools" to "White"
-         set the foreGroundColor of group "widget" of stack "revTools" to "Black"
-         set the backgroundColor of group "widget" of stack "revTools" to "White"
-         set the foreGroundColor of group "background" of stack "revTools" to "Black"
-         set the backgroundColor of group "classic" of stack "revTools" to "White"
+		dispatch "darkMode" to stack "revTools" with false, isMac
+         -- set the foreGroundColor of stack "revTools" to "Black"
+         -- set the backGroundColor of stack "revTools" to "White"
+         -- set the foreGroundColor of group "widget" of stack "revTools" to "Black"
+         -- set the backgroundColor of group "widget" of stack "revTools" to "White"
+         -- set the foreGroundColor of group "background" of stack "revTools" to "Black"
+         -- set the backgroundColor of group "classic" of stack "revTools" to "White"
 
          if the systemVersion is "NT 10.0" then set the textColor of group "revMenuBar" of stack "revMenuBar" to "Black"
          -- set the opaque of stack "revMenuBar" to false
@@ -2551,16 +2553,17 @@ on IDEToDarkMode
       if isMac is true then
          setAppToDarkMode
          -- setWindowToDarkMode
-         set the backGroundColor of stack "revTools" to empty -- "Gray30"
-         set the foreGroundColor of stack "revTools" to empty -- "White"
+         -- set the backGroundColor of stack "revTools" to empty -- "Gray30"
+         -- set the foreGroundColor of stack "revTools" to empty -- "White"
+		dispatch "darkMode" to stack "revTools" with true, isMac
          -- set the opaque of group "widget" of stack "revTools" to false
-         set the foreGroundColor of group "widget" of stack "revTools" to  "White"
-         set the backgroundColor of group "widget" of stack "revTools" to empty -- "Gray50"
-         set the foreGroundColor of group "background" of stack "revTools" to "White"
+         --set the foreGroundColor of group "widget" of stack "revTools" to  "White"
+         --set the backgroundColor of group "widget" of stack "revTools" to empty -- "Gray50"
+         --set the foreGroundColor of group "background" of stack "revTools" to "White"
 
          -- set the opaque of group "classic" of stack "revTools" to true
          -- set the foreGroundColor of group "classic" of stack "revTools" to "White"
-         set the backgroundColor of group "classic" of stack "revTools" to empty -- "Gray60"
+         --set the backgroundColor of group "classic" of stack "revTools" to empty -- "Gray60"
 
          -- set the opaque of group "graphictoolscontrols" of stack "revTools" to true
          -- set the backgroundColor of group "graphictoolscontrols" of stack "revTools" to "Gray25"
@@ -2579,12 +2582,13 @@ on IDEToDarkMode
          set the foreGroundColor of stack "revPreferencesGUI" to "White"
 
       else
-         set the foreGroundColor of stack "revTools" to "White"
-         set the backGroundColor of stack "revTools" to "Gray20"
-         set the foreGroundColor of group "widget" of stack "revTools" to  "White"
-         set the backgroundColor of group "widget" of stack "revTools" to "Gray20"
-         set the foreGroundColor of group "background" of stack "revTools" to "White"
-         set the backgroundColor of group "classic" of stack "revTools" to "Gray20"
+		dispatch "darkMode" to stack "revTools" with true, isMac
+         -- set the foreGroundColor of stack "revTools" to "White"
+         -- set the backGroundColor of stack "revTools" to "Gray20"
+         -- set the foreGroundColor of group "widget" of stack "revTools" to  "White"
+         -- set the backgroundColor of group "widget" of stack "revTools" to "Gray20"
+         -- set the foreGroundColor of group "background" of stack "revTools" to "White"
+         -- set the backgroundColor of group "classic" of stack "revTools" to "Gray20"
 
          if the systemVersion is "NT 10.0" then set the textColor of group "revMenuBar" of stack "revMenuBar" to "Black"
          -- set the opaque of stack "revMenuBar" to false

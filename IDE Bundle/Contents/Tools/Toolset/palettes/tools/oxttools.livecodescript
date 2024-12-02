@@ -1285,3 +1285,39 @@ on moveStack
    ideSetWindowBoundingRect
    pass moveStack
 end moveStack
+
+# pass true for darkMode, false for lightMode
+command darkMode pIsDark?, pIsMac?
+	local tForeGroundColor, tBackGroundColor, tStackForeGroundColor, tStackBackGroundColor
+
+	if pIsDark? then
+		put "White" into tForeGroundColor
+		if pIsMac? then
+			put empty into tStackForeGroundColor
+			put empty into tStackBackGroundColor
+			put empty into tBackGroundColor
+		else
+			put "White" into tStackForeGroundColor
+			put "Gray20" into tStackBackGroundColor
+			put "Gray20" into tBackGroundColor
+		end if
+	else
+		put "Black" into tForeGroundColor
+		if pIsMac? then
+			put empty into tStackForeGroundColor
+			put empty into tStackBackGroundColor
+			put empty into tBackGroundColor
+		else
+			put "Black" into tStackForeGroundColor
+			put "White" into tStackBackGroundColor
+			put "White" into tBackGroundColor
+		end if
+	end if
+
+	set the foreGroundColor of this stack to tStackForeGroundColor
+	set the backGroundColor of this stack to tStackBackGroundColor
+	set the foreGroundColor of group "widget" of this stack to tForeGroundColor
+	set the backgroundColor of group "widget" of this stack to tBackGroundColor
+	set the foreGroundColor of group "background" of this stack to tForeGroundColor
+	set the backgroundColor of group "classic" of this stack to tBackGroundColor
+end darkMode
