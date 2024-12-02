@@ -29,7 +29,8 @@ end openStack
 
 on closeStack
    ## Unsubscribe from all messages
-   revIDEUnsubscribe "idePreferenceChanged:idePropertyInspector_labels"
+   # 2023.06.06 MDW unsubscribe from ALL messages
+   revIDEUnsubscribeAll the long id of me
 
    set the cSelectedObjects of me to empty
 
