@@ -2870,6 +2870,10 @@ on revMenubarFileMenuPick pWhich
                else
                   revIDEOpenStack tRecentStack
                end if
+				# 2023.06.06 MDW [[center new stacks on linux]]
+				local tStack
+				put the result into tStack
+				set the location of tStack to the screenloc
                break
             case "Import As Control"
                put item 2 of pWhich into tType
