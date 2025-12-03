@@ -29,15 +29,15 @@ end revTargetstack
 on revGoURL pUrl
    global gREVWebBrowser
    revSetWindowsShellCommand
-
+   
    -- revRunningWindowsNT is not used for anything in this handler -- Paul McClernan - 1/11/2022
    --   local tNT
    --   put revRunningWindowsNT() into tNT
-
+   
    if "file://" is not in pUrl then
       replace "file:/" with "file:///" in pUrl
    end if
-
+   
    if char 1 to 4 of pUrl is not "file" \
          and char 1 to 4 of pUrl is not "http" \
          and char 1 to 7 of pUrl is not "mailto:" \
@@ -47,10 +47,10 @@ on revGoURL pUrl
          and char 1 to 5 of pUrl is not "dav:/"\
          and char 1 to 5 of pUrl is not "tel:/"\
          and char 1 to 11 of pUrl is not "facetime://"\
-         then
-      put "http://" before pUrl
+         and char 1 to 6 of pUrl is not "sms://"\
+   then
+      put "https://" before pUrl
    end if
-
    launch url pUrl
 end revGoURL
 
@@ -138,9 +138,9 @@ function revRunningWindowsNT
 end revRunningWindowsNT
 
 on revSetWindowsShellCommand
-  if the platform is not "Win32" then exit revSetWindowsShellCommand
-  set the hideConsoleWindows to true
-  set the shellCommand to $COMSPEC
+   if the platform is not "Win32" then exit revSetWindowsShellCommand
+   set the hideConsoleWindows to true
+   set the shellCommand to $COMSPEC -- instead of the environmental variable, could probably use a different shell here.
 end revSetWindowsShellCommand
 
 getProp revProfile
@@ -429,7 +429,7 @@ setProp cREVGeneral[pWhichProp] pWhichProfile
 end cREVGeneral
 
 function revAppVersion
-  return the version
+  return the version & "DPE"
 end revAppVersion
 
 function revLoadedStacks pWhich
@@ -1129,15 +1129,15 @@ on revChangeWindowSize pWidth, pHeight, pSlide, pCard, pDelay
 end revChangeWindowSize
 
 on revChangePage
-
+    -- I wonder what these are about?
 end revChangePage
 
 on revUpdateCellValue
-
+    -- ?
 end revUpdateCellValue
 
 on revMoveCellDirection
-
+   -- ?
 end revMoveCellDirection
 
 on revDatabaseError pType, pError, pDataLinkedObject
@@ -1298,28 +1298,28 @@ function revFontGetSystemFont
             return "MS Sans Serif"
          end if
          break
-
+         
       case "MacOS X"
          if "SF Pro Regular" is among the lines of the fontNames then
-            return "San Francisco Pro Text"
+            return "SF Pro Regular" -- "San Francisco Pro Text"
          else
             return "Lucida Grande"
          end if
-
+         
          break
-
+         
       case "Linux"
-         return "Helvetica"
+         return "Ubuntu"
          break
-
+         
       case "iphone"
          return "San Francisco"
          break
-
+         
       case "android"
          return "Roboto"
          break
-
+         
    end switch
    -- Default sans-serif font in MacOS
    -- MacOS (El Capitan and newer) San Francisco
@@ -1329,13 +1329,13 @@ function revFontGetSystemFont
    -- sans-serif font — for web -apple-system will need to be used, as the
    -- sans-serif fallback will display Helvetica instead of San Francisco.
    --(this is one of the quirks I mentioned earlier)
-
+   
    -- Default sans-serif font in Windows
    -- The difference between Microsoft Sans Serif and MS Sans Serif is that MS Sans Serif was a
    -- bitmap/raster font available in 8, 10, 12, 14, 18, and 24 sizes and Microsoft Sans Serif is a TrueType scalable font.
-
+   
    -- MS Sans Serif was based on Helvetica and in all versions up to Windows 3.1 it was called Helv.
-   --Windows (Vista and newer, including Windows 10) Segoe UI
+   -- Windows (Vista and newer, including Windows 10) Segoe UI
    -- Windows (XP) Tahoma
    -- Windows (2000) Microsoft Sans Serif
    -- Windows (95, NT, Millennium) MS Sans Serif
@@ -1344,18 +1344,18 @@ function revFontGetSystemFont
    -- So it’s almost impossible to accurately mention defaults, except for the Ubuntu distro
    --  which has its own font as default.
    -- Red Hat also has commissioned its own fonts Red Hat Display and Red Hat Text.
-
+   
    -- Ubuntu - Ubuntu
    -- Red Hat = Red Hat
    -- Other distros (Arch Linux, Debian, Fedora etc.) varies, can be DejaVu Sans, Noto Sans, Liberation Sans etc.
-
+   
    -- iOS (9 and newer)and iPadOS San Francisco
    -- iOS (8 and older) Helvetica/Helvetica Neue
-
+   
    -- watchOS = San Francisco Compact
    -- Android (4.0+) Roboto
    -- Android (older versions) Droid Sans
-
+   
 end revFontGetSystemFont
 
 function revFontGetSystemFontSize

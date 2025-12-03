@@ -1,23 +1,24 @@
 Property : optional getter : optional setter	Label	Section	Editor	User Visible	Read Only	Group	Default	Options	Subsection	min	max	step
 type	button
 title	Oval Button
+
 -----	-----	-----	-----	-----	-----	-----	-----	-----	-----	-----	-----	-----
 name							Button
-label							Oval Button
+label
 tooltip
 style							oval	standard,transparent,opaque,rectangle,roundRect,oval,shadow,checkbox,radioButton
-visible							TRUE
-opaque							TRUE
-showName							TRUE
-autoHilite							TRUE TRUE  TRUE  TRUE
-sharedHilite							FALSE
+visible
+opaque							true
+showName							true
+autoHilite							true
+sharedHilite							true
 acceleratorKey
 acceleratorModifiers
 acceleratorText
-traversalOn							FALSE
-showFocusBorder							TRUE
+traversalOn							false
+showFocusBorder							true
 mnemonic
-default							FALSE
+default							false
 disabled
 layerMode
 behavior
@@ -28,17 +29,17 @@ visitedIcon
 armedIcon
 hoverIcon
 iconGravity
-threeD							FALSE
-showBorder
-hiliteBorder							TRUE
+threeD							true
+showBorder							true
+hiliteBorder							true
 borderWidth							1
-foregroundColor						Text fill	White
+foregroundColor						Text fill	empty
 foregroundPattern						Text fill
-backgroundColor							Gray50
+backgroundColor							gray50
 backgroundPattern
 hiliteColor
 hilitePattern
-borderColor							Gray50
+borderColor
 borderPattern
 topColor
 topPattern
@@ -54,13 +55,13 @@ innerShadow
 outerGlow
 innerGlow
 colorOverlay
-blendLevel							0	100
+blendLevel							0	0,100
 ink
 textFont
 textSize
 textStyle
 textAlign							center
 margins							4
-lockLoc							FALSE
+lockLoc							false
 width::revIDESetRectProperty			com.livecode.pi.dimension				82
 height::revIDESetRectProperty			com.livecode.pi.dimension				23

@@ -716,7 +716,6 @@ end messageNotHandled
 on scriptParsingError pWhich
    global gREVSuppressErrors
    if gREVSuppressErrors then exit scriptParsingError
-
    local tDigest
    put MD5Digest(pWhich) into tDigest
    if tDigest is among the lines of lSeenErrors then exit scriptParsingError
@@ -731,7 +730,6 @@ function revOKTarget pWhich
    else
       put the long id of the target into tTarget
    end if
-
    return revIDEObjectIsOnIDEStack(tTarget)
 end revOKTarget
 

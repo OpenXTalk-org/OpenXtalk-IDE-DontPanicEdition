@@ -1,0 +1,24 @@
+import module org.openxtalk.avmidiplay.paulmcclernan
+  use com.livecode.objc
+  use com.livecode.foreign
+  use com.livecode.engine
+  use com.livecode.arithmetic
+  use com.livecode.binary
+  use com.livecode.list
+  use com.livecode.logic
+  use com.livecode.string
+  use com.livecode.type
+  use com.livecode.system
+  handler AVMIDIPlayerStopCallback(in pBlock as pointer) returns optional any
+  handler AVMIDIPlayerInitCallback() returns optional any
+  handler AVMIDIPlayerRemoveCallback() returns optional any
+  handler AVMIDIPlayerLoad(in MIDIfilePath as String, in SoundFontPath as String) returns nothing
+  handler AVMIDIPlayerLoadURLs(in MIDIfilePath as String, in SoundFontPath as String) returns nothing
+  handler AVMIDIPlayerPlay() returns optional any
+  handler AVMIDIPlayerStop() returns optional NaturalFloat
+  handler AVMIDIPlayerIsPlaying() returns Boolean
+  handler AVMIDIPlayerSetRate(in playbackRate as Number) returns nothing
+  handler AVMIDIPlayerDuration() returns String
+  handler AVMIDIPlayerGetCurrentPosition() returns String
+  handler AVMIDIPlayerSetCurrentPosition(in playbackRate as Number) returns nothing
+end module

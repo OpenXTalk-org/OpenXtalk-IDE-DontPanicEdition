@@ -1,0 +1,1039 @@
+library org.openxtalk.library.fluidsynth
+
+metadata version is "0.6"
+metadata author is "Paul McClernan,FerrusLogic"
+metadata title is "OpenXTalk.org FluidSynth"
+metadata userVisible is "true" -- Show Widget in ... ?
+metadata _ide is "true" -- ? default load at startup
+
+use com.livecode.foreign
+use com.livecode.canvas
+use com.livecode.string
+use com.livecode.char
+use com.livecode.array
+use com.livecode.list
+use com.livecode.widget
+use com.livecode.engine
+use com.livecode.library.widgetutils
+use com.livecode.system
+
+private type fs_SETTINGS is Pointer
+private type fs_SYNTH is Pointer
+private type fs_AUIDIOdrvr is Pointer
+private type fs_PLAYER is Pointer
+private type fs_SOUNDFONT is Pointer
+private type fs_FILE_RENDERER is Pointer
+private type fs_MIDIROUTER is Pointer
+private type fs_MIDIROUTER_rule is Pointer
+private type fs_MIDIdrvr is Pointer
+private type fs_MIDIEvent is Pointer
+
+constant kFLUID_OK is 0
+constant kFLUID_FAILED is -1
+
+private variable mInited as Boolean
+private variable mSettings as optional fs_SETTINGS
+private variable mSynth as optional fs_SYNTH
+private variable mAudioDriver	as optional fs_AUIDIOdrvr
+private variable mPlayer as optional fs_PLAYER
+private variable mSelectedSoundFont	as optional fs_SOUNDFONT
+private variable mSoundFont as optional fs_SOUNDFONT
+private variable mMIDIDriver as optional fs_MIDIdrvr
+
+__safe foreign handler new_fluid_settings() returns fs_SETTINGS binds to "c:libfluidsynth>new_fluid_settings"
+__safe foreign handler delete_fluid_settings(in pSettings as fs_SETTINGS) returns nothing binds to "c:libfluidsynth>delete_fluid_settings"
+__safe foreign handler fluid_settings_setnum(in pSettings as fs_SETTINGS, in pSettingName as ZStringNative, in pNumber as CDouble) returns CInt binds to "c:libfluidsynth>fluid_settings_setnum"
+__safe foreign handler fluid_settings_getnum(in pSettings as fs_SETTINGS, in pSettingName as ZStringNative, out rNumber as CDouble) returns CInt binds to "c:libfluidsynth>fluid_settings_getnum"
+__safe foreign handler fluid_settings_setint(in pSettings as fs_SETTINGS, in pSettingName as ZStringNative, in pNumber as CInt) returns CInt binds to "c:libfluidsynth>fluid_settings_setint"
+__safe foreign handler fluid_settings_getint(in pSettings as fs_SETTINGS, in pSettingName as ZStringNative, out rNumber as CInt) returns CInt binds to "c:libfluidsynth>fluid_settings_getint"
+__safe foreign handler fluid_settings_setstr(in pSettings as fs_SETTINGS, in pSettingName as ZStringNative, in pSettingString as ZStringNative) returns Cbool binds to "c:libfluidsynth>fluid_settings_setstr"
+__safe foreign handler fluid_settings_getstr(in pSettings as fs_SETTINGS, in pSettingName as ZStringNative, out rSettingString as ZStringNative) returns CBool binds to "c:libfluidsynth>fluid_settings_getstr"
+
+__safe foreign handler fluid_settings_getstr_default(in pSettings as fs_SETTINGS, in pSettingName as ZStringNative, out rSettingString as ZStringNative) returns CBool binds to "c:libfluidsynth>fluid_settings_getstr_default"
+
+__safe foreign handler fluid_is_midifile(in pFilename as ZStringNative ) returns CBool binds to "c:libfluidsynth>fluid_is_midifile"
+__safe foreign handler fluid_is_soundfont(in pFilename as ZStringNative ) returns CBool binds to "c:libfluidsynth>fluid_is_soundfont"
+__safe foreign handler fluid_version(out rMaj as CInt, out rMin as CInt, out rMicr as CInt) returns nothing binds to "c:libfluidsynth>fluid_version"
+__safe foreign handler fluid_version_str() returns Pointer binds to "c:libfluidsynth>fluid_version_str"
+
+__safe foreign handler new_fluid_audio_driver(in pSettings as fs_SETTINGS,in pSynth as fs_SYNTH ) returns optional fs_AUIDIOdrvr binds to "c:libfluidsynth>new_fluid_audio_driver"
+__safe foreign handler delete_fluid_audio_driver(in pDriver as fs_AUIDIOdrvr ) returns nothing binds to "c:libfluidsynth>delete_fluid_audio_driver"
+
+__safe foreign handler new_fluid_synth(in pSettings as fs_SETTINGS) returns optional fs_SYNTH binds to "c:libfluidsynth>new_fluid_synth"
+__safe foreign handler delete_fluid_synth(in pSynth as fs_SYNTH) returns CBool binds to "c:libfluidsynth>delete_fluid_synth"
+__safe foreign handler fluid_synth_get_cpu_load(in pSynth as fs_SYNTH) returns CDouble binds to "c:libfluidsynth>fluid_synth_get_cpu_load"
+__safe foreign handler fluid_synth_sfload(in pSynth as fs_SYNTH,in pFilename as ZStringNative,in pResetPresets as CBool) returns CSInt binds to "c:libfluidsynth>fluid_synth_sfload"
+__safe foreign handler fluid_synth_add_sfont(in pSynth as fs_SYNTH, in pSoudFont as fs_SOUNDFONT ) returns CSInt binds to "c:libfluidsynth>fluid_synth_add_sfont"
+__safe foreign handler fluid_synth_remove_sfont(in pSynth as fs_SYNTH,in pSoudFont as fs_SOUNDFONT ) returns CSInt binds to "c:libfluidsynth>fluid_synth_remove_sfont"
+__safe foreign handler fluid_synth_sfunload(in pSynth as fs_SYNTH,in pSoudFont as fs_SOUNDFONT, in pReset as CInt) returns CSInt binds to "c:libfluidsynth>fluid_synth_sfunload"
+__safe foreign handler fluid_synth_sfreload(in pSynth as fs_SYNTH,in pSoundFontId as Cint) returns CSInt binds to "c:libfluidsynth>fluid_synth_sfreload"
+__safe foreign handler fluid_synth_get_sfont(in pSynth as fs_SYNTH, in pSFontIndexNum as CInt) returns optional fs_SOUNDFONT binds to "c:libfluidsynth>fluid_synth_get_sfont" -- Index is 0 to _sfcount -1
+__safe foreign handler fluid_synth_get_sfont_by_id(in pSynth as fs_SYNTH, in pSFontID as CInt) returns optional fs_SOUNDFONT binds to "c:libfluidsynth>fluid_synth_get_sfont_by_id"
+__safe foreign handler fluid_sfont_get_name(in pSoundFont as optional fs_SOUNDFONT) returns optional Pointer binds to "c:libfluidsynth>fluid_sfont_get_name" -- pointer to *char string
+__safe foreign handler fluid_synth_sfcount(in pSynth as fs_SYNTH ) returns CInt binds to "c:libfluidsynth>fluid_synth_sfcount"
+__safe foreign handler fluid_synth_system_reset(in pSynth as fs_SYNTH) returns CBool binds to "c:libfluidsynth>fluid_synth_system_reset"
+__safe foreign handler fluid_synth_noteon(in pSynth as fs_SYNTH,in pChan as CInt,in pKey as CInt, in pVel as CInt ) returns CSInt binds to "c:libfluidsynth>fluid_synth_noteon"
+__safe foreign handler fluid_synth_noteoff(in pSynth as fs_SYNTH,in pChan as CInt,in pKey as CInt ) returns CInt binds to "c:libfluidsynth>fluid_synth_noteoff"
+__safe foreign handler fluid_synth_pitch_bend(in pSynth as fs_SYNTH,in pChan as CInt,in pBend as CInt ) returns CSInt binds to "c:libfluidsynth>fluid_synth_pitch_bend" -- bend 0-16383, 8192 as center
+__safe foreign handler fluid_synth_cc(in pSynth as fs_SYNTH,in pChan as CInt,in pControllerNum as CInt, in pCCValue as CInt ) returns CSInt binds to "c:libfluidsynth>fluid_synth_cc"
+__safe foreign handler fluid_synth_get_cc(in pSynth as fs_SYNTH,in pChan as CInt,in pControllerNum as CInt, out rCCValue as CInt ) returns CSInt binds to "c:libfluidsynth>fluid_synth_get_cc"
+__safe foreign handler fluid_synth_program_change(in pSynth as fs_SYNTH,in pChan as CInt,in pProgram as CInt ) returns CInt binds to "c:libfluidsynth>fluid_synth_program_change"
+__safe foreign handler fluid_synth_bank_select(in pSynth as fs_SYNTH,in pChan as CInt,in pBankNum as CInt ) returns CSInt binds to "c:libfluidsynth>fluid_synth_bank_select"
+__safe foreign handler fluid_synth_all_notes_off(in pSynth as fs_SYNTH,in pChan as CInt) returns CSInt binds to "c:libfluidsynth>fluid_synth_all_notes_off"
+__safe foreign handler fluid_synth_all_sounds_off(in pSynth as fs_SYNTH,in pChan as CInt) returns CSInt binds to "c:libfluidsynth>fluid_synth_all_sounds_off"
+
+--pFXGroup must be in the range -1 to (fluid_synth_count_effects_groups()-1). If -1 the parameter common to all fx groups is fetched.
+__safe foreign handler fluid_synth_count_effects_groups(in pSynth as fs_SYNTH) returns CInt binds to "c:libfluidsynth>fluid_synth_count_effects_groups"
+
+__safe foreign handler fluid_synth_set_reverb_on(in pSynth as fs_SYNTH,in pFXGroup as CSInt,in pOnOff as Boolean) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_reverb_on"
+-- fluid_synth_set_reverb is Deprecated in FluidSynth 2.x use the new reverb 'group' / individual settings versions
+__safe foreign handler fluid_synth_set_reverb( in pSynth as fs_SYNTH, pRoomsize as CDouble, pDamp as CDouble, pWidth as CDouble, pLevel as CDouble) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_reverb"
+__safe foreign handler fluid_synth_set_reverb_group_level(in pSynth as fs_SYNTH,in pFXGroup as CSInt,in pLevel as CDouble ) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_reverb_group_level"
+__safe foreign handler fluid_synth_set_reverb_group_roomsize(in pSynth as fs_SYNTH,in pFXGroup as CSInt,in pSize as CDouble) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_reverb_group_roomsize"
+__safe foreign handler fluid_synth_set_reverb_group_width(in pSynth as fs_SYNTH,in pFXGroup as CSInt,in pWidth as CDouble) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_reverb_group_width"
+__safe foreign handler fluid_synth_set_reverb_group_damp(in pSynth as fs_SYNTH,in pFXGroup as CSInt,in pDamp as CDouble) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_reverb_group_damp"
+
+__safe foreign handler fluid_synth_set_chorus_on(in pSynth as fs_SYNTH,in pFXGroup as CSInt, in pOnOff as CBool) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_chorus_on"
+-- fluid_synth_set_reverb is Deprecated in FluidSynth 2.x use the new chorus 'group' / individual settings versions
+__safe foreign handler fluid_synth_set_chorus( in pSynth as fs_SYNTH, in pChorusVoices as CInt, in pLevel as CDouble, in pSpeed as CDouble, in pDepth as CDouble, in pChorusType as CInt) \
+                                                returns CSInt binds to "c:libfluidsynth>fluid_synth_set_chorus"
+__safe foreign handler fluid_synth_set_chorus_group_nr(in pSynth as fs_SYNTH,in pFXGroup as CSInt,in pChorusVoices as CInt ) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_chorus_group_nr"
+__safe foreign handler fluid_synth_set_chorus_group_level(in pSynth as fs_SYNTH,in pFXGroup as CSInt,in pLevel as CDouble ) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_chorus_group_level"
+__safe foreign handler fluid_synth_set_chorus_group_speed(in pSynth as fs_SYNTH,in pFXGroup as CSInt,in pSize as CDouble) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_chorus_group_speed"
+__safe foreign handler fluid_synth_set_chorus_group_depth(in pSynth as fs_SYNTH,in pFXGroup as CSInt,in pDamp as CDouble) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_chorus_group_depth"
+__safe foreign handler fluid_synth_set_chorus_group_type(in pSynth as fs_SYNTH,in pFXGroup as CSInt,in pChorusVoices as CInt ) returns CSInt binds to "c:libfluidsynth>fluid_synth_set_chorus_group_type"
+-- FLUID_CHORUS_MOD_SINE = 0, FLUID_CHORUS_MOD_TRIANGLE = 1
+
+__safe foreign handler new_fluid_player(in pSynth as fs_SYNTH ) returns optional fs_PLAYER binds to "c:libfluidsynth>new_fluid_player"
+__safe foreign handler delete_fluid_player(in pPlayer as fs_PLAYER) returns CBool binds to "c:libfluidsynth>delete_fluid_player"
+__safe foreign handler fluid_player_add(in pPlayer as fs_PLAYER,in pFilename as ZStringNative) returns CInt binds to "c:libfluidsynth>fluid_player_add"
+__safe foreign handler fluid_player_play(in pPlayer as fs_PLAYER) returns CInt binds to "c:libfluidsynth>fluid_player_play"
+__safe foreign handler fluid_player_stop(in pPlayer as fs_PLAYER) returns CInt binds to "c:libfluidsynth>fluid_player_stop"
+__safe foreign handler fluid_player_join(in pPlayer as fs_PLAYER) returns CInt binds to "c:libfluidsynth>fluid_player_join"
+
+-- pLoop = 	Times left to loop the playlist. -1 means loop infinitely.
+__safe foreign handler fluid_player_set_loop(in pPlayer as fs_PLAYER,in pLoop as CInt) returns CInt binds to "c:libfluidsynth>fluid_player_set_loop"
+__safe foreign handler fluid_player_set_bpm(in pPlayer as fs_PLAYER,in pBPM as CInt) returns CInt binds to "c:libfluidsynth>fluid_player_set_bpm"
+__safe foreign handler fluid_player_get_bpm(in pPlayer as fs_PLAYER) returns CInt binds to "c:libfluidsynth>fluid_player_get_bpm"
+-- per MIDI file spec so 500000 = 120 BPM
+__safe foreign handler fluid_player_set_midi_tempo(in pPlayer as fs_PLAYER,in pMicroSecsPerQrtrNote as CInt) returns CInt binds to "c:libfluidsynth>fluid_player_set_midi_tempo" -- per MIDI file spec so 500000 = 120 BPM
+__safe foreign handler fluid_player_get_midi_tempo(in pPlayer as fs_PLAYER) returns CInt binds to "c:libfluidsynth>fluid_player_get_midi_tempo" -- per MIDI file spec so 500000 = 120 BPM
+__safe foreign handler fluid_player_get_status(in pPlayer as fs_PLAYER) returns CInt binds to "c:libfluidsynth>fluid_player_get_status"
+__safe foreign handler fluid_player_get_current_tick(in pPlayer as fs_PLAYER) returns CInt binds to "c:libfluidsynth>fluid_player_get_current_tick"
+__safe foreign handler fluid_player_get_total_ticks(in pPlayer as fs_PLAYER) returns CInt binds to "c:libfluidsynth>fluid_player_get_total_ticks"
+
+__safe foreign handler new_fluid_file_renderer(in mSynth as fs_SYNTH) returns fs_FILE_RENDERER binds to "c:libfluidsynth>new_fluid_file_renderer"
+__safe foreign handler fluid_file_renderer_process_block(in pFileRenderer as fs_FILE_RENDERER) returns CSInt binds to "c:libfluidsynth>fluid_file_renderer_process_block"
+__safe foreign handler delete_fluid_file_renderer(in pFileRenderer as fs_FILE_RENDERER) returns CSInt binds to "c:libfluidsynth>delete_fluid_file_renderer"
+
+-- http://www.fluidsynth.org/api-1.x/index.html#RealtimeMIDI
+__safe foreign handler new_fluid_midi_router(in pSettings as fs_SETTINGS, in pHandler as any, in pHandlerData as optional any)\
+ 																			returns optional fs_MIDIROUTER binds to "c:libfluidsynth>new_fluid_midi_router"
+__safe foreign handler delete_fluid_midi_router(in pPlayer as fs_MIDIROUTER) returns CBool binds to "c:libfluidsynth>delete_fluid_midi_router"
+__safe foreign handler new_fluid_midi_router_rule() returns fs_MIDIROUTER_rule binds to "c:libfluidsynth>new_fluid_midi_router_rule"
+__safe foreign handler delete_fluid_midi_router_rule(in pRouterRule as fs_MIDIROUTER_rule) returns CBool binds to "c:libfluidsynth>new_fluid_midi_router_rule"
+
+
+public foreign handler type handle_midi_event_func_t( in pOptionalDataPtr as optional Pointer, in mMIDIEvtPtr as Pointer) returns CInt
+
+__safe foreign handler new_fluid_midi_driver(in pSettings as fs_SETTINGS, in pHandler as handle_midi_event_func_t, in pOptionalDataPtr as optional Pointer) \
+																	returns optional fs_MIDIdrvr binds to "c:libfluidsynth>new_fluid_midi_driver"
+__safe foreign handler delete_fluid_midi_driver(in pPlayer as fs_MIDIdrvr) returns CBool binds to "c:libfluidsynth>delete_fluid_midi_driver"
+__safe foreign handler fluid_midi_event_get_type(in pMIDIEvent as fs_MIDIEvent) returns Cint binds to "c:libfluidsynth>fluid_midi_event_get_type"
+__safe foreign handler fluid_midi_event_get_channel(in pMIDIEvent as fs_MIDIEvent) returns Cint binds to "c:libfluidsynth>fluid_midi_event_get_channel"
+__safe foreign handler fluid_midi_event_get_key(in pMIDIEvent as fs_MIDIEvent) returns Cint binds to "c:libfluidsynth>fluid_midi_event_get_key"
+__safe foreign handler fluid_midi_event_get_velocity(in pMIDIEvent as fs_MIDIEvent) returns Cint binds to "c:libfluidsynth>fluid_midi_event_get_velocity"
+__safe foreign handler fluid_midi_event_get_pitch(in pMIDIEvent as fs_MIDIEvent) returns Cint binds to "c:libfluidsynth>fluid_midi_event_get_pitch"
+__safe foreign handler delete_fluid_midi_event(in pMIDIEvent as fs_MIDIEvent) returns nothing binds to "c:libfluidsynth>delete_fluid_midi_event"
+
+-- FLUIDSYNTH_API int 	fluid_player_set_playback_callback (fluid_player_t *player, handle_midi_event_func_t handler, void *handler_data) Change the MIDI callback function. More...
+-- FLUIDSYNTH_API int 	fluid_player_seek (fluid_player_t *player, int ticks) Seek in the currently playing file. More...
+
+constant kMCStringEncodingUTF8 is 4
+__safe foreign handler MCStringEncode(in pString as String, in pEncoding as CUInt, in pIsExternalRep as CBool, out rUTF8String as Data) returns CBool binds to "<builtin>"
+__safe foreign handler MCStringCreateWithCString(in pString as Pointer, out rString as String) returns CBool binds to "<builtin>"
+--foreign handler MCStringCreateWithBytes(in pBytes as Pointer, in pByteCount as LCUInt, in pEncoding as CUInt, in pIsExternalRep as CBool, out rString as String) returns CBool binds to "<builtin>"
+--foreign handler MCDataConvertStringToData(in pString as String, out rData as Data) returns CBool binds to "<builtin>"
+__safe foreign handler MCDataGetBytePtr(in pData as Data) returns optional Pointer binds to "<builtin>"
+__safe foreign handler MCMemoryAllocate(in pSize as UIntSize, out rBlockPtr as Pointer) returns CBool binds to "<builtin>"
+-- allocates a block of size pSize bytes, places the pointer into rBlockPtr and returns true - or just returns false if it fails
+-- MCMemoryReallocate(T *p_block, size_t p_new_size, T*& r_new_block)
+__safe foreign handler MCMemoryReallocate(in rBlockPtr as Pointer, in pSize as UIntSize, out rReAllocBlockPtr as Pointer) returns CBool binds to "<builtin>"
+__safe foreign handler MCMemoryDeallocate(in rBlockPtr as Pointer) returns nothing binds to "<builtin>"
+__safe foreign handler MCWidgetGetMyScriptObject(out rObject as ScriptObject) returns nothing binds to "<builtin>"
+
+private handler fsPostMIDIinput(in tMsgType as Integer, in pChan as Integer, pNoteNum as Integer, pVelocity as optional Integer) returns nothing
+   -- variable tScriptObj as ScriptObject
+	-- MCWidgetGetMyScriptObject(tScriptObj)
+	-- log tScriptObj
+	-- get the target -- not allowed in Library modules
+	-- log the result
+   -- resolve script object mScriptObject
+   if mScriptObject exists then
+   	if tMsgType = 144 then
+   		post "MIDINoteOn" to mScriptObject with [ pChan , pNoteNum , pVelocity ]
+   		-- send "MIDINoteOn" to mScriptObject with [ pChan , pNoteNum , pVelocity ]
+   		-- execute script "get MIDINoteOn(param(1),param(2),param(3)) " of mScriptObject with [ pChan, pNoteNum, pVelocity]
+   		-- execute script ("MIDINoteOn("& pChan &","& pNoteNum  &","& pVelocity &")") in mScriptObject
+   		-- log the message was handled
+   		-- log the result
+   	else if tMsgType = 128 then
+   		post "MIDINoteOff" to mScriptObject with [ pChan , pNoteNum ]
+   		-- send "MIDINoteOff" to mScriptObject with [ pChan , pNoteNum ]
+   		-- execute script ("MIDINoteOff("& pChan &","& pNoteNum & ")") in mScriptObject
+   		-- log the message was handled
+   		-- log the result
+   	else if tMsgType = 224 then
+   		-- post "MIDIPitchBend" with [ tChan , tNoteNum , tVelocity ]
+   		post "MIDIPitchBend" to mScriptObject with [ pChan , pNoteNum ]
+   	else if tMsgType = 176 then
+   		-- post "MIDIController" with [ tChan , tNoteNum , tVelocity ]
+   		post "MIDIController" to mScriptObject with [ pChan , pNoteNum , pVelocity ]
+
+   	end if
+   end if
+	-- log the system error message
+	-- com.livecode.system
+	-- log the result
+	return
+end handler
+
+public handler fsSetMIDIInTargetScriptObj(in pTargetScriptObj as optional String ) returns optional any
+	if pTargetScriptObj is not nothing then
+		resolve script object pTargetScriptObj
+		put the result into mScriptObject
+      log pTargetScriptObj
+	--else
+	  -- resolve script object "this stack"
+     -- put the result into mScriptObject
+     -- log pTargetScriptObj
+	end if
+end handler
+
+private handler fsHandleMIDIinput(in pMyDataPtr as optional Pointer, in mMIDIEvtPtr as Pointer ) returns CInt
+	-- log [pMIDIEvent]
+	variable tChan as Integer
+	variable tMsgType as Integer
+	variable tNoteNum as Integer
+	variable tVelocity as Integer
+	put fluid_midi_event_get_type(mMIDIEvtPtr) into tMsgType
+	put fluid_midi_event_get_channel(mMIDIEvtPtr) into tChan
+	-- log [tMsgType] -- ,tChan,tNoteNum,tVelocity]
+	if tMsgType = 144 then
+      put fluid_midi_event_get_key(mMIDIEvtPtr) into tNoteNum
+      put fluid_midi_event_get_velocity(mMIDIEvtPtr) into tVelocity
+		fsPostMIDIinput(tMsgType,tChan,tNoteNum,tVelocity)
+		-- fluid_synth_noteon(mSynth,tChan,tNoteNum,tVelocity)
+	else if tMsgType = 128 then
+      put fluid_midi_event_get_key(mMIDIEvtPtr) into tNoteNum
+      -- put fluid_midi_event_get_velocity(mMIDIEvtPtr) into tVelocity
+		fsPostMIDIinput(tMsgType,tChan,tNoteNum,0)
+		-- fluid_synth_noteoff(mSynth,tChan,tNoteNum)
+	else if tMsgType = 224 then
+      put fluid_midi_event_get_pitch(mMIDIEvtPtr) into tNoteNum
+		fsPostMIDIinput(tMsgType,tChan,tNoteNum,0)
+		-- fluid_synth_pitch_bend(mSynth,tChan,tNoteNum)
+	else if tMsgType = 176 then
+      put fluid_midi_event_get_key(mMIDIEvtPtr) into tNoteNum
+      put fluid_midi_event_get_velocity(mMIDIEvtPtr) into tVelocity
+		fsPostMIDIinput(tMsgType,tChan,tNoteNum,tVelocity)
+		-- fluid_synth_cc(mSynth,tChan,tNoteNum,tVelocity)
+	end if
+   -- delete_fluid_midi_event(mMIDIEvtPtr)
+   -- put nothing into mMIDIEvtPtr
+	return 0
+end handler
+
+private variable mMIDIBuffer as Data
+private variable mMIDIEvtPtr as optional Pointer
+variable mScriptObject as ScriptObject
+
+public handler fsInitMIDIinput(in pInputPortName as optional String, in pTargetScriptObj as optional String) -- returns optional any
+	if pTargetScriptObj is not nothing then
+		resolve script object pTargetScriptObj
+		put the result into mScriptObject
+	else
+		resolve script object "this stack"
+		put the result into mScriptObject
+	end if
+	log ["MiDI IN TARGET ", mScriptObject]
+	if mInited then
+		if mMIDIDriver is not nothing then
+				delete_fluid_midi_driver(mMIDIDriver)
+				put nothing into mMIDIDriver
+		end if
+		if pInputPortName is nothing then
+			put "LC FluidSynth MIDI in" into pInputPortName
+		end if
+		variable tWasSet as Boolean
+      --if MCStringEncode(pInputPortName, kMCStringEncodingUTF8, false, pInputPortNameData) then
+		--	put MCDataGetBytePtr(pInputPortNameData) into pInputPortNameDataPtr
+		-- put fluid_settings_setstr(mSettings,"midi.driver","coremidi") into tWasSet
+	 	put fluid_settings_setstr(mSettings,"midi.portname", pInputPortName) into tWasSet
+	--	end if
+	--	variable tDoRunLoopFunc as MCRunloopActionCallback
+	--	variable tContext as optional Pointer
+	 --  MCHandlerGetFunctionPtr(fsHandleMIDIinput,pMIDICalbackPtr)
+	--	if MCHandlerGetFunctionPtr(doRunLoop, tDoRunLoopFunc) then
+	--	  MCEngineAddRunloopAction(tDoRunLoopFunc, tContext, mRunloopAction)
+	--		else
+	--		  put "Unable to set run loop" into tError
+	--		end if
+
+     -- put MCMemoryAllocate(65536,mMIDIEvtPtr) into tDidAllocateBlock --- crashing has nothing to do with buffer size
+		-- put MCMemoryAllocate(256,mMIDIEvtPtr) into tDidAllocateBlock
+		put new_fluid_midi_driver(mSettings, fsHandleMIDIinput, nothing) into mMIDIDriver
+ 		--put new_fluid_midi_driver(mSettings, fsHandleMIDIinput , nothing) into mMIDIDriver
+	end if
+end handler
+
+/**
+Setup the libFluidSynth Engine .
+
+Type: function
+
+Example:
+fsEnsureInitialize()
+
+Returns: True on success, false or error string on failure.
+
+Description:
+Attempts to load an instance of libFluidSynth.
+*/
+public handler fsEnsureInitialize() returns optional any
+   variable tStrPtr as Pointer
+   variable tString as String
+   variable tWasSet as CSInt
+
+	if mInited then
+		return mInited
+	else
+   	--variable rMaj as Integer
+   	--variable rMin as Integer
+   	-- variable rMicr as Integer
+   	-- fluid_version(rMaj,rMin,rMicr)
+      -- log [rMaj,rMin,rMicr]
+      put fluid_version_str() into tStrPtr
+      if MCStringCreateWithCString(tStrPtr, tString) then
+         log ["FluidSynth Version:" && tString]
+      end if
+
+      put new_fluid_settings() into mSettings
+
+      -- put fluid_settings_getstr_default(mSettings,"audio.driver",tStrPtr) into tWasSet
+      -- if MCStringCreateWithCString(tStrPtr, tString) then
+      --   log ["FluidSynth Default:" && tString]
+      -- end if
+      fluid_settings_setint(mSettings, "audio.jack.autoconnect", 1)
+
+      put new_fluid_synth(mSettings) into mSynth
+   	put new_fluid_audio_driver(mSettings,mSynth) into mAudioDriver
+      if mAudioDriver is not nothing then
+   	    put true into mInited
+          return true
+       else
+          return false
+       end if
+   end if
+end handler
+
+
+
+/**
+Check the ammount of CPU load the FluidSynth library is currently using.
+
+Type: function
+
+Example:
+get fsGetCPULoad()
+
+Returns: The ammount of CPU load the FluidSynth library is currently using.
+
+Description:
+Returns the ammount of CPU load the FluidSynth library is currently using.
+*/
+public handler fsGetCPULoad() returns optional any
+   if fsEnsureInitialize() then
+      if mSynth is not nothing then
+         return fluid_synth_get_cpu_load(mSynth)
+      end if
+   end if
+end handler
+
+/**
+Get the number of SoundFonts that are loaded by the FluidSynth library
+
+Type: function
+
+Example:
+get fsGetSoundFontCount()
+
+Returns: The number of SoundFonts that are loaded by the FluidSynth library.
+
+Description:
+Returns the number of SoundFonts that are loaded by the FluidSynth library.
+*/
+public handler fsGetSoundFontCount() returns optional Integer
+	variable tCount as Integer
+	if fsEnsureInitialize() then
+		if mSynth is not nothing then
+         put fluid_synth_sfcount(mSynth) into tCount
+         if tCount is a number then
+			    return tCount
+          end if
+		end if
+	end if
+end handler
+
+
+private type LibraryHandle is optional Pointer
+private variable mNSConcreteGlobalBlock as optional Pointer
+constant kRTLD_LAZY    is 1
+private foreign handler OpenLibrary(in pPath as ZStringUTF8, in pFlag as CSInt) returns LibraryHandle binds to "dlopen"
+private foreign handler GetSymbolPointer(in pHandle as LibraryHandle, in pSymbol as ZStringUTF8) returns optional Pointer binds to "dlsym"
+private foreign handler CloseLibrary(in pHandle as LibraryHandle) returns CSInt binds to "dlclose"
+
+public handler fsMIDIFileToSoundFile(in pSoundFontPath as String, in pMIDIFilePath as String, in pSoundFilePath as String ) -- returns optional any
+	variable tStatus as Integer
+   variable tSynth as fs_SYNTH
+   variable tSettings as fs_SETTINGS
+   variable tPlayer as fs_PLAYER
+   variable tRenderer as fs_FILE_RENDERER
+	if fsEnsureInitialize() then
+
+      --variable tLibSndFile as LibraryHandle
+      --unsafe
+      --   put OpenLibrary("libsndfile.1.dylib", kRTLD_LAZY) into tLibSndFile
+      --   put OpenLibrary("@loader_path/libsndfile.1.dylib", kRTLD_LAZY) into tLibSndFile
+      --end unsafe
+      -- if tSystLibSndFile is not nothing then
+      --    put GetSymbolPointer(tSystem, "_NSConcreteGlobalBlock") into mNSConcreteGlobalBlock
+         -- CloseLibrary(tSystem)
+      --  end if
+
+      -- specify the file to store the audio to
+      -- make sure you compiled fluidsynth with libsndfile to get a real wave file
+      -- otherwise this file will only contain raw s16 stereo PCM
+      put new_fluid_settings() into tSettings
+
+      fluid_settings_setstr(tSettings, "audio.file.name", pSoundFilePath)
+      fluid_settings_setstr(tSettings, "audio.file.type", "wav")
+      -- aiff, au, auto, avr, caf, flac, htk, iff, mat, oga, paf, pvf, raw, sd2, sds, sf, voc, w64, wav, xi
+      -- Default = 'auto' if libsndfile support is built in, Limited to 'raw' if compiled without libsndfile support.
+      -- Actual options will vary depending on libsndfile library.
+
+      fluid_settings_setstr(tSettings, "audio.file.format", "s16") -- options are double, float, s16, s24, s32, s8, u8
+      fluid_settings_setstr(tSettings, "audio.file.endian", "auto") -- auto, big, cpu, little ('cpu' only if libsndfile support is not built in)
+
+      -- use number of samples processed as timing source, rather than the system timer
+      fluid_settings_setstr(tSettings, "player.timing-source", "sample")
+
+      -- since this is a non-realtime scenario, there is no need to pin the sample data
+      fluid_settings_setint(tSettings, "synth.lock-memory", 0)
+
+      put new_fluid_synth(tSettings) into tSynth
+
+      if fluid_is_soundfont(pSoundFontPath) then
+			put fluid_synth_sfload(tSynth,pSoundFontPath,true) into tStatus
+         --- maybe check tStatus result for error ;-)
+      end if
+      put new_fluid_player(tSynth) into tPlayer
+      put new_fluid_file_renderer(tSynth) into tRenderer
+      fluid_player_add(tPlayer, pMIDIFilePath)
+      fluid_player_play(tPlayer)
+      repeat while fluid_player_get_status(tPlayer) = 1  -- FLUID_PLAYER_PLAYING = 1
+         if (fluid_file_renderer_process_block(tRenderer) is not kFLUID_OK) then
+            exit repeat
+         end if
+      end repeat
+      -- just for sure: stop the playback explicitly and wait until finished
+      fluid_player_stop(tPlayer)
+      fluid_player_join(tPlayer)
+      delete_fluid_file_renderer(tRenderer)
+      delete_fluid_player(tPlayer)
+      delete_fluid_synth(tSynth)
+      delete_fluid_settings(tSettings)
+
+      -- re-pin the sample data
+      -- fluid_settings_setint(tSettings, "synth.lock-memory", 1)
+	else
+		return "Error: FluidSynth not initialized!"
+	end if
+end handler
+
+
+/**
+Loads a Soundbank file (SF2 or DLS) for use with MIDI playback
+
+Example:
+fsLoadMIDIFile "/Path/To?My/Soundbank.sf2"
+
+Parameters:
+SoundFontPath (string): the file path to a SoundBank SF2 or DLS file
+
+Description:
+Give a file path fsLoadSoundFont attempts tp load a Soundbank file in either SoundFont2 (.sf2) or
+Downloadable Sound DLS format (.dls) for use with MIDI playback.
+*/
+public handler fsLoadSoundFont(in pFilename as String) returns optional any
+	variable tStatus as Integer
+	if fsEnsureInitialize() then
+		if fluid_is_soundfont(pFilename) then
+			put fluid_synth_sfload(mSynth,pFilename,true) into tStatus
+			if tStatus is not kFLUID_FAILED then
+				return tStatus
+			else
+				return "Error: SoundFont did not load!"
+			end if
+		else
+			return "Error: File May not be a valid SoundFont File!"
+		end if
+	else
+		return "Error: FluidSynth not initialized!"
+	end if
+end handler
+
+public handler fsGetSoundFontByID(in pSoundFontID as Integer) returns optional fs_SOUNDFONT
+	variable tCount as Integer
+	variable tSelectedSoundFont as optional fs_SOUNDFONT
+   put nothing into tSelectedSoundFont
+	if fsEnsureInitialize() then
+		if mSynth is not nothing then
+         if pSoundFontID > -1 then
+   			put fluid_synth_get_sfont_by_id(mSynth, pSoundFontID) into tSelectedSoundFont
+            -- log tSelectedSoundFont
+   			if tSelectedSoundFont is not nothing then
+               return tSelectedSoundFont
+   			else
+               return nothing
+            end if
+         else
+            return nothing
+         end if
+      else
+         return nothing
+		end if
+   else
+      return nothing
+	end if
+end handler
+
+handler fsGetSoundFontByIndex(in pSoundFontIndex as Integer) returns optional fs_SOUNDFONT
+	variable tCount as Integer
+	variable tSelectedSoundFont as optional fs_SOUNDFONT
+   put nothing into tSelectedSoundFont
+	if fsEnsureInitialize() then
+		if mSynth is not nothing then
+         if pSoundFontIndex > -1 then
+   			put fluid_synth_get_sfont(mSynth, pSoundFontIndex) into tSelectedSoundFont
+            -- log tSelectedSoundFont
+   			if tSelectedSoundFont is not nothing then
+   		      return tSelectedSoundFont
+   			else
+               return nothing
+            end if
+         else
+            return nothing
+         end if
+      else
+         return nothing
+		end if
+   else
+      return nothing
+	end if
+end handler
+
+public handler fsListLoadedSoundFonts() returns String
+   variable tString as optional String -- ZStringNative
+   variable tStrPtr as optional Pointer
+   variable tCount as optional Integer
+   variable tStatus as optional CSint
+   variable tStringList as optional String
+   variable tIterate as optional Cint
+   variable tSelectedSoundFont as optional fs_SOUNDFONT
+   put nothing into tSelectedSoundFont
+   put the empty string into tStringList
+   put fsGetSoundFontCount() into tCount
+   -- log tCount
+   repeat with tIterate from 1 up to tCount by 1
+      put fluid_synth_get_sfont_by_id(mSynth, tIterate) into tSelectedSoundFont
+      if mSoundFont is not nothing then
+         put fluid_sfont_get_name(tSelectedSoundFont) into tStrPtr
+         if not MCStringCreateWithCString(tStrPtr, tString) then
+            return "Failed to convert const *char to String"
+         else if tString is not nothing and tString is not the empty string then
+            put tIterate formatted as string && tString & "\n" after tStringList
+         end if
+      else
+         put tIterate formatted as string && "Error\n" after tStringList
+      end if
+   end repeat
+   return tStringList
+end handler
+
+public handler fsGetSoundFontNameByIndex(in tIndex as optional Integer) returns optional String
+   variable tString as optional String -- ZStringNative
+   variable tStrPtr as optional Pointer -- ZStringNative
+   variable tIterate as optional Integer
+   variable tSelectedSoundFont as optional fs_SOUNDFONT
+   put fsGetSoundFontByIndex( tIndex ) into mSoundFont
+   if mSoundFont is not nothing then
+      put fluid_sfont_get_name(mSoundFont) into tStrPtr
+      if not MCStringCreateWithCString(tStrPtr, tString) then
+         return "failed to convert const char * to String"
+      else if tString is not nothing and tString is not the empty string then
+         return tString
+      else
+         return "Error"
+      end if
+   else
+     return "No Soundfont selected"
+   end if
+end handler
+
+
+public handler fsMIDIPlayerInit() returns optional any
+	if mPlayer is nothing then
+		if fsEnsureInitialize() then
+			put new_fluid_player(mSynth) into mPlayer
+		end if
+	end if
+end handler
+
+public handler fsMIDIPlayerSetLoop(in pLoop as Number) returns nothing
+	variable tStatus as Integer
+	if mPlayer is not nothing then
+		put fluid_player_set_loop(mPlayer,pLoop) into tStatus
+	end if
+end handler
+
+/**
+Loads a MIDI file from and a Soundbank file from file paths and prepares for playback.
+
+Example:
+fsLoadMIDIFile "/Users/Me/MIDIMusic.mid"
+
+Parameters:
+MIDIfilePath (string): the file path to a MIDI file
+SoundFontPath (string): the file path to a SoundBank SF2 or DLS file
+
+Description:
+Loads a MIDI file from and a Soundbank file in either SoundFont2 or
+Downloadable Sound DLS format from absolute file paths passed in and
+"prerolls" the data, preparing it for playback.
+*/
+public handler fsLoadMIDIFile(in pFilename as String) returns optional any
+	variable tStatus as Integer
+	variable tBool as Boolean
+
+	if fsEnsureInitialize() then
+		if fluid_is_midifile(pFilename) then
+			if mPlayer is not nothing then
+				put delete_fluid_player(mPlayer) into tBool
+				put new_fluid_player(mSynth) into mPlayer
+			   put fluid_player_add(mPlayer,pFilename) into tStatus
+				if tStatus is kFLUID_OK then
+					return true
+				else
+					return false
+				end if
+			else
+				put new_fluid_player(mSynth) into mPlayer
+				put fluid_player_add(mPlayer,pFilename) into tStatus
+			end if
+		else
+			return "Error: File May not be a valid MIDI File!"
+		end if
+	end if
+end handler
+
+
+/**
+Returns the current position of a loaded sequence in MIDI ticks.
+
+Example:
+if fsMIDIPlayerCurrentTick() >= fsMIDIPlayerTotalTicks() then send playStop to me
+
+Description:
+Returns the current MIDI-tick position of the currently playing MIDI file.
+Note: MIDI Ticks are an arbitrary value based on song tempo as opposed to static
+measurement like microseconds.
+*/
+public handler fsMIDIPlayerCurrentTick() returns optional any
+	variable tTick as Integer
+	variable tBool as Boolean
+
+	if fsEnsureInitialize() then
+		if mPlayer is not nothing then
+			put fluid_player_get_current_tick(mPlayer) into tTick
+			return tTick
+		end if
+	end if
+	-- __safe foreign handler fluid_player_get_total_ticks(in pPlayer as fs_PLAYER) returns CInt binds to "c:libfluidsynth>fluid_player_get_total_ticks"
+end handler
+
+
+/**
+Returns ending position of playing sequence in MIDI ticks.
+
+Example:
+if fsMIDIPlayerCurrentTick() >= fsMIDIPlayerTotalTicks() then send playStop to me
+
+Description:
+Returns the ending MIDI-tick position of the currently loaded MIDI file.
+Note: MIDI Ticks are an arbitrary value based on song tempo as opposed to static
+measurement like microseconds.
+*/
+public handler fsMIDIPlayerTotalTicks() returns optional any
+	variable tTicks as Integer
+	variable tBool as Boolean
+
+	if fsEnsureInitialize() then
+		if mPlayer is not nothing then
+			put fluid_player_get_total_ticks(mPlayer) into tTicks
+			return tTicks
+		end if
+	end if
+	-- __safe foreign handler (in pPlayer as fs_PLAYER) returns CInt binds to "c:libfluidsynth>fluid_player_get_total_ticks"
+end handler
+
+/**
+Stops playback
+
+Example:
+fsMIDIPlayerStop
+
+Description:
+Stops playback of the currently playing sequence stated with fsMIDIPlayerPlay.
+*/
+public handler fsMIDIPlayerStop()
+	if mPlayer is not nothing then
+		fluid_player_stop(mPlayer)
+		delete_fluid_player(mPlayer)
+		put nothing into mPlayer
+	end if
+end handler
+
+
+/**
+Stops playback
+
+Example:
+fsMIDIPlayerPause
+
+Description:
+Pause playback of the currently playing sequence stated with fsMIDIPlayerPlay.
+*/
+public handler fsMIDIPlayerPause()
+	if mPlayer is not nothing then
+		fluid_player_stop(mPlayer)
+	end if
+end handler
+
+/**
+Plays the data that was loaded with fsLoadMIDIFile
+
+Example:
+fsMIDIPlayerPlay
+
+Description:
+Plays the data that was loaded with either AVMIDIPlayerLoad or AVMIDIPlayerLoadURLs
+*/
+public handler fsMIDIPlayerPlay() returns optional any
+	if mPlayer is not nothing then
+		variable tStatus as Integer
+		put fluid_player_play(mPlayer) into tStatus
+		if tStatus is kFLUID_OK then
+			return true
+		else
+			return false
+		end if
+	end if
+end handler
+
+/**
+Checks to see if MIDI Data is currently being played back
+
+Example:
+ if fsMIDIPlayerStatus() is "playing" then fsMIDIPlayerStop
+
+Description:
+A boolean that indicates if MIDI Data is currently being played back.
+*/
+public handler fsMIDIPlayerStatus() returns optional any
+	variable tStatus as Integer
+	if mPlayer is not nothing then
+		put fluid_player_get_status(mPlayer) into tStatus
+		if tStatus is 1 then
+			return "playing"
+		else if tStatus is 2 then
+			return "play stopped"
+		else
+			return tStatus
+		end if
+	else
+		return "no player"
+	end if
+end handler
+
+
+public handler fsSetTempoMillisecsPerQuarterNote(in pTempoMillsecs as optional Integer)
+	if pTempoMillsecs is nothing then
+		put 500000 into pTempoMillsecs --- 500000 = 120 BPM
+	end if
+	fluid_player_set_midi_tempo(mPlayer,pTempoMillsecs)
+end handler
+
+
+/**
+Set playback tempo in beats per minute
+
+Example:
+fsSetTempoBPM 120 -- Set playback tempo to 120 BPM
+
+Description:
+Sets the default playback tempo in beats per minute for currenlty loaded MIDI sequence
+*/
+public handler fsSetTempoBPM(in pBPM as optional Integer)
+	if pBPM is nothing then
+		put 120 into pBPM
+	end if
+	if mPlayer is not nothing then
+		fluid_player_set_bpm(mPlayer,pBPM)
+	end if
+end handler
+
+/**
+Get the playback tempo in beats per minute
+
+Example:
+put fsSetTempoBPM() into fld "Tempo"
+
+Description:
+Gets the default playback tempo in beats per minute for currenlty loaded MIDI sequence
+*/
+public handler fsGetTempoBPM() returns optional any
+	variable tBPM as Integer
+	if mPlayer is not nothing then
+			put fluid_player_get_bpm(mPlayer) into tBPM
+			return tBPM
+	end if
+end handler
+
+public handler fsSystemReset()
+	fluid_synth_system_reset(mSynth)
+end handler
+
+public handler fsSetGain(in pGain as optional Number) returns optional any
+	if pGain is nothing then
+		put 0.5 into pGain
+	end if
+	variable tWasSet as CInt
+	put fluid_settings_setnum(mSettings,"synth.gain",pGain) into tWasSet
+	if tWasSet is kFLUID_OK then
+		return true
+	else
+		return false
+	end if
+end handler
+
+/**
+Sets the playback volume gain globally for libFluidSynth
+Example:
+fsGetGain 1.5 -- incresing gain too much will result in clipping or distortion
+
+Description:
+Sets the playback volume gain globally for libFluidSynth
+*/
+public handler fsGetGain() returns optional any
+	variable rGain as Number
+	variable tWasGotten as CInt
+	put fluid_settings_getnum(mSettings,"synth.gain",rGain) into tWasGotten
+	if tWasGotten is kFLUID_OK then
+		return rGain
+	else
+		return false
+	end if
+end handler
+
+/**
+Immediately sends a MIDI Note On message with the given pitch and velocity on the given channel.
+
+Type: command
+
+Syntax: fsNoteOn <MIDINoteNumber>,pMIDIVelocityNumber,<pMIDIChannelNumber>
+
+Example:
+fsNoteOn 1,60,127 -- 1=MIDI channel 1, 60=Middle C, 127=Full velocity
+
+Parameters:
+pMIDINoteNum: The number of the pitch to turn on, 0 to 127, 60 = Middle C
+pMIDIVeloNum: The velocity to play the given pitch at, 0 to 127
+pMIDIChanNum: The MIDI Channel to play the note on, 1 to 16
+
+Description: Immediately sends a MIDI Note On message with the given pitch and velocity on the given channel.
+*/
+public handler fsNoteOn(in pChannel as Integer, in pKey as Integer, in pVel as Integer)
+	fluid_synth_noteon(mSynth,pChannel,pKey,pVel)
+end handler
+
+/**
+Name: fsNoteOff
+
+Type: command
+
+Syntax: fsNoteOff <MIDIChannelNumber>, <MIDINoteNumber>
+
+Summary:
+Immediately sends a MIDI Note Off message with the given pitch and velocity on the given channel.
+
+Example:
+fsNoteOff 1,60 -- Turns off Middle C on MIDI channel 1
+
+Parameters:
+pMIDINoteNum: The number of the pitch to turn off, 0 to 127, 60 = Middle C
+pMIDIChanNum: The MIDI Channel to send the message to, 0 to 15, 0 = Channel 1
+
+Description:
+Immediately sends a MIDI Note Off message with the given pitch on the given channel.
+*/
+public handler fsNoteOff(in pChannel as Integer, in pKey as Integer)
+	fluid_synth_noteoff(mSynth,pChannel,pKey)
+end handler
+
+
+/**
+The send pitchbend with fine range from 0 to 16384, 8192 is centered (no bend)
+
+Type: command
+
+Syntax: fsPitchBend <pPitchBendCoarseNFine>,<pMIDIChanNum>
+
+Example:
+fsPitchBend 1,0 -- Pitchbend Maximum Down, channel 1
+fsPitchBend 1,16384 -- Pitchbend Maximum Up, channel 1
+fsPitchBend 1,8192 -- Centered / No Bend, channel 1
+
+Parameters:
+pPitchBendCoarseNFine: The number of the pitch bend 'position'
+pMIDIChanNum: MIDI Channel to send the bend value on, 1 to 16
+
+Description:
+The send pitchbend with fine range from 0 to 16384, 8192 is centered (no bend)
+*/
+public handler fsPitchBend(in pChannel as Integer, in pBend as Integer)
+	fluid_synth_pitch_bend(mSynth,pChannel,pBend)
+end handler
+
+
+/**
+Sends Program Change message on the given channel
+
+Type: command
+
+Example:
+fsProgramChange 1,2 -- Channel 1, Change to Program 2
+
+Parameters:
+pChannel (Integer): MIDI Channel to send the value on, 1 to 16
+pProgramNum (Integer): The program number to change to, range 0 to 127
+
+Description:
+Sends Program Change message on the given channel.
+*/
+public handler fsProgramChange(in pChannel as Integer, in pProgramNum as Integer)
+   expect that (pProgramNum >= 0 and pProgramNum <= 127 ) because "MIDI controller selection must be in the range of 0 to 127"
+   expect that (pChannel >= 1 and pChannel <= 16 ) because "MIDI channel values must be in the range of 1 to 16"
+	fluid_synth_program_change(mSynth, pChannel - 1, pProgramNum)
+end handler
+
+public handler fsBankSelect(in pChannel as Integer, in pProgramNum as Integer)
+	fluid_synth_bank_select(mSynth,pChannel,pProgramNum)
+end handler
+
+public handler fsAllNotesOff(in pChannel as Integer)
+	fluid_synth_all_notes_off(mSynth,pChannel)
+end handler
+
+public handler fsAllSoundsOff(in pChannel as Integer)
+	fluid_synth_all_sounds_off(mSynth,pChannel)
+end handler
+
+/**
+Name: fsContinuousController
+
+Type: command
+
+Syntax: fsContinuousController  <pMIDIChanNum>, <pController>, <pControllerVal>
+
+Summary:
+The send a controller with a single data byte value to on a given channel
+
+Example:
+fsContinuousController 1,7,127 -- channel 1, Volume Controller = 7, Data Byte 1 = 127
+
+Parameters:
+pChannel: MIDI Channel to send the controller value on, 1 to 16
+pController: The number of the MIDI Controller to set values for
+pControllerVal: The value byte one
+
+Description:
+Sends a controller message with a single data byte value to a given channel
+*/
+public handler fsContinuousController(in pChannel as Integer, in pController as Integer, in pValue as Integer)
+   fluid_synth_cc(mSynth,pChannel,pController,pValue) -- returns CSInt
+end handler
+
+public handler fsSetReverb(in pFXGroup as Integer, in pLevel as Number, in pRoomSize as Number, in pWidth as Number, in pDamp as Number)
+   variable tResultStatus as CSint
+   put fluid_synth_set_reverb_on(mSynth,-1,true) into tResultStatus
+   -- pFXGroup must be in the range -1 to (fluid_synth_count_effects_groups()-1). If -1 the parameter common to all fx groups is fetched.
+   -- put fluid_synth_count_effects_groups(mSynth) into tResultStatus
+   --log tResultStatus
+   put fluid_synth_set_reverb( mSynth, pRoomsize, pDamp, pWidth, pLevel) into tResultStatus
+   -- fluid_synth_set_reverb above is deprecated in libFluidSynth 2.x but could not bind to the individual replacement functions below on macOS FS v.2.1.5
+
+   -- put fluid_synth_set_reverb_group_level(mSynth,-1,pLevel) into tResultStatus
+   -- put fluid_synth_set_reverb_group_roomsize(mSynth,-1,pRoomSize) into tResultStatus
+   -- put fluid_synth_set_reverb_group_width(mSynth,-1,pWidth) into tResultStatus
+   -- put fluid_synth_set_reverb_group_damp(mSynth,-1,pDamp) into tResultStatus
+end handler
+
+public handler fsSetChorus(in pFXGroup as Integer, in pChorusVoices as Integer, in pLevel as Number, in pSpeed as Number, in pDepth as Number, in pChorusType as Integer)
+   variable tResultStatus as CSint
+   put fluid_synth_set_chorus_on(mSynth,-1,true) into tResultStatus
+   -- pFXGroup must be in the range -1 to (fluid_synth_count_effects_groups()-1). If -1 the parameter common to all fx groups is fetched.
+   -- put fluid_synth_count_effects_groups(mSynth) into tResultStatus
+   --log tResultStatus
+   put fluid_synth_set_chorus( mSynth, pChorusVoices, pLevel, pSpeed, pDepth, pChorusType) into tResultStatus
+   -- fluid_synth_set_chorus above is deprecated in libFluidSynth 2.x but could not bind to the individual replacement functions below on macOS FS v.2.1.5
+   -- pChorusVoices  0-99 default = 3
+   -- pLevel 0.0-10.0 default = 2.0
+   -- pSpeed 0.1-5.0 default = 0.3 Hz
+   -- pDepth 0.0 - 256.0 default = 8.0
+   -- pChorusType LFO SINE = 0, LFO TRIANGLE = 1
+
+end handler
+
+public handler fsStopDriver()
+	if mMIDIDriver is not nothing then
+			delete_fluid_midi_driver(mMIDIDriver)
+			put nothing into mMIDIDriver
+	end if
+	if mPlayer is not nothing then
+		delete_fluid_player(mPlayer)
+		put nothing into mPlayer
+	end if
+	if mAudioDriver is not nothing then
+		delete_fluid_audio_driver(mAudioDriver)
+		put nothing into mAudioDriver
+	end if
+	-- if mSynth is not nothing then
+	--	delete_fluid_synth(mSynth)
+	put nothing into mSynth
+	-- end if
+	put nothing into mSettings
+	put false into mInited
+end handler
+
+end library

@@ -5,6 +5,6 @@ on menuPick pChosenItem
    case empty
       break
    default
-      pass menuPick
+      break
    end switch
 end menuPick

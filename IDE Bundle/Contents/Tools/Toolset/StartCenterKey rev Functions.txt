@@ -1,0 +1,73 @@
+revIDESetPreference "StartCenterClassic",  pVisible
+
+put revIDEPaletteResourcePath()
+
+put revIDEStackScreenLoc("Untitled 1")
+
+revIDEGetAllPlugins()
+
+put revIDERecentStacks() — returns array
+
+revIDEOpenStack tFileData["filename"]
+
+revIDERecentStacks()
+
+return revIDEPaletteResourcePath(pFileName)
+
+put revIDEPaletteResourcePath(pFileName)
+
+revIDELaunchResource "sample stacks"
+
+revIDEDocumentationLoad "API", "LiveCode Script"
+
+revIDEDocumentationLoad "API", "Guide"
+
+revIDEActionNewMainstack "default"
+
+revIDEActionNewScriptOnlyStack
+
+revIDEActionNewMainstack "default"
+
+revIDEActionNewMainstack "iPhone 4 (320x480)"
+
+revIDEActionNewMainstack "15 In Monitor (1024x768)"
+
+revIDEActionNewMainstack "Arbitrary (50x90)"
+
+revIDESubscribe "ideDesktopChanged"
+
+revIDEStackScreenLoc(the short name of me)
+
+put revIDEGetPreference("cStartPageShow")
+
+put revIDEGetPreference("StartCenterClassic")
+
+set the iconPresetName of widget "startupCheckbox" to "lc-checkbox-unchecked"
+
+revIDEStartTutorial "First Run", “"Hello World", "App Lesson"
+
+ revIDESubscribe "ideTutorialProgressChanged"
+
+revIDEStartTutorial "First Run", “"Hello World", "App Lesson"
+
+put revEnvironmentEditionProperty("start_center_tile_color_step")
+
+revIDEStartTutorial "First Run", "Hello World", "App Lesson"
+"To Do List"
+"BMI Calculator"
+"Combining Text"
+"Timers"
+
+revLicenseType()
+
+revIDEColor("edition_color")
+
+revEnvironmentEditionProperty("upgrade_url")
+revEnvironmentEditionProperty("upgrade_mini_url")
+
+revIDESubscribe "ideDesktopChanged"
+
+revIDEOpenStack tFileData["filename"]
+
+  if revIDETutorialInProgress() is empty then
+      revIDEUnsubscribe "ideTutorialProgressChanged"

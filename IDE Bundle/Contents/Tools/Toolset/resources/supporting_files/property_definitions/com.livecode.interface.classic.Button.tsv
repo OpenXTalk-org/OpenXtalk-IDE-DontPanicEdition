@@ -6,7 +6,7 @@ title	Standard Button
 name							Button
 label
 tooltip
-style							standard	standard,transparent,opaque,rectangle,roundRect,oval,shadow,checkbox,radioButton				
+style							standard	standard,transparent,opaque,rectangle,roundRect,oval,shadow,checkbox,radioButton
 visible
 opaque							true
 showName							true
@@ -33,7 +33,7 @@ threeD							true
 showBorder							true
 hiliteBorder							true
 borderWidth							2
-foregroundColor						Text fill	black
+foregroundColor						Text fill	empty
 foregroundPattern						Text fill
 backgroundColor
 backgroundPattern

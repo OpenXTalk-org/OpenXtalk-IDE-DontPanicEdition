@@ -100,19 +100,19 @@ on commandKeyDown pWhich
          and pWhich is among the items of "P,N,U" then
       pass commandKeyDown
    end if
-
+   
    --shortcuts in ask or answer
    if the mode of stack "ask dialog" is not 0 or the mode of stack "answer dialog" is not 0 then
       pass commandKeyDown
    end if
-
+   
    --keyboard shortcut in Script Editor
    if the short name of the focusedObject is "Script" \
          and char 1 to -2 of revTargetStack(the focusedObject) is "revPropertyPalette" \
          and pWhich is "F" then
       pass commandKeyDown
    end if
-
+   
    -- in OpenXTalk command-option-S is now "Save As..." since that's far more traditional app behavior
    --  as well as far more useful in my opinion - Paul McClernan 7/15/22
    -- commented out the following script because it was blocking that shortcut key change:
@@ -128,7 +128,7 @@ on commandKeyDown pWhich
    --   end repeat
    --   exit commandKeyDown
    -- end if
-
+   
    if the shiftKey is not down then
       switch pWhich
          case "\"
@@ -141,7 +141,7 @@ on commandKeyDown pWhich
                end repeat
             end if
             break
-
+            
          case ";"
             if the selectedObjects is not empty then
                repeat for each line l in (the selectedObjects)
@@ -167,7 +167,7 @@ on commandKeyDown pWhich
       end switch
    else
       switch pWhich
-         -- case "?"
+         -- case "?" -- might make this open Dictionary or Start Center
          -- case "/"
          -- if the optionKey is not down then
          --   revIDEHelpKeyPressed -- this does seem to do anything, anymore.
@@ -178,7 +178,7 @@ on commandKeyDown pWhich
          --        send "menuPick" && quote & "Help Contents" & quote to btn "Help" of stack "revMenuBar"
          --      end if
          -- break
-
+         
          ---------- Commoand-Shift- + / - to scale text of selected objects Up / Down
          case "="
          case "+"
@@ -243,7 +243,7 @@ on commandKeyDown pWhich
                if revIDEStackIsIDEStack(tTopStack) and (not gREVShowStacks) then
                   exit commandKeyDown
                end if
-
+               
                if pWhich is "S" then --- This should probably be changed to a "Save As..." command instead of edit script of card/stack
                   edit script of tTopStack
                else
@@ -261,24 +261,26 @@ on commandKeyDown pWhich
                      end try
                   end repeat
                else if the selectedChunk is not empty then
-                     try
-                        set the textAlign of the selectedChunk to tAlign
-                     end try
+                  try
+                     set the textAlign of the selectedChunk to tAlign
+                  end try
                end if
             end if
-
-
+            
+            
             # OK-2008-07-07: Bug 6710 - The exit to top is preventing the script editor from finishing its initialization,
             # I'm not 100% certain how safe this fix is but it seems to be working ok.
             --exit to top
             exit commandKeyDown
             break
-
+         case "D"
+            revIDEDuplicateCard 
+            break
          default
             pass commandKeyDown
       end switch
    end if
-
+   
    if not gREVSuppressMessages or (gREVSuppressMessages and revOKTarget()) then pass commandKeyDown
 end commandKeyDown
 

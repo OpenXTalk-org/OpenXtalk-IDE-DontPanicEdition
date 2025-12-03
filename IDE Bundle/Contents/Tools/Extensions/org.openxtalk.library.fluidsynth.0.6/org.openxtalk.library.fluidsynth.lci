@@ -1,0 +1,48 @@
+import module org.openxtalk.library.fluidsynth
+  use com.livecode.foreign
+  use com.livecode.engine
+  use com.livecode.arithmetic
+  use com.livecode.binary
+  use com.livecode.list
+  use com.livecode.logic
+  use com.livecode.string
+  use com.livecode.type
+  use com.livecode.assert
+  foreign handler type handle_midi_event_func_t(in pOptionalDataPtr as optional Pointer, in mMIDIEvtPtr as Pointer) returns CSInt
+  handler fsSetMIDIInTargetScriptObj(in pTargetScriptObj as optional String) returns optional any
+  handler fsInitMIDIinput(in pInputPortName as optional String, in pTargetScriptObj as optional String) returns optional any
+  handler fsEnsureInitialize() returns optional any
+  handler fsGetCPULoad() returns optional any
+  handler fsGetSoundFontCount() returns optional Number
+  handler fsMIDIFileToSoundFile(in pSoundFontPath as String, in pMIDIFilePath as String, in pSoundFilePath as String) returns optional any
+  handler fsLoadSoundFont(in pFilename as String) returns optional any
+  handler fsGetSoundFontByID(in pSoundFontID as Number) returns optional fs_SOUNDFONT
+  handler fsListLoadedSoundFonts() returns String
+  handler fsGetSoundFontNameByIndex(in tIndex as optional Number) returns optional String
+  handler fsMIDIPlayerInit() returns optional any
+  handler fsMIDIPlayerSetLoop(in pLoop as Number) returns nothing
+  handler fsLoadMIDIFile(in pFilename as String) returns optional any
+  handler fsMIDIPlayerCurrentTick() returns optional any
+  handler fsMIDIPlayerTotalTicks() returns optional any
+  handler fsMIDIPlayerStop() returns optional any
+  handler fsMIDIPlayerPause() returns optional any
+  handler fsMIDIPlayerPlay() returns optional any
+  handler fsMIDIPlayerStatus() returns optional any
+  handler fsSetTempoMillisecsPerQuarterNote(in pTempoMillsecs as optional Number) returns optional any
+  handler fsSetTempoBPM(in pTempoMillsecs as optional Number) returns optional any
+  handler fsGetTempoBPM() returns optional any
+  handler fsSystemReset() returns optional any
+  handler fsSetGain(in pTempoMillsecs as optional Number) returns optional any
+  handler fsGetGain() returns optional any
+  handler fsNoteOn(in pChannel as Number, in pKey as Number, in pVel as Number) returns optional any
+  handler fsNoteOff(in pChannel as Number, in pKey as Number) returns optional any
+  handler fsPitchBend(in pChannel as Number, in pKey as Number) returns optional any
+  handler fsProgramChange(in pChannel as Number, in pKey as Number) returns optional any
+  handler fsBankSelect(in pChannel as Number, in pKey as Number) returns optional any
+  handler fsAllNotesOff(in pChannel as Number) returns optional any
+  handler fsAllSoundsOff(in pChannel as Number) returns optional any
+  handler fsContinuousController(in pChannel as Number, in pKey as Number, in pVel as Number) returns optional any
+  handler fsSetReverb(in pFXGroup as Number, in pLevel as Number, in pRoomSize as Number, in pWidth as Number, in pDamp as Number) returns optional any
+  handler fsSetChorus(in pFXGroup as Number, in pChorusVoices as Number, in pLevel as Number, in pSpeed as Number, in pDepth as Number, in pChorusType as Number) returns optional any
+  handler fsStopDriver() returns optional any
+end module

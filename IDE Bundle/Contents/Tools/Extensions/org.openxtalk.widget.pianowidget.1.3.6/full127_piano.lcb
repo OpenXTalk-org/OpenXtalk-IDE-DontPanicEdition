@@ -1,0 +1,2490 @@
+/**
+Widget is a virtual mouse piano
+
+Description:
+This widget allows for creation of scalable piano controls.
+Note that this is a purely graphical control that produces no
+sound on it's own. It is meant to be attached to a musical engine
+such as a MIDI playback library.
+
+------------------------------------------------------------------------------------------------------------------------------------
+Name: noteOn
+
+Type: message
+
+Syntax: noteOn <pNoteNum>, <pNoteName>
+
+OS: mac,ios,android,win
+
+Platforms: desktop,mobile
+
+Summary: Sent when a key on the piano set to it's 'on' state.
+
+Example:
+on noteOn pNoteNum,pNoteName
+	put "noteOn " & pNoteNum && pNoteName
+end noteOn
+
+Parameters:
+
+pNoteNum: The MIDI note number(s) of the note key (exp. 63), this can be an item delimited list of multiple key numbers (chords)
+
+pNoteName: The Name of the note key (exp. D#Eb), this can be an item delimited list of multiple key numbers (chords)
+
+Description:
+Handle the <noteOn> message in the widget's object script to respond to
+'note down' clicks on the piano's individual note keys.
+
+
+Name: noteOff
+
+Type: message
+
+Syntax: noteOff <pNoteNum>, <pNoteName>
+
+OS: mac,ios,android,win
+
+Platforms: desktop,mobile
+
+Summary: Sent when a key on the piano released from it's 'on' state.
+
+Example:
+on noteOff pNoteNum,pNoteName
+	put "noteOff " & pNoteNum && pNoteName
+end noteOff
+
+Parameters:
+
+pNoteNum:The MIDI note number(s) of the note key (exp. 63), this can be an item delimited list of multiple key numbers (chords)
+
+pNoteName: The Name of the note key (exp. D#Eb), this can be an item delimited list of multiple key names (chords)
+
+Description:
+Handle the <noteOff> message in the widget's object script to respond to
+'note release' messages from the piano's individual note keys.
+
+------------------------------------------------------------------------------------------------------------------------------------
+Name: borderWidth
+Type: property
+
+Syntax: set the borderWidth of <widget> to <number>
+Syntax: get the borderWidth of <widget>
+
+Summary: The stroke width for piano keys outlines
+
+Description:
+The <borderWidth> property controls thickness of lines used to draw the
+widget's piano keys outlines.
+
+Name: borderColor
+Type: property
+
+Syntax: get the borderColor of widget
+Syntax: set the borderColor of widget to <color>
+
+Summary: The color used to draw the outlinnes of the piano keys
+
+Description:
+The <borderColor> property controls the color used to draw the outlinnes of the piano keys.
+
+------------------------------------------------------------------------------------------------------------------------------------
+Name: accidentalsColor
+Type: property
+Synonyms: blackKeysColors
+
+Syntax: set the accidentalsColor of <widget> to <color>
+Syntax: get the accidentalsColor of <widget>
+
+Summary: The fill color for accidentals (black) keys
+
+Description:
+The <accidentalsColor> property controls the default color used to fill
+the piano's accidentals (black) keys. This property is the same as <blackKeysColors>
+
+Name: blackKeysColor
+Type: property
+Synonyms: accidentalsColor
+
+Syntax: set the blackKeysColor of <widget> to <color>
+Syntax: get the blackKeysColor of <widget>
+
+Summary: The fill color for accidentals (black) keys
+
+Description:
+The <blackKeysColor> property controls the default color used to fill
+the piano's accidentals (black) keys. This property is the same as <accidentalsColor>
+
+Name: whiteKeysColor
+Type: property
+Synonyms: naturalsColor
+
+Syntax: set the whiteKeysColor of <widget> to <color>
+Syntax: get the whiteKeysColor of <widget>
+
+Summary: The fill color for naturals (white) keys
+
+Description:
+The <whiteKeysColor> property controls the default color used to fill
+the piano's naturals (white) keys. This property is the same as <naturalsColor>
+
+Name: naturalsColor
+Type: property
+Synonyms: whiteKeysColors
+
+Syntax: set the naturalsColor of <widget> to <color>
+Syntax: get the naturalsColor of <widget>
+
+Summary: The fill color for naturals (white) keys
+
+Description:
+The <naturalsColor> property controls the default color used to fill
+the piano's naturals (white) keys. This property is the same as <whiteKeysColors>
+
+------------------------------------------------------------------------------------------------------------------------------------
+Name: hiliteColor
+Type: property
+
+Syntax: set the hiliteColor of <widget> to <color>
+Syntax: get the hiliteColor of <widget>
+
+Summary: The fill color when piano keys are hilited
+
+Description:
+The <hiliteColor> property controls the color used to draw the
+widget's piano key fill color while hilighted.
+
+
+Name: colorNotes
+Type: property
+
+Syntax: set the colorNotes of <widget> to <pColorsSpaceNotesPairedLineList>
+Syntax: get the colorNotes of <widget>
+
+Example:
+on mouseUp
+  -- clear all keys individual color settings:
+  set the colorNotes of widget "Piano Widget" to reset
+  -- set color white and 50% transparency for ALL C# keys, MIDI note 60, D#4 (same as Eb4), Gb 5th octave
+  -- and then also set color to 50% grey, no transparency, for all Ab/G# keys:
+  set the colorNotes of widget "Piano Widget" to "255,255,255,127 C#,60,D#4,F#Gb5" & \
+   cr & "127,127,127,255 G#"
+  put the colorNotes of widget "Piano Widget"
+end mouseUp
+
+Summary: The colorNotes piano keys as line list or colors and note pairs
+
+Description:
+The <colorNotes> property can be used to set colors for individual
+piano keys using the format R,G,B,A followed by a comma delimited list
+of keys, by MIDI note numbers or note names, seperated by a single space.
+If a note name is used without an octave number then that note is colorized
+on all 10.5 octaves. Set the <colorNotes> to empty, reset or pass an empty
+string to clear all key colorization, reverting key colors to those
+specified by the <accidentalsColor>/<blackKeysColor> and
+<naturalsColor>/<whiteKeysColor> properties.
+Multiple lines of color and note-lists can be set, any duplicates
+will ovewrite previously set colorKeys.
+The property returns a line delimited list of RGBA, blank space, with
+a note number-list, followed by a space, and then the same note list
+as note-names, for any keys that have been colorized.
+
+
+Name: hilitedNotes
+Type: property
+
+Syntax: set the hilitedNotes of <widget> to <pHilightNotes>
+Syntax: get the hilitedNotes of <widget>
+
+Example:
+on mouseUp
+  -- clear all
+  set the hilitedNotes of widget "Piano Widget" to empty
+  -- hilte ALL C# keys, MIDI note 60, D#4 (same as Eb4), Gb 5th octave:
+  set the hilitedNotes of widget "Piano Widget" to "C#,60,D#4,F#Gb5"
+  put the hilitedNotes of widget "Piano Widget"
+end mouseUp
+
+Summary: The hilighted piano keys as list of notes
+
+Description:
+The <hilitedNotes> property can be used to set the piano keys
+to hilite using a comma seperated list of keys, by MIDI note number or note name.
+If a note name is used without an octave number then that note is
+hilited on all 10.5 octaves.
+Set to empty or pass an empty string to clear all key hilites.
+The property returns the list as two lines,
+Line one lists MIDI note numbers and the second line list same keys as note names.
+
+lockToTonicWithScale
+Name: lockToTonicWithScale
+Type: property
+
+Syntax: set the lockToTonicWithScale of <widget> to <pRootAndScaleFormula>
+Syntax: get the lockToTonicWithScale of <widget>
+
+Example:
+on mouseUp
+  -- clear any previously set scale:
+  set the lockToTonicWithScale of widget "Piano Widget" to empty
+  -- the following form locks to a scale of the C,C#,D#,E keys enabled:
+  set the lockToTonicWithScale of widget "Piano Widget" to "C 1,3,4"
+
+  -- the following form sets to a same scale of the C,C#,D#,E keys enabled:
+  set the lockToTonicWithScale of widget "Piano Widget" to "C H,W,h"
+
+  get the lockToTonicWithScale of widget "Piano Widget"
+  -- 'it' now contains "C,C#,D#,E"
+end mouseUp
+
+Summary: lockToTonicWithScale are the  piano keys that are enabled or empty if no scale
+
+Description:
+The <lockToTonicWithScale> property can be set to Root Note as a NoteName followed
+by a space and then by a comma delimited list of either numeric offsets,
+between 1 and 11 that represent half-steps from the root note, or using the
+style H,W,WH (case insenstive) often used to describe musical scales or modes.
+H meaning Halfstep, W for Wholestep, and combining H and W for Halfstep+Wholestep.
+Piano keys that will be enabled are then determine from this root + formula pair
+and any keys that are not in the resulting note-name list will be locked.
+Set <lockToTonicWithScale> to empty to clear the scale and unlock all piano keys.
+Getting the <lockToTonicWithScale> returns a comma delimited list of notes in the
+scale, rather than the formula used, or empty. This returned list can then be
+used with the <lockToScale> property.
+
+Name: lockToScale
+Type: property
+
+Syntax: set the lockToScale of <widget> to <pNoteNamesList>
+Syntax: get the lockToScale of <widget>
+
+Example:
+on mouseUp
+  -- clear any previously set scale:
+  set the lockToScale of widget "Piano Widget" to empty
+  --  and then lock all piano keys that are NOT in the list of Note Names,
+  -- any octave number on the end of NoteNames will be ignored, and the full
+  -- Sharp AND Flat NoteName will appear in the returned list
+  set the lockToScale of widget "Piano Widget" to "C#,D#4,F#Gb,G#"
+  get the lockToScale of widget "Piano Widget"
+  -- 'it' now contains "C#Db,D#Eb,F#Gb,G#Ab"
+end mouseUp
+
+Summary: lockToScale are the  piano keys that are enabled or empty if no scale
+
+Description:
+The <lockToScale> property can be set to a comma delimited list of Note Names
+(ie C#,D,Eb,A#Bb,etc.) any piano keys with note names that are NOT in the list
+will be disabled. Use this property to lock the Piano to a musical scale.
+Get the lockToScale property to see a list of notes that are currently enabled.
+If no scale has been applied then the property will contain empty.
+
+Name: chordFormula
+Type: property
+
+Syntax: set the chordFormula of <widget> to <pChordFormula>
+Syntax: get the chordFormula of <widget>
+
+Example:
+on mouseUp
+   -- keys will trigger a 1st-Inversion Major Triad Chord:
+  set the chordFormula of widget "Piano Widget" -5,-8
+end mouseUp
+
+Summary: Specifies additional keys that each key should trigger
+
+Description:
+The <chordFormula> property if optionally specified, can be set to a list
+of integers to indicate which additional piano key(s) should be triggered
+based on the half-step distance from the origin root key. For example,
+to trigger the same note name as the root key but 1 octave lower set
+this property to -12, for one octave lower and one octave higher set
+this property to -12,12. To clear the current <chordFormula> set it to empty.
+
+Name: chordPreset
+Type: property
+
+Syntax: set the chordPreset of <widget> to <pChordPresetName>
+
+Example:
+on mouseUp
+   -- the chordFormula will be set to "3,7":
+  set the chordPreset of widget "Piano Widget" to "Minor Triad"
+end mouseUp
+
+Summary: A name from a list of names of premade <chordFormula>
+
+Description:
+The <chordPreset> is a convience property that can be set to a chord
+name from a list of premade named <chordFormula>. Use the <chordPresets>
+property to retreive a line delimited list of valid chord names.
+<chordPreset> is a "write-only" property, after a <chordPreset> name is passed
+and the <chordFormula> is updated, this property is reset and returns "...".
+
+Name: chordPresets
+Type: property
+
+Syntax: get the chordPresets of <widget>
+
+Example:
+on mouseUp
+  put the chordPresets of widget "Piano Widget"
+end mouseUp
+
+Summary: Line delimited list of preset names of premade <chordFormula>
+
+Description:
+Use the <chordPresets> property to retreive a line delimited list of
+valid names to use in conjunction with the <chordPreset> property.
+
+------------------------------------------------------------------------------------------------------------------------------------
+Name: lowOctave
+Type: property
+
+Syntax: set the lowOctave of <widget> to <number>
+Syntax: get the lowOctave of <widget>
+
+Example:
+on mouseUp
+  -- set the left most octave to start at MIDI Note Number 0 (C-1)
+  set the lowOctave of widget "Piano Widget" to -1
+  -- set the right most octave to start at MIDI Note Number 36 (C2)
+  set the highOctave of widget "Piano Widget" to 2
+  get the octaveCount of of widget "Piano Widget" -- octaveCount containss 4
+end mouseUp
+
+Summary: The starting, left most octave for the piano's visible note range
+
+Description:
+The <lowOctave> property is used in conjunction with <highOctave> to
+specify the visible note range of the piano's keyboard by specifying the
+starting octave and ending octave between -1 (which starts at MIDI note 0 C)
+to 9 (Which starts at MIDI number 120 C and is actually 7/12th of an octave
+ending at the MIDI Note 127 G). If lowOctave is greater than highOctave or
+highOctave is less than lowOctave then the opposite property will
+automatically be ajusted to match, resulting in a single octave range.
+
+Name: highOctave
+Type: property
+
+Syntax: set the highOctave of <widget> to <number>
+Syntax: get the highOctave of <widget>
+
+Example:
+on mouseUp
+  -- set the left most octave to start at MIDI Note Number 0 (C-1)
+  set the lowOctave of widget "Piano Widget" to -1
+  -- set the right most octave to start at MIDI Note Number 36 (C2)
+  set the highOctave of widget "Piano Widget" to 2
+  get the octaveCount of of widget "Piano Widget" -- octaveCount containss 4
+end mouseUp
+
+Summary: The ending, right most octave for the piano's visible note range
+
+Description:
+The <highOctave> property is used in conjunction with <lowOctave> to
+specify the visible note range of the piano's keyboard by specifying the
+starting octave and ending octave between -1 (which starts at MIDI note 0 C)
+to 9 (Which starts at MIDI number 120 C and is actually 7/12th of an octave
+ending at the MIDI Note 127 G). If lowOctave is greater than highOctave or
+highOctave is less than lowOctave then the opposite property will
+automatically be ajusted to match, resulting in a single octave range.
+
+Name: octaveCount
+Type: property
+
+Syntax: get the octaveCount of <widget>
+
+Example:
+on mouseUp
+  -- set the left most octave to start at MIDI Note Number 0 (C-1)
+  set the lowOctave of widget "Piano Widget" to -1
+  -- set the right most octave to start at MIDI Note Number 36 (C2)
+  set the highOctave of widget "Piano Widget" to 2
+  get the octaveCount of of widget "Piano Widget" -- octaveCount containss 4
+end mouseUp
+
+Summary: The amount of octaves in the piano's current visible note range.
+
+Description:
+The <octaveCount> is a read-only property that returns the amount of
+octaves  that are currently visible on the Piano's keyboard. It is the
+same as the count from <lowOctave> to <highOctave>.
+
+*/
+
+------------------------------------------------------------------------------------------------------------------------------------
+widget org.openxtalk.widget.pianowidget
+
+-- dependancy declarations
+use com.livecode.canvas
+use com.livecode.string
+use com.livecode.char
+use com.livecode.array
+use com.livecode.list
+use com.livecode.widget
+use com.livecode.engine
+use com.livecode.library.widgetutils
+
+metadata title is "Piano Widget"
+metadata author is "Paul McClernan, Bernd Niggemann"
+metadata version is "1.3.6"
+metadata preferredSize is "600,100"
+metadata _ide is "true" -- ? default load at startup
+metadata userVisible is "true" -- Show Widget in ... ?
+metadata svgicon is "M0,0v69.6c0,1.4,1.1,2.5,2.4,2.5h9.7c0.8,0,1.5-0.4,2-1.1c0.4,0.7,1.1,1.1,2,1.1h9.8c0.8,0,1.5-0.4,1.9-1.1 c0.4,0.6,1.1,1.1,1.9,1.1h9.8c0.8,0,1.5-0.4,1.9-1.1c0.4,0.6,1.1,1.1,1.9,1.1h9.8c0.8,0,1.5-0.4,2-1.1c0.4,0.7,1.1,1.1,2,1.1h9.7 c0.8,0,1.5-0.4,1.9-1.1c0.4,0.6,1.1,1.1,1.9,1.1h9.7c0.8,0,1.5-0.4,1.9-1.1c0.4,0.6,1.1,1.1,1.9,1.1H94c1.3,0,2.4-1.1,2.4-2.5V0H0z M95.4,69.6c0,0.8-0.6,1.5-1.4,1.5h-9.8c-0.8,0-1.4-0.7-1.4-1.5V46.9h2.5c1,0,1.9-0.9,1.9-2V1h8.1L95.4,69.6z M80.4,71.1h-9.7 c-0.8,0-1.4-0.7-1.4-1.5V46.9h2.5c1,0,1.9-0.9,1.9-2V1h3.6v43.9c0,1.1,0.9,2,1.9,2h2.5v22.7C81.8,70.4,81.2,71.1,80.4,71.1z M57,71.1c-0.8,0-1.4-0.7-1.4-1.5V46.9h2.5c1,0,1.9-0.9,1.9-2V1h3.7v43.9c0,1.1,0.9,2,1.9,2h2.5v22.7c0,0.8-0.6,1.5-1.4,1.5 L57,71.1z M53.1,71.1h-9.8c-0.8,0-1.4-0.7-1.4-1.5V1H50v43.9c0,1.1,0.9,2,1.9,2h2.5v22.7C54.5,70.4,53.8,71.1,53.1,71.1z M28.3,69.6V46.9h2.5c1,0,1.9-0.9,1.9-2V1h8.1v68.6c0,0.8-0.6,1.5-1.4,1.5h-9.8C28.9,71.1,28.3,70.4,28.3,69.6z M14.7,69.6V46.9 h2.5c1,0,1.9-0.9,1.9-2V1h3.7v43.6l0,0v0.3c0,1.1,0.9,2,1.9,2h2.5v22.7c0,0.8-0.6,1.5-1.4,1.5H16C15.3,71.1,14.7,70.4,14.7,69.6z M12.1,71.1H2.4c-0.8,0-1.4-0.7-1.4-1.5V1h8.1v43.9c0,1.1,0.9,2,1.9,2h2.5v22.7C13.5,70.4,12.9,71.1,12.1,71.1z"
+
+-----------------------------------------------------------------------------------------------  Properties --------------------------------------------------------------------------------------
+property SVGIconPath get GetIconSVGPath
+metadata SVGIconPath.user_visible is "false"
+private handler GetIconSVGPath() returns String
+   return "M0,0v69.6c0,1.4,1.1,2.5,2.4,2.5h9.7c0.8,0,1.5-0.4,2-1.1c0.4,0.7,1.1,1.1,2,1.1h9.8c0.8,0,1.5-0.4,1.9-1.1 c0.4,0.6,1.1,1.1,1.9,1.1h9.8c0.8,0,1.5-0.4,1.9-1.1c0.4,0.6,1.1,1.1,1.9,1.1h9.8c0.8,0,1.5-0.4,2-1.1c0.4,0.7,1.1,1.1,2,1.1h9.7 c0.8,0,1.5-0.4,1.9-1.1c0.4,0.6,1.1,1.1,1.9,1.1h9.7c0.8,0,1.5-0.4,1.9-1.1c0.4,0.6,1.1,1.1,1.9,1.1H94c1.3,0,2.4-1.1,2.4-2.5V0H0z M95.4,69.6c0,0.8-0.6,1.5-1.4,1.5h-9.8c-0.8,0-1.4-0.7-1.4-1.5V46.9h2.5c1,0,1.9-0.9,1.9-2V1h8.1L95.4,69.6z M80.4,71.1h-9.7 c-0.8,0-1.4-0.7-1.4-1.5V46.9h2.5c1,0,1.9-0.9,1.9-2V1h3.6v43.9c0,1.1,0.9,2,1.9,2h2.5v22.7C81.8,70.4,81.2,71.1,80.4,71.1z M57,71.1c-0.8,0-1.4-0.7-1.4-1.5V46.9h2.5c1,0,1.9-0.9,1.9-2V1h3.7v43.9c0,1.1,0.9,2,1.9,2h2.5v22.7c0,0.8-0.6,1.5-1.4,1.5 L57,71.1z M53.1,71.1h-9.8c-0.8,0-1.4-0.7-1.4-1.5V1H50v43.9c0,1.1,0.9,2,1.9,2h2.5v22.7C54.5,70.4,53.8,71.1,53.1,71.1z M28.3,69.6V46.9h2.5c1,0,1.9-0.9,1.9-2V1h8.1v68.6c0,0.8-0.6,1.5-1.4,1.5h-9.8C28.9,71.1,28.3,70.4,28.3,69.6z M14.7,69.6V46.9 h2.5c1,0,1.9-0.9,1.9-2V1h3.7v43.6l0,0v0.3c0,1.1,0.9,2,1.9,2h2.5v22.7c0,0.8-0.6,1.5-1.4,1.5H16C15.3,71.1,14.7,70.4,14.7,69.6z M12.1,71.1H2.4c-0.8,0-1.4-0.7-1.4-1.5V1h8.1v43.9c0,1.1,0.9,2,1.9,2h2.5v22.7C13.5,70.4,12.9,71.1,12.1,71.1z"
+end handler
+
+public handler getChromaticNumberForNoteName(in pKey as String) returns optional Number
+   variable tVarListA as List
+   variable tVarListB as List
+   variable tOffset as Number
+	put ["C","C#","C#Db","Db","D","D#","D#Eb","Eb","E","F","F#","F#Gb","Gb","G","G#","G#Ab","Ab","A","A#","A#Bb","Bb","B"] into tVarListA
+   put [1,   2,   2,     2,    3,  4,     4,   4,  5,  6,   7,    7,    7,   8,  9,    9,    9,  10,  11,    11,  11,  12 ] into tVarListB
+   put the index of pKey in tVarListA into tOffset
+   -- log tOffset
+   if tOffset > 0 then
+      return element tOffset of tVarListB
+   else
+      return -1
+   end if
+end handler
+
+-- constant kNoteNamesList is ["C","C#","C#Db","Db","D","D#","D#Eb","Eb","E","F","F#","F#Gb","Gb","G","G#","G#Ab","Ab","A","A#","A#Bb","Bb","B"]
+
+property lockToTonicWithScale get mScaleNotes set setLockToTonicWithScale
+metadata lockToTonicWithScale.user_visible is "false"
+private handler setLockToTonicWithScale(pTonicAndScale as String) returns nothing
+   variable tTonicStr as String
+   variable tNotesStr as String
+   variable tScaleStr as String
+   variable tTonicAndScale as List
+   variable tScale as List
+   variable tScaleOffset as Number
+   variable tScaleOffsets as List
+   variable tScaleGoodStr as String
+   variable tRootNumber as Number
+   variable tCtr as Number
+   variable tOffset as Number
+   variable tNoteNamesList as List
+   variable tNoteValidNamesList as List
+   variable tNoteValidOffsetsStrList as List
+   variable tStepList as List
+   variable tStepValues as List
+   variable tStepValue as Number
+   variable tStepTotal as List
+   if pTonicAndScale is the empty string then
+      unlockAllPianoKeys()
+   else
+      split pTonicAndScale by " " into tTonicAndScale
+      put element 1 of tTonicAndScale into tTonicStr
+      put ["C","C#","C#Db","Db","D","D#","D#Eb","Eb","E","F","F#","F#Gb","Gb","G","G#","G#Ab","Ab","A","A#","A#Bb","Bb","B"] into tNoteValidNamesList
+      put ["1","2","3","4","5","6","7","8","9","10","11"] into tNoteValidOffsetsStrList
+      put ["C","C#Db","D","D#Eb","E","F","F#Gb","G","G#Ab","A","A#Bb","B"] into tNoteNamesList
+      put ["H","h",  "W","w","HW","WH","hw","wh","WH","hW","Hw","3H","3h","2W","2w","4h","4h"] into tStepList
+      put [1,    1,   2,   2, 3,   3,   3,    3,  3,    3,  3,   3,   3,    4,   4,   4,  4] into tStepValues
+      if ( the index of tTonicStr in tNoteValidNamesList > 0 ) then
+         put element 2 of tTonicAndScale into tScaleStr
+         put getSharpOrFlatToSharpAndFlat(tTonicStr) into tTonicStr
+         put getChromaticNumberForNoteName(tTonicStr) into tRootNumber
+         -- log [tScaleStr,tTonicStr,tRootNumber]
+         put tTonicStr & "," into tScaleGoodStr
+         split tScaleStr by "," into tScale
+         if ((the index of (element 1 of tScale) in tStepList) > 0 ) then -- Do HalfSteps,WholeSteps formula
+            put 0 into tScaleOffset
+            repeat with tCtr from 1 up to (the number of elements in tScale)
+                put (the index of (element tCtr of tScale) in tStepList) into tOffset
+                if tOffset>0 then
+                   put (element tOffset of tStepValues) into tStepValue
+                   -- log tStepValue
+                   put tScaleOffset + tStepValue into tScaleOffset
+                   push tScaleOffset onto tScaleOffsets
+                end if
+            end repeat
+         else if ((the index of (element 1 of tScale) in tNoteValidOffsetsStrList) > 0 ) then
+            repeat with tCtr from 1 up to (the number of elements in tScale)
+                put (the index of (element tCtr of tScale) in tNoteValidOffsetsStrList) into tOffset
+                if tOffset>0 then
+                   put ((element tOffset of tNoteValidOffsetsStrList) parsed as number) into tStepValue
+                   push tStepValue onto tScaleOffsets
+                end if
+            end repeat
+         end if
+         if tScaleOffsets is not the empty list then
+            -- log tScaleGoodStr
+            repeat with tCtr from 1 up to (the number of elements in tScaleOffsets)
+               put tRootNumber+ (element tCtr of tScaleOffsets) into tOffset
+               repeat forever
+                  if tOffset > 12 then
+                     subtract 12 from tOffset
+                  else
+                     exit repeat
+                  end if
+               end repeat
+               put element tOffset of tNoteNamesList into tNotesStr
+               put tNotesStr & "," after tScaleGoodStr
+            end repeat
+            -- log tScaleGoodStr
+            setLockedToScale(tScaleGoodStr)
+         end if
+      end if
+   end if
+end handler
+
+private handler getLockToTonicWithScale( ) returns String
+   getLockedToScale()
+   return mScaleNotes
+end handler
+
+private handler unlockAllPianoKeys()
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+   variable tWhiteKey as Array
+   variable tKeyIteration as Number
+   variable tOctaveIteration as Number
+   repeat with tOctaveIteration from 1 up to 11
+      put element tOctaveIteration of mOctaveList into tOctave
+      put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+      repeat with tKeyIteration from 1 up to 5
+         put element tKeyIteration of tBlackKeysList into tBlackKey
+         if tBlackKey["KeyNumber"] <128 then
+            put false into tBlackKey["keyLocked"]
+            put tBlackKey into element tKeyIteration of tBlackKeysList
+         end if
+      end repeat
+      put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+      put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+      repeat with tKeyIteration from 1 up to 7
+         put element tKeyIteration of tWhiteKeysList into tWhiteKey
+         if tWhiteKey["KeyNumber"] <128 then
+            put false into tWhiteKey["keyLocked"]
+            put tWhiteKey into element tKeyIteration of tWhiteKeysList
+         end if
+      end repeat
+      put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+      put tOctave into element tOctaveIteration of mOctaveList
+   end repeat
+   put "" into mScaleNotes
+end handler
+
+property lockToScale get getLockedToScale set setLockedToScale
+metadata lockToScale.user_visible is "false"
+private variable mScaleNotes as String
+private handler setLockedToScale(pScaleNotes as String) returns nothing
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+   variable tWhiteKey as Array
+   variable tNumStr as String
+   variable tKeysList as List
+   variable tKey as optional any
+   variable tKeyIteration as Number
+   variable tOctaveIteration as Number
+   setHilitedNotes("") --- Clear hilities first so that there is no keys stuck on hilited
+   if pScaleNotes is the empty string then
+      unlockAllPianoKeys()
+   else
+      ------------------------------------------------------------------------ Set All Locked First ------------------------------------------------------------------------
+      repeat with tOctaveIteration from 1 up to 11
+         put element tOctaveIteration of mOctaveList into tOctave
+         put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+         repeat with tKeyIteration from 1 up to 5
+            put element tKeyIteration of tBlackKeysList into tBlackKey
+            if tBlackKey["KeyNumber"] <128 then
+               put true into tBlackKey["keyLocked"]
+               put tBlackKey into element tKeyIteration of tBlackKeysList
+            end if
+         end repeat
+         put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+         put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+         repeat with tKeyIteration from 1 up to 7
+            put element tKeyIteration of tWhiteKeysList into tWhiteKey
+            if tWhiteKey["KeyNumber"] <128 then
+               put true into tWhiteKey["keyLocked"]
+               put tWhiteKey into element tKeyIteration of tWhiteKeysList
+            end if
+         end repeat
+         put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+         put tOctave into element tOctaveIteration of mOctaveList
+      end repeat
+      ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      split pScaleNotes by "," into tKeysList
+      put "" into pScaleNotes
+      repeat for each element tKey in tKeysList
+         --- check if it's a sharp without flat or flat without sharp
+         if tKey parsed as number is not nothing then
+            next repeat
+         end if
+         if the number of chars in tKey > 1 then
+            if ((char 2 of tKey is "#") and (the number of chars in tKey < 4))  or (char 2 of tKey is "b") then
+               if (char -1 of tKey) parsed as number is not nothing then
+                  repeat forever
+                     if the last char of tKey is in "-012356789" then
+                        delete the last char of tKey
+                     else
+                        exit repeat
+                     end if
+                  end repeat
+               end if
+               put getSharpOrFlatToSharpAndFlat(tKey) into tKey
+               put tKey & tNumStr into tKey
+            end if
+         end if
+         put tKey &"," after pScaleNotes
+         repeat with tOctaveIteration from 1 up to 11
+            put element tOctaveIteration of mOctaveList into tOctave
+            put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+            repeat with tKeyIteration from 1 up to 5
+               put element tKeyIteration of tBlackKeysList into tBlackKey
+               if tBlackKey["KeyNumber"] >127 then
+                  exit repeat
+               end if
+               if tBlackKey["KeyName"] is tKey then
+                  put false into tBlackKey["keyLocked"]
+                  put tBlackKey into element tKeyIteration of tBlackKeysList
+               end if
+            end repeat
+            put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+            put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+            repeat with tKeyIteration from 1 up to 7
+               put element tKeyIteration of tWhiteKeysList into tWhiteKey
+               if tWhiteKey["KeyNumber"] >127 then
+                  exit repeat
+               end if
+               if tWhiteKey["KeyName"] is tKey then
+                  put false into tWhiteKey["keyLocked"]
+                  put tWhiteKey into element tKeyIteration of tWhiteKeysList
+               end if
+            end repeat
+            put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+            put tOctave into element tOctaveIteration of mOctaveList
+         end repeat
+      end repeat
+      if the number of chars in pScaleNotes >1 then
+         delete the last char of pScaleNotes
+      end if
+      put pScaleNotes into mScaleNotes
+   end if
+   redraw all
+end handler
+
+private handler getLockedToScale() returns String
+   variable tScaleNotesList as List
+   variable tScaleNotesNewList as List
+   variable tScaleNote as String
+   variable tCtr as Number
+   put the empty list into tScaleNotesNewList
+   split mScaleNotes by "," into tScaleNotesList
+   repeat for each element tScaleNote in tScaleNotesList
+      if ((the index of (tScaleNote) in tScaleNotesNewList) > 0 ) then
+      -- if mScaleNote is among the elements of mScaleNotesNewList then
+         next repeat
+      else
+         push tScaleNote onto tScaleNotesNewList
+      end if
+   end repeat
+   combine tScaleNotesNewList with "," into mScaleNotes
+   return mScaleNotes
+end handler
+
+property hilitedNotesRefresh get getHilitedNotesRefresh set setHilitedNotesRefresh
+-- metadata hilitedNotes.user_visible is "false"
+private variable mHilitedNotesRefresh as Boolean
+private handler setHilitedNotesRefresh(in pBool as Boolean) returns nothing
+   put pBool into mHilitedNotesRefresh
+   if mHilitedNotesRefresh then
+      redraw all
+   end if
+end handler
+private handler getHilitedNotesRefresh() returns Boolean
+   return mHilitedNotesRefresh
+end handler
+
+property hilitedNotes get getHilitedNotes set setHilitedNotes
+metadata hilitedNotes.user_visible is "false"
+private variable mHilitedNotes as String
+private handler setHilitedNotes(pHilightNotes as String) returns nothing
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+   variable tWhiteKey as Array
+   variable tNumStr as String
+   variable tKeysList as List
+   variable tKey as optional any
+   variable tKeyIteration as Number
+   variable tOctaveIteration as Number
+   ------------------------------------------------------------------------ Clear All Hilights First ------------------------------------------------------------------------
+   repeat with tOctaveIteration from 1 up to 11
+      put element tOctaveIteration of mOctaveList into tOctave
+      put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+      repeat with tKeyIteration from 1 up to 5
+         put element tKeyIteration of tBlackKeysList into tBlackKey
+         put false into tBlackKey["KeyHilited"]
+         put tBlackKey into element tKeyIteration of tBlackKeysList
+      end repeat
+      put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+      put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+      repeat with tKeyIteration from 1 up to 7
+         put element tKeyIteration of tWhiteKeysList into tWhiteKey
+         put false into tWhiteKey["KeyHilited"]
+         put tWhiteKey into element tKeyIteration of tWhiteKeysList
+      end repeat
+      put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+      put tOctave into element tOctaveIteration of mOctaveList
+   end repeat
+   -- redraw all
+   ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   split pHilightNotes by "," into tKeysList
+   repeat for each element tKey in tKeysList
+      --- check if it's a sharp without flat or flat
+      if the number of chars in tKey > 1 then
+         if ((char 2 of tKey is "#") and (the number of chars in tKey < 4))  or (char 2 of tKey is "b") then
+            if (char -1 of tKey) parsed as number is not nothing then
+               repeat forever
+                  if the last char of tKey is in "-012356789" then
+                     put the last char of tKey before tNumStr
+                     delete the last char of tKey
+                  else
+                     exit repeat
+                  end if
+               end repeat
+            end if
+            put getSharpOrFlatToSharpAndFlat(tKey) into tKey
+            put tKey & tNumStr into tKey
+         end if
+      end if
+      repeat with tOctaveIteration from 1 up to 11
+         put element tOctaveIteration of mOctaveList into tOctave
+         put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+         repeat with tKeyIteration from 1 up to 5
+            put element tKeyIteration of tBlackKeysList into tBlackKey
+            if tBlackKey["KeyName"] is tKey then
+               put true into tBlackKey["KeyHilited"]
+               put tBlackKey into element tKeyIteration of tBlackKeysList
+            else if (tBlackKey["KeyName"] & tOctave["OctaveName"]) is tKey then
+                  put true into tBlackKey["KeyHilited"]
+                  put tBlackKey into element tKeyIteration of tBlackKeysList
+            else if tBlackKey["KeyNumber"] is tKey parsed as number then
+               put true into tBlackKey["KeyHilited"]
+               put tBlackKey into element tKeyIteration of tBlackKeysList
+            end if
+         end repeat
+         put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+
+         put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+         repeat with tKeyIteration from 1 up to 7
+            put element tKeyIteration of tWhiteKeysList into tWhiteKey
+            if tWhiteKey["KeyName"] is tKey then
+               put true into tWhiteKey["KeyHilited"]
+               put tWhiteKey into element tKeyIteration of tWhiteKeysList
+            else if tWhiteKey["KeyName"] & tOctave["OctaveName"] is tKey then
+               put true into tWhiteKey["KeyHilited"]
+               put tWhiteKey into element tKeyIteration of tWhiteKeysList
+            else if tWhiteKey["KeyNumber"] is tKey parsed as number then
+               put true into tWhiteKey["KeyHilited"]
+               put tWhiteKey into element tKeyIteration of tWhiteKeysList
+            end if
+         end repeat
+         put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+
+         put tOctave into element tOctaveIteration of mOctaveList
+      end repeat
+   end repeat
+   if mHilitedNotesRefresh then
+      redraw all
+   end if
+end handler
+
+property addHilitedNotes get getAddHilitedNotes set setAddHilitedNotes
+metadata addHilitedNotes.user_visible is "false"
+private handler setAddHilitedNotes(in pHilightNotes as String) returns nothing
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+   variable tWhiteKey as Array
+   variable tNumStr as String
+   variable tKeysList as List
+   variable tKey as optional any
+   variable tKeyIteration as Number
+   variable tOctaveIteration as Number
+   ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   split pHilightNotes by "," into tKeysList
+   repeat for each element tKey in tKeysList
+      --- add check if its a number first then do different lookup
+
+      --- check if it's a sharp without flat or flat
+      if the number of chars in tKey > 1 then
+         if ((char 2 of tKey is "#") and (the number of chars in tKey < 4))  or (char 2 of tKey is "b") then
+            if (char -1 of tKey) parsed as number is not nothing then
+               repeat forever
+                  if the last char of tKey is in "-012356789" then
+                     put the last char of tKey before tNumStr
+                     delete the last char of tKey
+                  else
+                     exit repeat
+                  end if
+               end repeat
+            end if
+            put getSharpOrFlatToSharpAndFlat(tKey) into tKey
+            put tKey & tNumStr into tKey
+         end if
+      end if
+      repeat with tOctaveIteration from 1 up to 11
+         put element tOctaveIteration of mOctaveList into tOctave
+         put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+         repeat with tKeyIteration from 1 up to 5
+            put element tKeyIteration of tBlackKeysList into tBlackKey
+            if tBlackKey["KeyName"] is tKey then
+               put true into tBlackKey["KeyHilited"]
+               put tBlackKey into element tKeyIteration of tBlackKeysList
+            else if (tBlackKey["KeyName"] & tOctave["OctaveName"]) is tKey then
+                  put true into tBlackKey["KeyHilited"]
+                  put tBlackKey into element tKeyIteration of tBlackKeysList
+            else if tBlackKey["KeyNumber"] is tKey parsed as number then
+               put true into tBlackKey["KeyHilited"]
+               put tBlackKey into element tKeyIteration of tBlackKeysList
+            end if
+         end repeat
+         put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+
+         put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+         repeat with tKeyIteration from 1 up to 7
+            put element tKeyIteration of tWhiteKeysList into tWhiteKey
+            if tWhiteKey["KeyName"] is tKey then
+               put true into tWhiteKey["KeyHilited"]
+               put tWhiteKey into element tKeyIteration of tWhiteKeysList
+            else if tWhiteKey["KeyName"] & tOctave["OctaveName"] is tKey then
+               put true into tWhiteKey["KeyHilited"]
+               put tWhiteKey into element tKeyIteration of tWhiteKeysList
+            else if tWhiteKey["KeyNumber"] is tKey parsed as number then
+               put true into tWhiteKey["KeyHilited"]
+               put tWhiteKey into element tKeyIteration of tWhiteKeysList
+            end if
+         end repeat
+         put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+
+         put tOctave into element tOctaveIteration of mOctaveList
+      end repeat
+   end repeat
+   if mHilitedNotesRefresh then
+      redraw all
+   end if
+end handler
+private handler getAddHilitedNotes() returns any
+   return nothing
+end handler
+
+property unhiliteNotes get getUnhiliteNotes set setUnhiliteNotes
+metadata uhiliteNotes.user_visible is "false"
+private handler setUnhiliteNotes(in pHilightNotes as optional String) returns nothing
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+   variable tWhiteKey as Array
+   variable tNumStr as String
+   variable tKeysList as List
+   variable tKey as optional any
+   variable tKeyIteration as Number
+   variable tOctaveIteration as Number
+   if pHilightNotes is not nothing and pHilightNotes is not the empty string then
+      ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      split pHilightNotes by "," into tKeysList
+      repeat for each element tKey in tKeysList
+         --- add check if its a number first then do different lookup
+
+         --- check if it's a sharp without flat or flat
+         if the number of chars in tKey > 1 then
+            if ((char 2 of tKey is "#") and (the number of chars in tKey < 4))  or (char 2 of tKey is "b") then
+               if (char -1 of tKey) parsed as number is not nothing then
+                  repeat forever
+                     if the last char of tKey is in "-012356789" then
+                        put the last char of tKey before tNumStr
+                        delete the last char of tKey
+                     else
+                        exit repeat
+                     end if
+                  end repeat
+               end if
+               put getSharpOrFlatToSharpAndFlat(tKey) into tKey
+               put tKey & tNumStr into tKey
+            end if
+         end if
+         repeat with tOctaveIteration from 1 up to 11
+            put element tOctaveIteration of mOctaveList into tOctave
+            put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+            repeat with tKeyIteration from 1 up to 5
+               put element tKeyIteration of tBlackKeysList into tBlackKey
+               if tBlackKey["KeyName"] is tKey then
+                  put false into tBlackKey["KeyHilited"]
+                  put tBlackKey into element tKeyIteration of tBlackKeysList
+               else if (tBlackKey["KeyName"] & tOctave["OctaveName"]) is tKey then
+                     put false into tBlackKey["KeyHilited"]
+                     put tBlackKey into element tKeyIteration of tBlackKeysList
+               else if tBlackKey["KeyNumber"] is tKey parsed as number then
+                  put false into tBlackKey["KeyHilited"]
+                  put tBlackKey into element tKeyIteration of tBlackKeysList
+               end if
+            end repeat
+            put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+
+            put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+            repeat with tKeyIteration from 1 up to 7
+               put element tKeyIteration of tWhiteKeysList into tWhiteKey
+               if tWhiteKey["KeyName"] is tKey then
+                  put false into tWhiteKey["KeyHilited"]
+                  put tWhiteKey into element tKeyIteration of tWhiteKeysList
+               else if tWhiteKey["KeyName"] & tOctave["OctaveName"] is tKey then
+                  put false into tWhiteKey["KeyHilited"]
+                  put tWhiteKey into element tKeyIteration of tWhiteKeysList
+               else if tWhiteKey["KeyNumber"] is tKey parsed as number then
+                  put false into tWhiteKey["KeyHilited"]
+                  put tWhiteKey into element tKeyIteration of tWhiteKeysList
+               end if
+            end repeat
+            put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+
+            put tOctave into element tOctaveIteration of mOctaveList
+         end repeat
+      end repeat
+      if mHilitedNotesRefresh then
+         redraw all
+      end if
+   end if
+end handler
+
+private handler getUnhiliteNotes() returns any
+   return nothing
+end handler
+
+private handler getHilitedNotes() returns String
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+   variable tWhiteKey as Array
+   variable tPath as Path
+   variable tNamesString as String
+   variable tNoteNumsString as String
+   variable tOctaveIteration as Number
+   put "" into tNamesString
+   put "" into tNoteNumsString
+   repeat with tOctaveIteration from 1 up to 11
+      put element (tOctaveIteration) of mOctaveList into tOctave
+      put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+      repeat for each element tBlackKey in tBlackKeysList
+         if tBlackKey["KeyHilited"] is true then
+            put tBlackKey["KeyNumber"] formatted as string & "," after tNoteNumsString
+            put tBlackKey["KeyName"] & tOctave["OctaveName"] & "," after tNamesString
+         end if
+      end repeat
+      put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+      repeat for each element tWhiteKey in tWhiteKeysList
+         if tWhiteKey["KeyHilited"] is true then
+            put tWhiteKey["KeyNumber"] formatted as string & "," after tNoteNumsString
+            put tWhiteKey["KeyName"] & tOctave["OctaveName"] & "," after tNamesString
+         end if
+      end repeat
+   end repeat
+   if tNamesString is not the empty string then
+      if the last char of tNamesString is "," then
+         delete the last char of tNamesString
+      end if
+   end if
+   if tNoteNumsString is not the empty string then
+      if the last char of tNoteNumsString is "," then
+         delete the last char of tNoteNumsString
+      end if
+   end if
+   return tNoteNumsString &"\n"& tNamesString
+end handler
+
+
+property colorNotes get getColorNotes set setColordNotes
+metadata colorNotes.user_visible is "false"
+private variable mColorNotes as String
+private handler setColordNotes(pColorizedNotes as String) returns nothing
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+   variable tWhiteKey as Array
+   variable tNumStr as String
+
+   variable tListOfStrings as List
+   variable tColorAndKeyListPair as List
+   variable tColor as Color
+   variable tLine as String
+   variable tKeysList as List
+   variable tKey as optional any
+   variable tKeyIteration as Number
+   variable tOctaveIteration as Number
+   ------------------------------------------------------------------------ Clear All Colorizations ------------------------------------------------------------------------
+   if pColorizedNotes is the empty string or pColorizedNotes is "reset" then
+      repeat with tOctaveIteration from 1 up to 11
+         put element tOctaveIteration of mOctaveList into tOctave
+         put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+         repeat with tKeyIteration from 1 up to 5
+            put element tKeyIteration of tBlackKeysList into tBlackKey
+            put nothing into tBlackKey["keyColor"]
+            put tBlackKey into element tKeyIteration of tBlackKeysList
+         end repeat
+         put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+         put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+         repeat with tKeyIteration from 1 up to 7
+            put element tKeyIteration of tWhiteKeysList into tWhiteKey
+            put nothing into tWhiteKey["keyColor"]
+            put tWhiteKey into element tKeyIteration of tWhiteKeysList
+         end repeat
+         put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+         put tOctave into element tOctaveIteration of mOctaveList
+      end repeat
+   else
+      ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      split pColorizedNotes by "\n" into tListOfStrings
+      repeat for each element tLine in tListOfStrings
+         split tLine by " " into tColorAndKeyListPair
+         -- log tColorAndKeyListPair
+         put stringToColor( element 1 of tColorAndKeyListPair ) into tColor
+         split ( element 2 of tColorAndKeyListPair ) by "," into tKeysList
+         repeat for each element tKey in tKeysList
+            --- check if it's a sharp without flat or flat
+            if the number of chars in tKey > 1 then
+               if ((char 2 of tKey is "#") and (the number of chars in tKey < 4))  or (char 2 of tKey is "b") then
+                  if (char -1 of tKey) parsed as number is not nothing then
+                     repeat forever
+                        if the last char of tKey is in "-012356789" then
+                           put the last char of tKey before tNumStr
+                           delete the last char of tKey
+                        else
+                           exit repeat
+                        end if
+                     end repeat
+                  end if
+                  put getSharpOrFlatToSharpAndFlat(tKey) into tKey
+                  put tKey & tNumStr into tKey
+               end if
+            end if
+            repeat with tOctaveIteration from 1 up to 11
+               put element tOctaveIteration of mOctaveList into tOctave
+               put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+               repeat with tKeyIteration from 1 up to 5
+                  put element tKeyIteration of tBlackKeysList into tBlackKey
+                  if tBlackKey["KeyName"] is tKey then
+                     put tColor into tBlackKey["keyColor"]
+                     put tBlackKey into element tKeyIteration of tBlackKeysList
+                  else if (tBlackKey["KeyName"] & tOctave["OctaveName"]) is tKey then
+                     put tColor into tBlackKey["keyColor"]
+                     put tBlackKey into element tKeyIteration of tBlackKeysList
+                  else if tBlackKey["KeyNumber"] is tKey parsed as number then
+                     put tColor into tBlackKey["keyColor"]
+                     put tBlackKey into element tKeyIteration of tBlackKeysList
+                  end if
+               end repeat
+               put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+
+               put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+               repeat with tKeyIteration from 1 up to 7
+                  put element tKeyIteration of tWhiteKeysList into tWhiteKey
+                  if tWhiteKey["KeyName"] is tKey then
+                     put tColor into tWhiteKey["keyColor"]
+                     put tWhiteKey into element tKeyIteration of tWhiteKeysList
+                  else if tWhiteKey["KeyName"] & tOctave["OctaveName"] is tKey then
+                     put tColor into tWhiteKey["keyColor"]
+                     put tWhiteKey into element tKeyIteration of tWhiteKeysList
+                  else if tWhiteKey["KeyNumber"] is tKey parsed as number then
+                     put tColor into tWhiteKey["keyColor"]
+                     put tWhiteKey into element tKeyIteration of tWhiteKeysList
+                  end if
+               end repeat
+               put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+               put tOctave into element tOctaveIteration of mOctaveList
+            end repeat
+         end repeat
+      end repeat
+   end if
+   redraw all
+end handler
+
+private handler getColorNotes() returns String
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+   variable tWhiteKey as Array
+
+   variable tNamesString as String
+   variable tNoteNumsString as String
+   variable tColorsString as String
+   variable tColoredKeysList as List
+   variable tColoredKeysListString as String
+
+   variable tTEMPColoredKeysList as List
+   variable tCombinedColoredKeysList as List
+   variable tColoredKeysString as String
+   variable tCombineColoredKeyNums as String
+   variable tCombineColoredKeyNames as String
+   variable tCurrentColorString as String
+   variable tCounter as Number
+   variable tOctaveIteration as Number
+   put "" into tNamesString
+   put "" into tNoteNumsString
+   repeat with tOctaveIteration from 1 up to 11
+      put element (tOctaveIteration) of mOctaveList into tOctave
+      put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+      repeat for each element tBlackKey in tBlackKeysList
+         if tBlackKey["keyColor"] is not nothing then
+            put colorToString(tBlackKey["keyColor"],true) into tColorsString
+            put tBlackKey["KeyNumber"] formatted as string into tNoteNumsString
+            put tBlackKey["KeyName"] & tOctave["OctaveName"] into tNamesString
+            push ( tColorsString & " " & tNoteNumsString & " " & tNamesString ) onto tColoredKeysList
+         end if
+      end repeat
+      put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+      repeat for each element tWhiteKey in tWhiteKeysList
+         if tWhiteKey["keyColor"] is not nothing then
+            put colorToString(tWhiteKey["keyColor"],true) into tColorsString
+            put tWhiteKey["KeyNumber"] formatted as string into tNoteNumsString
+            put tWhiteKey["KeyName"] & tOctave["OctaveName"] into tNamesString
+            push ( tColorsString & " " & tNoteNumsString & " " & tNamesString ) onto tColoredKeysList
+         end if
+      end repeat
+   end repeat
+
+   if tColoredKeysList is not the empty list then
+      sort tColoredKeysList
+      put "" into tCombineColoredKeyNames
+      put "" into tCombineColoredKeyNames
+      put "" into tCurrentColorString
+      repeat with tCounter from 1 up to (the number of elements in tColoredKeysList)
+         split (element tCounter of tColoredKeysList) by " " into tTEMPColoredKeysList
+         -- log [element 1 of tTEMPColoredKeysList]
+         if element 1 of tTEMPColoredKeysList is tCurrentColorString then --- if it is still the same color as the last iteration then just tack on the new note names & note numbers to the same line element
+            put element 2 of tTEMPColoredKeysList & "," after tCombineColoredKeyNums
+            put element 3 of tTEMPColoredKeysList & "," after tCombineColoredKeyNames
+         else             -- if it's not the same color as the previous loop iteration's color then ...
+            if tCurrentColorString is not "" then -- if it's not the first line then push the last line onto the combined list, reset variables, and start a new line
+               delete the last char of tCombineColoredKeyNums --- delete trailing comma
+               delete the last char of tCombineColoredKeyNames --- delete trailing comma
+               push ( tCurrentColorString & " " & tCombineColoredKeyNums & " " & tCombineColoredKeyNames ) onto tCombinedColoredKeysList
+               -- log [( tCurrentColorString & " " & tCombineColoredKeyNums & " " & tCombineColoredKeyNames )]
+               put element 1 of tTEMPColoredKeysList into tCurrentColorString
+               put element 2 of tTEMPColoredKeysList & "," into tCombineColoredKeyNums
+               put element 3 of tTEMPColoredKeysList & "," into tCombineColoredKeyNames
+               next repeat
+            else -- if it is the first line just put it into the new line element
+               put element 1 of tTEMPColoredKeysList into tCurrentColorString
+               put element 2 of tTEMPColoredKeysList & "," into tCombineColoredKeyNums
+               put element 3 of tTEMPColoredKeysList & "," into tCombineColoredKeyNames
+               next repeat
+            end if
+            next repeat
+         end if
+      end repeat
+      push ( tCurrentColorString & " " & tCombineColoredKeyNums & " " & tCombineColoredKeyNames ) onto tCombinedColoredKeysList
+      -- log tCombinedColoredKeysList
+      combine tCombinedColoredKeysList with "\n" into tColoredKeysListString
+      return tColoredKeysListString
+   else
+      return the empty string
+   end if
+end handler
+
+public handler getSharpOrFlatToSharpAndFlat(in pKey as String) returns String
+   variable tVarListA as List
+   variable tVarListB as List
+   variable tOffset as Number
+	put ["C#",  "D#",  "F#",  "G#",  "A#",  "Db",  "Eb",  "Gb",  "Ab",  "Bb"] into tVarListA
+   put ["C#Db","D#Eb","F#Gb","G#Ab","A#Bb","C#Db","D#Eb","F#Gb","G#Ab","A#Bb"] into tVarListB
+   put the index of pKey in tVarListA into tOffset
+   -- log tOffset
+   if tOffset > 0 then
+      return element tOffset of tVarListB
+   else
+      return pKey
+   end if
+end handler
+
+property octaveCount  get mOctaves
+metadata octaveCount.label is "Octave Count"
+private variable mOctaves as Integer
+
+property lowOctave  get getLowOctave  set setLowOctave
+metadata lowOctave.editor is "com.livecode.pi.enum"
+metadata lowOctave.options is "-1,0,1,2,3,4,5,6,7,8,9"
+metadata lowOctave.default is "3"
+metadata lowOctave.label is "Low Octave"
+private variable mLowOctaveStr as String
+private variable mLowOctave as Integer
+public handler setLowOctave(in pLowOctaveStr as String) returns nothing
+   if (pLowOctaveStr parsed as number) > -2 and (pLowOctaveStr parsed as number) < 10 then
+      put pLowOctaveStr into mLowOctaveStr
+   	put (pLowOctaveStr parsed as number) + 2 into mLowOctave
+      if mLowOctave > mHighOctave then
+         setHighOctave((mLowOctave -2) formatted as string)
+      end if
+      put mHighOctave - mLowOctave + 1 into mOctaves
+      OnGeometryChanged()
+      redraw all
+   end if
+end handler
+public handler getLowOctave() returns String
+   -- log mLowOctaveStr
+   return mLowOctaveStr
+end handler
+
+property highOctave  get getHighOctave  set setHighOctave
+metadata highOctave.editor is "com.livecode.pi.enum"
+metadata highOctave.options is "-1,0,1,2,3,4,5,6,7,8,9"
+metadata highOctave.default is "6"
+metadata highOctave.label is "High Octave"
+private variable mHighOctaveStr as String
+private variable mHighOctave as Integer
+public handler setHighOctave(in pHighOctaveStr as String) returns nothing
+   if (pHighOctaveStr parsed as number) > -2 and (pHighOctaveStr parsed as number) < 10 then
+      put pHighOctaveStr into mHighOctaveStr
+   	put (pHighOctaveStr parsed as number) + 2 into mHighOctave
+      if mLowOctave > mHighOctave then
+         setLowOctave((mHighOctave -2) formatted as string)
+      end if
+      put mHighOctave - mLowOctave + 1 into mOctaves
+      OnGeometryChanged()
+      redraw all
+   end if
+end handler
+public handler getHighOctave() returns String
+   return mHighOctaveStr
+end handler
+
+property chordFormula get getChordFormula  set setChordFormula
+metadata chordFormula.editor is "com.livecode.pi.string"
+metadata chordFormula.default is ""
+metadata chordFormula.label is "Chord Formula"
+public variable mChordFormula as String
+
+private handler setChordFormula(in pChordFormula as String) returns nothing
+   variable tNoteOffsetList as List
+   variable tGoodFormula as String
+   variable tElement as any
+   split pChordFormula by "," into tNoteOffsetList
+   -- log tNoteOffsetList
+   repeat for each element tElement in tNoteOffsetList
+      -- log tElement
+      if (tElement parsed as number is not nothing) and (tElement is not "0") and (not (tElement contains ".")) then -- Ensure elements are only numbers but not zero
+         put tElement & "," after tGoodFormula
+      end if
+   end repeat
+   if tGoodFormula is not the empty string then
+      if the last char of tGoodFormula is "," then
+          delete the last char of tGoodFormula
+      end if
+   end if
+   put tGoodFormula into mChordFormula
+   put "..." into mChordPreset
+   trigger all
+end handler
+public handler getChordFormula() returns String
+   return mChordFormula
+end handler
+
+property chordPresets get getChordPresets
+metadata chordPresets.user_visible is "false"
+private handler getChordPresets() returns String
+   return "+Octave\n-Octave\n-Octave+Octave\nPowerChord\nMajor Triad\nMinor Triad\nMinor 7th\nMajor 7th"
+end handler
+property chordPreset get mChordPreset set setChordPreset
+metadata chordPreset.editor is "com.livecode.pi.enum"
+metadata chordPreset.options is "...,+Octave,-Octave,-Octave+Octave,PowerChord,Major Triad,Minor Triad,Minor 7th,Major 7th"
+metadata chordPreset.default is "..."
+metadata chordPreset.label is "Chord Presets"
+public variable mChordPreset as String
+
+private handler setChordPreset(in pChordPreset as String) returns nothing
+   if pChordPreset is "..." or pChordPreset is "" then
+      put pChordPreset into mChordPreset
+      setChordFormula("")
+   end if
+   if pChordPreset is "+Octave" then
+      put pChordPreset into mChordPreset
+      setChordFormula("12")
+   end if
+   if pChordPreset is "-Octave" then
+      put pChordPreset into mChordPreset
+      setChordFormula("-12")
+   end if
+   if pChordPreset is "-Octave+Octave" then
+      put pChordPreset into mChordPreset
+      setChordFormula("-12,12")
+   end if
+   if pChordPreset is "PowerChord" then
+      put pChordPreset into mChordPreset
+      setChordFormula("7,12")
+   end if
+   if pChordPreset is "Major Triad" then
+      put pChordPreset into mChordPreset
+      setChordFormula("4,7")
+   end if
+   if pChordPreset is "Minor Triad" then
+      put pChordPreset into mChordPreset
+      setChordFormula("3,7")
+   end if
+   if pChordPreset is "Major 7th" then
+      put pChordPreset into mChordPreset
+      setChordFormula("4,7,11")
+   end if
+   if pChordPreset is "Minor 7th" then
+      put pChordPreset into mChordPreset
+      setChordFormula("3,7,10")
+   end if
+end handler
+
+property blackKeysColor   get getAccidentalsColor  set setAccidentalsColor
+metadata blackKeysColor.user_visible is "false"
+property accidentalsColor   get getaccidentalsColor  set setaccidentalsColor
+metadata accidentalsColor.editor is "com.livecode.pi.colorwithalpha"
+metadata accidentalsColor.label   is "Sharps and Flats fill"
+metadata accidentalsColor.section is "Colors"
+metadata accidentalsColor.default is "0,0,0,255"
+private variable mAccidentalsColor as optional Color
+public handler setAccidentalsColor(in pColor as String) returns nothing
+   put stringToColor(pColor) into mAccidentalsColor
+   redraw all
+end handler
+public handler getAccidentalsColor() returns String
+   return colorToString(mAccidentalsColor, true)
+end handler
+
+property whiteKeysColor   get getNaturalsColor  set setNaturalsColor
+metadata whiteKeysColor.user_visible is "false"
+property naturalsColor   get getNaturalsColor  set setNaturalsColor
+metadata naturalsColor.editor is "com.livecode.pi.colorwithalpha"
+metadata naturalsColor.label   is "Naturals fill"
+metadata naturalsColor.section is "Colors"
+metadata naturalsColor.default is "255,255,255,255"
+private variable mNaturalsColor as optional Color
+public handler setNaturalsColor(in pColor as String) returns nothing
+   put stringToColor(pColor) into mNaturalsColor
+   redraw all
+end handler
+public handler getNaturalsColor() returns String
+   return colorToString(mNaturalsColor, true)
+end handler
+
+private variable mHiliteColor as Color
+metadata hiliteColor.editor  is "com.livecode.pi.colorwithalpha" -- "com.livecode.pi.color"
+metadata hiliteColor.section is "Colors"
+metadata hiliteColor.label   is "Hilite fill"
+metadata hiliteColor.default is ""
+
+private variable mBorderWidth as Number
+property borderWidth get mBorderWidth  set setBorderWidth
+metadata borderWidth.editor is "com.livecode.pi.number"
+metadata borderWidth.label is "Border width"
+metadata borderWidth.step is "0.5"
+metadata borderWidth.default is "0.5"
+metadata borderWidth.min is "0.5"
+metadata borderWidth.max is "25"
+public handler setBorderWidth(in pBorderWidth as Number) returns nothing
+   put pBorderWidth into mBorderWidth
+   OnGeometryChanged()
+   redraw all
+end handler
+
+private variable mStrokeColor as Color
+metadata borderColor.editor  is "com.livecode.pi.color"
+metadata borderColor.section is "Colors"
+metadata borderColor.label   is "Borders fill"
+metadata borderColor.default is ""
+
+public handler OnStopEditing()
+   OnGeometryChanged()
+   redraw all
+end handler
+-- this handler is called when the widget is saved
+public handler OnSave(out rProperties as Array)
+   put getHilitedNotes() into rProperties["hilitedNotes"]
+   put mChordFormula into rProperties["chordFormula"]
+   put mLowOctaveStr into rProperties["lowOctave"]
+   put mHighOctaveStr into rProperties["highOctave"]
+   put mScaleNotes into rProperties["lockToScale"]
+   put mBorderWidth into rProperties["borderWidth"]
+   put colorToString(mStrokeColor, true) into rProperties["borderColor"]
+   put colorToString(mHiliteColor, true) into rProperties["hiliteColor"]
+   put colorToString(mNaturalsColor, true) into rProperties["naturalsColor"]
+   put colorToString(mAccidentalsColor, true) into rProperties["accidentalsColor"]
+end handler
+-- this handler is called when the widget is loaded
+public handler OnLoad(in pProperties as Array)
+   --log pProperties --> logging this doesn't seem to work!
+   setHilitedNotes( pProperties["hilitedNotes"])
+   setChordFormula( pProperties["chordFormula"])
+   setLowOctave( pProperties["lowOctave"])
+   setHighOctave( pProperties["highOctave"])
+   setLockedToScale( pProperties["lockToScale"])
+   put pProperties["borderWidth"] into mBorderWidth
+   put stringToColor(pProperties["borderColor"]) into mStrokeColor
+   put stringToColor(pProperties["hiliteColor"]) into mHiliteColor
+   put stringToColor(pProperties["naturalsColor"]) into mNaturalsColor
+   put stringToColor(pProperties["accidentalsColor"]) into mAccidentalsColor
+   OnGeometryChanged()
+   redraw all
+end handler
+
+private variable mBlackKeysList as List
+private variable mWhiteKeysList as List
+private variable mSelectedKeyList as optional List
+private variable mSelectedKey as optional Array
+private variable mOctaveList as List
+
+-----------------------------------------------------------------------------------------------  Mouse Handlers --------------------------------------------------------------------------------------
+public variable mPianoMouseButtonDown as Boolean
+
+public handler OnMouseUp()
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+   variable tWhiteKey as Array
+   variable tPath as Path
+   variable tIndex as Number
+   variable tNotesNumsOff as List
+   put false into  mPianoMouseButtonDown
+   if mSelectedKey is not nothing then
+      if mSelectedKey["keySharpFlat"] is true then
+         put unhighlightChordFormula(mSelectedKey["KeyNumber"]) into tNotesNumsOff
+         put element mSelectedKey["OctaveNumber"] of mOctaveList into tOctave
+         post "noteOff" with [ mSelectedKey["KeyNumber"] formatted as string & element 1 of tNotesNumsOff, mSelectedKey["KeyName"]&tOctave["OctaveName"] & element 2 of tNotesNumsOff ]
+         put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+         put element (mSelectedKey["index"]) of tBlackKeysList into tBlackKey
+         put false into tBlackKey["KeyHilited"]
+         put tBlackKey into element mSelectedKey["index"] of tBlackKeysList
+         put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+         put tOctave into element mSelectedKey["OctaveNumber"] of mOctaveList
+      else
+         put unhighlightChordFormula(mSelectedKey["KeyNumber"]) into tNotesNumsOff
+         put element mSelectedKey["OctaveNumber"] of mOctaveList into tOctave
+         post "noteOff" with [ mSelectedKey["KeyNumber"] formatted as string & element 1 of tNotesNumsOff, mSelectedKey["KeyName"]&tOctave["OctaveName"] & element 2 of tNotesNumsOff ]
+         put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+         put element mSelectedKey["index"] of tWhiteKeysList into tWhiteKey
+         put false into tWhiteKey["KeyHilited"]
+         put tWhiteKey into element mSelectedKey["index"] of tWhiteKeysList
+         put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+         put tOctave into element mSelectedKey["OctaveNumber"] of mOctaveList
+      end if
+      put nothing into mSelectedKey
+      redraw all
+   end if
+  post "mouseUp" with [the click button] --  to my script object with [the click button]
+end handler
+
+public handler OnMouseDown()
+   variable tOctaveCounter as Number
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+   variable tWhiteKey as Array
+   variable tPath as Path
+   variable tIndex as Number
+   variable tChordNotes as List
+
+   put true into mPianoMouseButtonDown
+   if mSelectedKey is not nothing then
+      put mSelectedKey["KeyPath"] into tPath
+      if hitTestPath( the mouse position, tPath, 0, true) is false then
+         if mSelectedKey["keySharpFlat"] is true then
+            put unhighlightChordFormula(mSelectedKey["KeyNumber"]) into tChordNotes
+            put element mSelectedKey["OctaveNumber"] of mOctaveList into tOctave
+            post "noteOff" with [ mSelectedKey["KeyNumber"] formatted as string & element 1 of tChordNotes, mSelectedKey["KeyName"]&tOctave["OctaveName"] & element 2 of tChordNotes ]
+            put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+            put element mSelectedKey["index"] of tBlackKeysList into tBlackKey
+            put false into tBlackKey["KeyHilited"]
+            put tBlackKey into element mSelectedKey["index"] of tBlackKeysList
+            put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+            put tOctave into element mSelectedKey["OctaveNumber"] of mOctaveList
+         else
+            put unhighlightChordFormula(mSelectedKey["KeyNumber"]) into tChordNotes
+            put element mSelectedKey["OctaveNumber"] of mOctaveList into tOctave
+            post "noteOff" with [ mSelectedKey["KeyNumber"] formatted as string & element 1 of tChordNotes, mSelectedKey["KeyName"]&tOctave["OctaveName"] & element 2 of tChordNotes ]
+            put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+            put element mSelectedKey["index"] of tWhiteKeysList into tWhiteKey
+            put false into tWhiteKey["KeyHilited"]
+            put tWhiteKey into element mSelectedKey["index"] of tWhiteKeysList
+            put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+            put tOctave into element mSelectedKey["OctaveNumber"] of mOctaveList
+         end if
+         put nothing into mSelectedKey
+      end if
+   end if
+   repeat with tOctaveCounter from mLowOctave up to mHighOctave
+      put element tOctaveCounter of mOctaveList into tOctave
+
+      put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+      repeat with tIndex from 1 up to 5
+         put element tIndex of tBlackKeysList into tBlackKey
+         if tBlackKey["keyLocked"] then
+            next repeat
+         -- if tBlackKey["KeyNumber"] > 127 then
+            -- exit repeat
+         end if
+         put tBlackKey["KeyPath"] into tPath
+         if hitTestPath( the mouse position, tPath, 0, true) then
+         -- if (the mouse position is within the bounding box of tPath) then
+            put highlightChordFormula(tBlackKey["KeyNumber"]) into tChordNotes
+            post "noteOn" with [ tBlackKey["KeyNumber"] formatted as string & element 1 of tChordNotes,tBlackKey["KeyName"]&tOctave["OctaveName"]& element 2 of tChordNotes]
+            put true into tBlackKey["KeyHilited"]
+            put tBlackKey into element tIndex of tBlackKeysList
+            put tBlackKey into mSelectedKey
+            put tIndex into mSelectedKey["index"]
+            put tOctaveCounter into mSelectedKey["OctaveNumber"]
+         else
+           put false into tBlackKey["KeyHilited"]
+           put tBlackKey into element tIndex of tBlackKeysList
+         end if
+      end repeat
+      put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+
+      put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+      repeat with tIndex from 1 up to 7
+         put element tIndex of tWhiteKeysList into tWhiteKey
+         if tWhiteKey["keyLocked"] then
+            next repeat
+         --if tWhiteKey["KeyNumber"] > 127 then
+            --exit repeat
+         end if
+         put tWhiteKey["KeyPath"] into tPath
+         if hitTestPath( the mouse position, tPath, 0, true) then
+            put highlightChordFormula(tWhiteKey["KeyNumber"]) into tChordNotes
+            post "noteOn" with [ tWhiteKey["KeyNumber"] formatted as string & element 1 of tChordNotes,tWhiteKey["KeyName"]&tOctave["OctaveName"] & element 2 of tChordNotes]
+            put true into tWhiteKey["KeyHilited"]
+            put tWhiteKey into element tIndex of tWhiteKeysList
+            put tWhiteKey into mSelectedKey
+            put tIndex into mSelectedKey["index"]
+            put tOctaveCounter into mSelectedKey["OctaveNumber"]
+         else
+            put false into tWhiteKey["KeyHilited"]
+            put tWhiteKey into element tIndex of tWhiteKeysList
+         end if
+      end repeat
+      put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+
+      put tOctave into element tOctaveCounter of mOctaveList
+   end repeat
+   if mSelectedKey is not nothing then
+      highlightChordFormula(mSelectedKey["KeyNumber"])
+   end if
+	redraw all
+   post "mouseDown" with [the click button] --- to my script object with [the click button]
+end handler
+
+public handler OnMouseMove()
+   if mPianoMouseButtonDown then
+      variable tOctaveCounter as Number
+      variable tOctave as Array
+      variable tBlackKeysList as List
+      variable tBlackKey as Array
+      variable tWhiteKeysList as List
+      variable tWhiteKey as Array
+      variable tPath as Path
+      variable tIndex as Number
+      variable tNum as Number
+      variable tChordNotes as List
+
+      variable tSameSelectedKey as Boolean -- Bernd (BN) added contidtional check to cut down on redraws
+      if mSelectedKey is not nothing then
+         put mSelectedKey["KeyPath"] into tPath
+         put hitTestPath( the mouse position, tPath, 0, true) into tSameSelectedKey
+      end if
+      if mSelectedKey is not nothing and not tSameSelectedKey then -- added tSameSelectedKey
+         put mSelectedKey["KeyPath"] into tPath
+         if hitTestPath( the mouse position, tPath, 0, true) is false then
+            if mSelectedKey["keySharpFlat"] is true then
+               put element mSelectedKey["OctaveNumber"] of mOctaveList into tOctave
+               put unhighlightChordFormula(mSelectedKey["KeyNumber"]) into tChordNotes
+               post "noteOff" with [ mSelectedKey["KeyNumber"] formatted as string & element 1 of tChordNotes,mSelectedKey["KeyName"]&tOctave["OctaveName"] & element 2 of tChordNotes]
+               put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+               put element mSelectedKey["index"] of tBlackKeysList into tBlackKey
+               put false into tBlackKey["KeyHilited"]
+               put tBlackKey into element mSelectedKey["index"] of tBlackKeysList
+               put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+               put tOctave into element mSelectedKey["OctaveNumber"] of mOctaveList
+            else
+               put element mSelectedKey["OctaveNumber"] of mOctaveList into tOctave
+               put unhighlightChordFormula(mSelectedKey["KeyNumber"]) into tChordNotes
+               post "noteOff" with [ mSelectedKey["KeyNumber"] formatted as string & element 1 of tChordNotes,mSelectedKey["KeyName"]&tOctave["OctaveName"] & element 2 of tChordNotes]
+               put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+               put element mSelectedKey["index"] of tWhiteKeysList into tWhiteKey
+               put false into tWhiteKey["KeyHilited"]
+               put tWhiteKey into element mSelectedKey["index"] of tWhiteKeysList
+               put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+               put tOctave into element mSelectedKey["OctaveNumber"] of mOctaveList
+            end if
+            put nothing into mSelectedKey
+         end if
+      end if
+      if not tSameSelectedKey then -- added
+         repeat with tOctaveCounter from mLowOctave up to mHighOctave
+            put element tOctaveCounter of mOctaveList into tOctave
+
+            put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+            repeat with tIndex from 1 up to 5
+               put element tIndex of tBlackKeysList into tBlackKey
+               if tBlackKey["keyLocked"] then
+                  next repeat
+               -- if tBlackKey["KeyNumber"] > 127 then
+               --   exit repeat
+               end if
+               put tBlackKey["KeyPath"] into tPath
+               if hitTestPath( the mouse position, tPath, 0, true) then
+               -- if (the mouse position is within the bounding box of tPath) then --- causes potentialy multiple positive results (hiliting multiple keys for one point)
+                  put highlightChordFormula(tBlackKey["KeyNumber"]) into tChordNotes
+                  post "noteOn" with [ tBlackKey["KeyNumber"] formatted as string & element 1 of tChordNotes,tBlackKey["KeyName"]&tOctave["OctaveName"] & element 2 of tChordNotes]
+                   put true into tBlackKey["KeyHilited"]
+                   put tBlackKey into element tIndex of tBlackKeysList
+                   put tBlackKey into mSelectedKey
+                   put tIndex into mSelectedKey["index"]
+                   put tOctaveCounter into mSelectedKey["OctaveNumber"]
+               else
+                 put false into tBlackKey["KeyHilited"]
+                 put tBlackKey into element tIndex of tBlackKeysList
+               end if
+            end repeat
+            put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+
+            put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+            repeat with tIndex from 1 up to 7
+               put element tIndex of tWhiteKeysList into tWhiteKey
+               if tWhiteKey["keyLocked"] then
+                  next repeat
+               --if tWhiteKey["KeyNumber"] > 127 then
+               --   exit repeat
+               end if
+               put tWhiteKey["KeyPath"] into tPath
+               if hitTestPath( the mouse position, tPath, 0, true) then
+                  put highlightChordFormula(tWhiteKey["KeyNumber"]) into tChordNotes
+                  post "noteOn" with [ tWhiteKey["KeyNumber"] formatted as string & element 1 of tChordNotes,tWhiteKey["KeyName"]&tOctave["OctaveName"] & element 2 of tChordNotes]
+                  put true into tWhiteKey["KeyHilited"]
+                  put tWhiteKey into element tIndex of tWhiteKeysList
+                  put tWhiteKey into mSelectedKey
+                  put tIndex into mSelectedKey["index"]
+                  put tOctaveCounter into mSelectedKey["OctaveNumber"]
+               else
+                  put false into tWhiteKey["KeyHilited"]
+                  put tWhiteKey into element tIndex of tWhiteKeysList
+               end if
+            end repeat
+            put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+            put tOctave into element tOctaveCounter of mOctaveList
+         end repeat
+         if mSelectedKey is not nothing then --- I forget why this is here, maybe to keep hiliting chord notes even if it's same key?
+            highlightChordFormula(mSelectedKey["KeyNumber"])
+         end if
+         redraw all
+      end if
+   end if
+end handler
+
+public handler OnMouseCancel()
+   put false into mPianoMouseButtonDown
+   OnMouseUp()
+end handler
+--public handler OnMouseCancelHover()
+--   put false into mPianoMouseButtonDown
+--   OnMouseUp()
+--end handler
+--public handler OnMouseEnter()
+   --variable tMouseButtonState as String
+   --execute script "global gPianoMouseButtonDown ; return gPianoMouseButtonDown"
+   --execute script "return mouse()"
+   -- log the result
+   --if the result is "up" then
+      --put false into mPianoMouseButtonDown
+       -- OnMouseUp()
+   --else
+       --put true into mPianoMouseButtonDown
+       -- OnMouseDown()
+   --end if
+--end handler
+
+--- Monte's point-within-path handler:
+public handler hitTestPath(in pPoint as Point, in pPath as Path, in pStrokeWidth as Number, in pWithin as Boolean) returns Boolean
+	-- set pWithin true and pStrokeWidth to 0 if you want to hit-test the filled path
+	-- set pWithin false and pStrokeWidth != 0 if you want hit-test the stroked path (i.e. just the outline)
+	-- set pWithin true and pStrokeWidth != 0 if you want to hit-test the stroked and filled path.
+	------------------------------------------------------------------------------------------------------------------------------
+	-- create a 1 x 1 canvas
+	variable tCanvas as Canvas
+	put a new canvas with size [1,1] into tCanvas
+	-- ensure we either get pixels drawn with our color or not drawn
+	set the antialias of tCanvas to false
+	-- translate the path by the point
+	translate pPath by [-(the x of pPoint), -(the y of pPoint)]
+	-- draw the path to the canvas
+	set the paint of tCanvas to solid paint with color [0.0, 0.0, 0.0, 1.0]
+	if pStrokeWidth is 0 and not pWithin then
+		put 1 into pStrokeWidth
+	end if
+	if pWithin then
+		fill pPath on tCanvas
+	end if
+	if pStrokeWidth > 0 then
+		set the stroke width of tCanvas to pStrokeWidth
+		stroke pPath on tCanvas
+	end if
+	-- get the pixel data of the canvas
+	variable tData as Data
+	put the pixel data of tCanvas into tData
+	-- return whether pixel is opaque
+	return the first byte of tData is the byte with code 255
+end handler
+
+public handler unhighlightChordFormula(in pKeyNum as Integer) returns optional any
+   variable tListOfString as List
+   variable tListOfNum as List
+   variable tChordNoteNums as List
+   variable tKeysList as List
+   variable tKey as Array
+   variable tNum as Number
+   variable tOctNum as Number
+   variable tOctave as Array
+   variable tCounter as Number
+   variable tNoteNumsOff as String
+   variable tNoteNamesOff as String
+   variable tNotesOff as List
+   split mChordFormula by "," into tListOfString
+   put tListOfString parsed as list of number into tListOfNum
+   repeat for each element tNum in tListOfNum
+      if pKeyNum + tNum < 128 and pKeyNum + tNum > -1 then
+         push pKeyNum + tNum onto tChordNoteNums
+      end if
+   end repeat
+   repeat for each element tNum in tChordNoteNums
+      put getOctaveFromNoteNumber(tNum) into tOctNum
+      put element tOctNum of mOctaveList into tOctave
+      if tNum is in tOctave["OctaveBlackKeysIndex"] then
+         put tOctave["OctaveBlackKeysList"] into tKeysList
+         repeat with tCounter from 1 up to 5
+            put element tCounter of tKeysList into tKey
+            if tKey["KeyNumber"] is tNum then
+               put "," &  tKey["KeyName"] & tOctave["OctaveName"] after tNoteNamesOff
+               put "," & tKey["KeyNumber"] formatted as string after tNoteNumsOff
+               put false into tKey["KeyHilited"]
+               put tKey into element tCounter of tKeysList
+            end if
+         end repeat
+         put tKeysList into tOctave["OctaveBlackKeysList"]
+         put tOctave into element tOctNum of mOctaveList
+         redraw all
+      else
+         if tNum is in tOctave["OctaveWhiteKeysIndex"] then
+            put tOctave["OctaveWhiteKeysList"] into tKeysList
+            repeat with tCounter from 1 up to 7
+               put tKeysList[tCounter] into tKey
+               if tKey["KeyNumber"] is tNum then
+                  put "," &  tKey["KeyName"] & tOctave["OctaveName"] after tNoteNamesOff
+                  put "," & tKey["KeyNumber"] formatted as string after tNoteNumsOff
+                  put false into tKey["KeyHilited"]
+                  put tKey into tKeysList[tCounter]
+               end if
+            end repeat
+            put tKeysList into tOctave["OctaveWhiteKeysList"]
+            put tOctave into element tOctNum of mOctaveList
+         end if
+      end if
+   end repeat
+   push tNoteNumsOff onto tNotesOff
+   push tNoteNamesOff onto tNotesOff
+   return tNotesOff
+end handler
+
+public handler highlightChordFormula(in pKeyNum as Integer) returns optional any
+   variable tListOfString as List
+   variable tListOfNum as List
+   variable tChordNoteNums as List
+   variable tKeysList as List
+   variable tKey as Array
+   variable tNum as Number
+   variable tOctNum as Number
+   variable tOctave as Array
+   variable tCounter as Number
+   variable tNoteNumsOn as String
+   variable tNoteNamesOn as String
+   variable tNotesOn as List
+   split mChordFormula by "," into tListOfString
+   put tListOfString parsed as list of number into tListOfNum
+   repeat for each element tNum in tListOfNum
+      if pKeyNum + tNum < 128 and pKeyNum + tNum > -1 then
+         push pKeyNum + tNum onto tChordNoteNums
+      end if
+   end repeat
+   repeat for each element tNum in tChordNoteNums
+      put getOctaveFromNoteNumber(tNum) into tOctNum
+      put element tOctNum of mOctaveList into tOctave
+      if tNum is in tOctave["OctaveBlackKeysIndex"] then
+         put tOctave["OctaveBlackKeysList"] into tKeysList
+         repeat with tCounter from 1 up to 5
+            put element tCounter of tKeysList into tKey
+            if tKey["keyLocked"] then
+               next repeat
+            end if
+            if tKey["KeyNumber"] is tNum then
+               put "," &  tKey["KeyName"] & tOctave["OctaveName"] after tNoteNamesOn
+               put "," & tKey["KeyNumber"] formatted as string after tNoteNumsOn
+               put true into tKey["KeyHilited"]
+               put tKey into element tCounter of tKeysList
+            end if
+         end repeat
+         put tKeysList into tOctave["OctaveBlackKeysList"]
+         put tOctave into element tOctNum of mOctaveList
+      else
+         if tNum is in tOctave["OctaveWhiteKeysIndex"] then
+            put tOctave["OctaveWhiteKeysList"] into tKeysList
+            repeat with tCounter from 1 up to 7
+               put tKeysList[tCounter] into tKey
+               if tKey["keyLocked"] then
+                  next repeat
+               end if
+               if tKey["KeyNumber"] is tNum then
+                  put "," & tKey["KeyName"] & tOctave["OctaveName"] after tNoteNamesOn
+                  put "," & tKey["KeyNumber"] formatted as string after tNoteNumsOn
+                  put true into tKey["KeyHilited"]
+                  put tKey into tKeysList[tCounter]
+               end if
+            end repeat
+            put tKeysList into tOctave["OctaveWhiteKeysList"]
+            put tOctave into element tOctNum of mOctaveList
+         end if
+      end if
+   end repeat
+   -- log tNoteNumsOn
+   -- log tNoteNamesOn
+   push tNoteNumsOn onto tNotesOn
+   push tNoteNamesOn onto tNotesOn
+   return tNotesOn
+end handler
+
+public handler getOctaveFromNoteNumber(in pNoteNum as Integer) returns optional any
+   if pNoteNum < 12 then
+      return 1
+   end if
+   if pNoteNum>11 and pNoteNum<24 then
+      return 2
+   end if
+   if pNoteNum>23 and pNoteNum<36 then
+      return 3
+   end if
+   if pNoteNum>35 and pNoteNum<48 then
+      return 4
+   end if
+   if pNoteNum>47 and pNoteNum<60 then
+      return 5
+   end if
+   if pNoteNum>59 and pNoteNum<72 then
+      return 6
+   end if
+   if pNoteNum>71 and pNoteNum<84 then
+      return 7
+   end if
+   if pNoteNum>83 and pNoteNum<96 then
+      return 8
+   end if
+   if pNoteNum>95 and pNoteNum<108 then
+      return 9
+   end if
+   if pNoteNum>107 and pNoteNum<120 then
+      return 10
+   end if
+   if pNoteNum>119 and pNoteNum<128 then
+      return 11
+   end if
+end handler
+-----------------------------------------------------------------------------------------------  Creating & Drawing --------------------------------------------------------------------------------------
+--- called when widget is created
+public handler OnCreate()
+   ------------------ Initialize Properties --------------------
+   put the color of my highlight paint into mHiliteColor
+   put the color of my border paint into mStrokeColor
+   put 0.5 into mBorderWidth
+   put 4 into mOctaves
+   put "1" into mLowOctaveStr
+   put 3 into mLowOctave
+   put "4" into mHighOctaveStr
+   put 6 into mHighOctave
+   put "..." into mChordPreset
+   put "" into mScaleNotes
+   put nothing into mSelectedKey
+   put false into mPianoMouseButtonDown
+   put true into mHilitedNotesRefresh
+   --------------------------------------------------------------
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tWhiteKeysList as List
+   variable tArray as Array
+   variable tBlackKeyPath as Path
+   variable tPath as Path
+	variable tWhiteKey as Array
+	variable tBlackKey as Array
+   variable tOctaveWidth as Number
+   variable tWhiteKeySpacing as Number
+   variable tBlackKeySpacing as Number
+   variable tOctaveIteration as Number
+   variable tOctaveShift as Number
+   variable tHalfStrokeOffset as Number
+   variable tMyWidthMinusStroke as Number
+   variable tMyHeightMinusStroke as Number
+   -- OctaveList -- List
+   --    OctaveName -- String
+   --    OctaveNumber -- Number
+   --    OctaveBlackKeysIndex -- List of Note Numbers
+   --    OctaveWhiteKeysIndex -- List of Note Numbers
+   --    BlackKeysList -- List of Arrays
+   --       KeyName -- String
+   --       KeyNumber -- Number
+   --       KeyPath -- Path
+   --       KeyHilited -- Boolean
+   --       keySharpFlat -- Boolean
+   --    WhiteKeysList -- List of Arrays
+   --       KeyName  -- String
+   --       KeyNumber -- Number
+   --       KeyPath -- Path
+   --       KeyHilited -- Boolean
+   --       keySharpFlat -- Boolean
+   put mBorderWidth / 2 into tHalfStrokeOffset
+   put my width - (mBorderWidth) into tMyWidthMinusStroke
+   put my height - (mBorderWidth) into tMyHeightMinusStroke
+
+   put tMyWidthMinusStroke / mOctaves into tOctaveWidth
+   put tMyWidthMinusStroke /7 / mOctaves into tWhiteKeySpacing
+   put tMyWidthMinusStroke /12 / mOctaves into tBlackKeySpacing
+   put (mLowOctave * tOctaveWidth) - tOctaveWidth into tOctaveShift
+
+   put path "M0,0v81.841C0,81.841,0,84,2.679,84h8.642c0,0,2.679,0,2.679-2.159V0H0z" into tBlackKeyPath -- BlackKeys all have identical shape
+   repeat with tOctaveIteration from 0 up to 10
+      ----------------------------------------------------------------------------------------------------------------Octave 0----------------------------------------------------------------------------------------
+      put the empty array into tArray
+      put the empty list into tBlackKeysList
+      put the empty list into tWhiteKeysList
+      --------------------------------------------White Keys--------------------------------------------
+   	put "C" into tArray["KeyName"]
+   	put path "M16.679,84C14,84,14,81.841,14,81.841V0H0v126.897c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103 V84H16.679z" into tPath
+      scale tPath by [(tOctaveWidth /7) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [0 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put false into tArray["keySharpFlat"]
+      -- put stringToColor("255,0,0,255") into tArray["keyColor"]
+      put nothing into tArray["keyColor"]
+      put false into tArray["keyLocked"]
+      put 0 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tWhiteKeysList
+   	put "D" into tArray["KeyName"]
+   	put path "M20.679,84C18,84,18,81.841,18,81.841V0H4v81.841C4,84,1.321,84,1.321,84H0v42.897c0,0,0,3.103,3.827,3.103	h16.346c0,0,3.827,0,3.827-3.103V84H20.679z" into tPath
+      scale tPath by [(tOctaveWidth /7) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put false into tArray["keySharpFlat"]
+      put nothing into tArray["keyColor"]
+      put false into tArray["keyLocked"]
+   	put 2 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tWhiteKeysList
+   	put "E" into tArray["KeyName"]
+   	put path "M8,0v81.841C8,84,5.321,84,5.321,84H0v42.897c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103V0H8z" into tPath
+      scale tPath by [(tOctaveWidth /7) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing*2  + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put false into tArray["keySharpFlat"]
+      put nothing into tArray["keyColor"]
+      put false into tArray["keyLocked"]
+   	put 4 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tWhiteKeysList
+   	put "F" into tArray["KeyName"]
+   	put path "M23.321,84h-8.642C12,84,12,81.841,12,81.841V0H0v126.897c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103V83.922C23.612,83.998,23.321,84,23.321,84z" into tPath
+      scale tPath by [(tOctaveWidth /7) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing*3  + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put false into tArray["keySharpFlat"]
+      put nothing into tArray["keyColor"]
+   	put 5 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tWhiteKeysList
+   	put "G" into tArray["KeyName"]
+   	put path "M18.679,84C16,84,16,81.841,16,81.841V0H2v81.841c0,1.45-1.206,1.924-2,2.081v42.975c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103V84H18.679z" into tPath
+      scale tPath by [(tOctaveWidth /7)/ the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing*4  + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put false into tArray["keySharpFlat"]
+      put nothing into tArray["keyColor"]
+      put false into tArray["keyLocked"]
+   	put 7 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tWhiteKeysList
+   	put "A" into tArray["KeyName"]
+   	put path "M22.679,84C20,84,20,81.841,20,81.841V0H6v81.841C6,84,3.321,84,3.321,84H0v42.897c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103V84H22.679z" into tPath
+      scale tPath by [(tOctaveWidth /7)/ the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing*5  + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put false into tArray["keySharpFlat"]
+      put nothing into tArray["keyColor"]
+      put false into tArray["keyLocked"]
+   	put 9 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tWhiteKeysList
+   	put "B" into tArray["KeyName"]
+   	put path "M10,0v81.841C10,84,7.321,84,7.321,84H0v42.897c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103V0H10z" into tPath
+      scale tPath by [(tOctaveWidth /7)/ the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing*6 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put false into tArray["keySharpFlat"]
+      put nothing into tArray["keyColor"]
+      put false into tArray["keyLocked"]
+   	put 11 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tWhiteKeysList
+      --------------------------------------------Black Keys--------------------------------------------
+      put the empty array into tArray
+
+   	put "C#Db" into tArray["KeyName"]
+   	put tBlackKeyPath into tPath
+      scale tPath by [(tOctaveWidth /12)/ the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)*0.64615384615385]
+      translate tPath by [tBlackKeySpacing + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put true into tArray["keySharpFlat"]
+      put nothing into tArray["keyColor"]
+      put false into tArray["keyLocked"]
+   	put 1 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tBlackKeysList
+   	put "D#Eb" into tArray["KeyName"]
+   	put tBlackKeyPath into tPath
+      scale tPath by [(tOctaveWidth /12)/ the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)*0.64615384615385]
+      translate tPath by [tBlackKeySpacing*3 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put true into tArray["keySharpFlat"]
+      put nothing into tArray["keyColor"]
+      put false into tArray["keyLocked"]
+   	put 3 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tBlackKeysList
+   	put "F#Gb" into tArray["KeyName"]
+   	put tBlackKeyPath into tPath
+      scale tPath by [(tOctaveWidth /12) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)*0.64615384615385]
+      translate tPath by [tBlackKeySpacing*6 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put true into tArray["keySharpFlat"]
+      put nothing into tArray["keyColor"]
+      put false into tArray["keyLocked"]
+   	put 6 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tBlackKeysList
+   	put "G#Ab" into tArray["KeyName"]
+   	put tBlackKeyPath into tPath
+      scale tPath by [(tOctaveWidth /12) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)*0.64615384615385]
+      translate tPath by [tBlackKeySpacing*8 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put true into tArray["keySharpFlat"]
+      put nothing into tArray["keyColor"]
+      put false into tArray["keyLocked"]
+   	put 8 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tBlackKeysList
+   	put "A#Bb" into tArray["KeyName"]
+   	put tBlackKeyPath into tPath
+      scale tPath by [(tOctaveWidth /12) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)*0.64615384615385]
+      translate tPath by [tBlackKeySpacing*10 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tArray["KeyPath"]
+   	put false into tArray["KeyHilited"]
+      put true into tArray["keySharpFlat"]
+      put nothing into tArray["keyColor"]
+      put false into tArray["keyLocked"]
+   	put 10 + (tOctaveIteration * 12) into tArray["KeyNumber"]
+   	push tArray onto tBlackKeysList
+      --------------------------------------------- Octave --------------------------------------------
+      put the empty array into tArray
+
+      put (tOctaveIteration -1) formatted as string into tArray["OctaveName"]
+      put 1 +tOctaveIteration into tArray["OctaveNumber"]
+      put tBlackKeysList into tArray["OctaveBlackKeysList"]
+      put tWhiteKeysList into tArray["OctaveWhiteKeysList"]
+      put [1 + (tOctaveIteration * 12), 3 + (tOctaveIteration * 12), 6 + (tOctaveIteration * 12), 8 + (tOctaveIteration * 12), 10 + (tOctaveIteration * 12)] into tArray["OctaveBlackKeysIndex"]
+      put [0 + (tOctaveIteration * 12), 2 + (tOctaveIteration * 12), 4 + (tOctaveIteration * 12), 5 + (tOctaveIteration * 12), 7 + (tOctaveIteration * 12), 9 + (tOctaveIteration * 12), 11 + (tOctaveIteration * 12)] into tArray["OctaveWhiteKeysIndex"]
+      push tArray onto mOctaveList
+   end repeat
+   --------- Lock Keys Over 127
+   put element 11 of mOctaveList into tOctave
+   put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+   put element 6 of tWhiteKeysList into tArray
+   put true into tArray["keyLocked"]
+   put tArray into element 6 of tWhiteKeysList
+   put element 7 of tWhiteKeysList into tArray
+   put true into tArray["keyLocked"]
+   put tArray into element 7 of tWhiteKeysList
+   put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+   put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+   put element 4 of tBlackKeysList into tArray
+   put true into tArray["keyLocked"]
+   put tArray into element 4 of tBlackKeysList
+   put element 5 of tBlackKeysList into tArray
+   put true into tArray["keyLocked"]
+   put tArray into element 5 of tBlackKeysList
+   put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+   put tOctave into element 11 of mOctaveList
+end handler
+
+public handler OnGeometryChanged()
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+	variable tWhiteKey as Array
+	variable tPath as Path
+   variable tBlackKeyPath as Path
+   variable tOctaveIteration as Number
+   variable tOctaveWidth as Number
+   variable tOctaveShift as Number
+   variable tWhiteKeySpacing as Number
+   variable tBlackKeySpacing as Number
+   variable tHalfStrokeOffset as Number
+   variable tMyWidthMinusStroke as Number
+   variable tMyHeightMinusStroke as Number
+
+   put mBorderWidth / 2 into tHalfStrokeOffset
+   put my width - (mBorderWidth) into tMyWidthMinusStroke
+   put my height - (mBorderWidth) into tMyHeightMinusStroke
+   put tMyWidthMinusStroke / mOctaves into tOctaveWidth
+   put tMyWidthMinusStroke /7 / mOctaves into tWhiteKeySpacing
+   put tMyWidthMinusStroke /12 / mOctaves into tBlackKeySpacing
+   put (mLowOctave * tOctaveWidth) - tOctaveWidth into tOctaveShift
+   if mNaturalsColor is nothing then
+      put stringToColor("255,255,255,255") into mNaturalsColor
+   end if
+   if mAccidentalsColor is nothing then
+      put stringToColor("0,0,0,255") into mAccidentalsColor
+   end if
+   put path "M0,0v81.841C0,81.841,0,84,2.679,84h8.642c0,0,2.679,0,2.679-2.159V0H0z" into tBlackKeyPath -- BlackKeys all have identical shape
+   repeat with tOctaveIteration from 0 up to 10
+      put element (tOctaveIteration+1) of mOctaveList into tOctave
+   	------------------------------------------------------------------------------------------ WhiteKeys ------------------------------------------------------------------------------------------
+      put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+      ------------------------------------------------------------------------------------------------------------------ C
+   	put element 1 of tWhiteKeysList into tWhiteKey
+      put path "M16.679,84C14,84,14,81.841,14,81.841V0H0v126.897c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103 V84H16.679z" into tPath
+      scale tPath by [(tOctaveWidth /7) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [0 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tWhiteKey["KeyPath"]
+      put tWhiteKey into element 1 of tWhiteKeysList
+   	----------------------0-------------------------------------------------------------------------------------------- D
+   	put element 2 of tWhiteKeysList into tWhiteKey
+      put path "M20.679,84C18,84,18,81.841,18,81.841V0H4v81.841C4,84,1.321,84,1.321,84H0v42.897c0,0,0,3.103,3.827,3.103	h16.346c0,0,3.827,0,3.827-3.103V84H20.679z" into tPath
+      scale tPath by [(tOctaveWidth /7) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tWhiteKey["KeyPath"]
+      put tWhiteKey into element 2 of tWhiteKeysList
+   	--------------------------------------------------------------------------------------------------- --------------- E
+   	put element 3 of tWhiteKeysList into tWhiteKey
+      put path "M8,0v81.841C8,84,5.321,84,5.321,84H0v42.897c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103V0H8z" into tPath
+      scale tPath by [(tOctaveWidth /7) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing*2  + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tWhiteKey["KeyPath"]
+      put tWhiteKey into element 3 of tWhiteKeysList
+   	------------------------------------------------------------------------------------------------------------------ F
+   	put element 4 of tWhiteKeysList into tWhiteKey
+      put path "M23.321,84h-8.642C12,84,12,81.841,12,81.841V0H0v126.897c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103V83.922C23.612,83.998,23.321,84,23.321,84z" into tPath
+      scale tPath by [(tOctaveWidth /7) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing*3  + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tWhiteKey["KeyPath"]
+      put tWhiteKey into element 4 of tWhiteKeysList
+   	------------------------------------------------------------------------------------------------------------------ G
+   	put element 5 of tWhiteKeysList into tWhiteKey
+      put path "M18.679,84C16,84,16,81.841,16,81.841V0H2v81.841c0,1.45-1.206,1.924-2,2.081v42.975c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103V84H18.679z" into tPath
+      scale tPath by [(tOctaveWidth /7)/ the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing*4  + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tWhiteKey["KeyPath"]
+      put tWhiteKey into element 5 of tWhiteKeysList
+   	------------------------------------------------------------------------------------------------------------------ A
+   	put element 6 of tWhiteKeysList into tWhiteKey
+      put path "M22.679,84C20,84,20,81.841,20,81.841V0H6v81.841C6,84,3.321,84,3.321,84H0v42.897c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103V84H22.679z" into tPath
+      scale tPath by [(tOctaveWidth /7)/ the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing*5  + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tWhiteKey["KeyPath"]
+      put tWhiteKey into element 6 of tWhiteKeysList
+   	------------------------------------------------------------------------------------------------------------------ B
+   	put element 7 of tWhiteKeysList into tWhiteKey
+      put path "M10,0v81.841C10,84,7.321,84,7.321,84H0v42.897c0,0,0,3.103,3.827,3.103h16.346c0,0,3.827,0,3.827-3.103V0H10z" into tPath
+      scale tPath by [(tOctaveWidth /7)/ the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)]
+      translate tPath by [tWhiteKeySpacing*6 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tWhiteKey["KeyPath"]
+      put tWhiteKey into element 7 of tWhiteKeysList
+   	------------------------------------------------------------------------------------------ Black Keys ------------------------------------------------------------------------------------------
+      put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+      ------------------------------------------------------------------------------------------------------------------ C#Db
+   	put element 1 of tBlackKeysList into tBlackKey
+   	put tBlackKeyPath into tPath
+      scale tPath by [(tOctaveWidth /12)/ the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)*0.64615384615385]
+      translate tPath by [tBlackKeySpacing + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tBlackKey["KeyPath"]
+   	put tBlackKey into element 1 of tBlackKeysList
+   	------------------------------------------------------------------------------------------------------------------ D#Eb
+   	put element 2 of tBlackKeysList into tBlackKey
+   	put tBlackKeyPath into tPath
+      scale tPath by [(tOctaveWidth /12)/ the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)*0.64615384615385]
+      translate tPath by [tBlackKeySpacing*3 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tBlackKey["KeyPath"]
+   	put tBlackKey into element 2 of tBlackKeysList
+   	------------------------------------------------------------------------------------------------------------------ F#Gb
+   	put element 3 of tBlackKeysList into tBlackKey
+   	put tBlackKeyPath into tPath
+      scale tPath by [(tOctaveWidth /12) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)*0.64615384615385]
+      translate tPath by [tBlackKeySpacing*6 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tBlackKey["KeyPath"]
+      put tBlackKey into element 3 of tBlackKeysList
+   	------------------------------------------------------------------------------------------------------------------ G#Ab
+   	put element 4 of tBlackKeysList into tBlackKey
+   	put tBlackKeyPath into tPath
+      scale tPath by [(tOctaveWidth /12) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)*0.64615384615385]
+      translate tPath by [tBlackKeySpacing*8 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tBlackKey["KeyPath"]
+      put tBlackKey into element 4 of tBlackKeysList
+   	------------------------------------------------------------------------------------------------------------------ A#Bb
+   	put element 5 of tBlackKeysList into tBlackKey
+   	put tBlackKeyPath into tPath
+      scale tPath by [(tOctaveWidth /12) / the width of the bounding box of tPath, (tMyHeightMinusStroke / the height of the bounding box of tPath)*0.64615384615385]
+      translate tPath by [tBlackKeySpacing*10 + (tOctaveIteration * tOctaveWidth) - tOctaveShift +tHalfStrokeOffset, tHalfStrokeOffset]
+      put tPath into tBlackKey["KeyPath"]
+      put tBlackKey into element 5 of tBlackKeysList
+       ----------------------------------------- replace elements in octave -------------------------------------------------
+       put tWhiteKeysList into tOctave["OctaveWhiteKeysList"]
+       put tBlackKeysList into tOctave["OctaveBlackKeysList"]
+       ----------------------------------- replace octave in mOctaveList ----------------------------------------------------
+       put tOctave into element tOctaveIteration+1 of mOctaveList
+       ------------------------------------------
+    end repeat
+    redraw all
+end handler
+--------------------------------------------------------------------------------------------------------------
+-- called whenever LiveCode needs to redraw the widget
+public handler OnPaint()
+   variable tOctave as Array
+   variable tBlackKeysList as List
+   variable tBlackKey as Array
+   variable tWhiteKeysList as List
+	variable tWhiteKey as Array
+	variable tPath as Path
+   variable tOctaveIteration as Number
+   put the color of my highlight paint into mHiliteColor
+   put the color of my border paint into mStrokeColor
+   set the antialias of this canvas to true
+   set the stroke width of this canvas to mBorderWidth
+   if mNaturalsColor is nothing then
+      put stringToColor("255,255,255,255") into mNaturalsColor
+   end if
+   if mAccidentalsColor is nothing then
+      put stringToColor("0,0,0,255") into mAccidentalsColor
+   end if
+   repeat with tOctaveIteration from mLowOctave up to mHighOctave
+      put element (tOctaveIteration) of mOctaveList into tOctave
+   	------------------------------------------------------------------------------------------ WhiteKeys ------------------------------------------------------------------------------------------
+      put tOctave["OctaveWhiteKeysList"] into tWhiteKeysList
+      ------------------------------------------------------------------------------------------------------------------ C
+   	put element 1 of tWhiteKeysList into tWhiteKey
+   	if tWhiteKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+   	else
+         if tWhiteKey["keyColor"] is nothing then
+   	      set the paint of this canvas to solid paint with mNaturalsColor
+         else
+            set the paint of this canvas to solid paint with tWhiteKey["keyColor"]
+         end if
+   	end if
+   	put tWhiteKey["KeyPath"] into tPath
+   	fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+   	------------------------------------------------------------------------------------------------------------------ D
+   	put element 2 of tWhiteKeysList into tWhiteKey
+      if tWhiteKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+      else
+         if tWhiteKey["keyColor"] is nothing then
+            set the paint of this canvas to solid paint with mNaturalsColor
+         else
+            set the paint of this canvas to solid paint with tWhiteKey["keyColor"]
+         end if
+      end if
+   	put tWhiteKey["KeyPath"] into tPath
+   	fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+   	------------------------------------------------------------------------------------------------------------------ E
+   	put element 3 of tWhiteKeysList into tWhiteKey
+      if tWhiteKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+      else
+         if tWhiteKey["keyColor"] is nothing then
+            set the paint of this canvas to solid paint with mNaturalsColor
+         else
+            set the paint of this canvas to solid paint with tWhiteKey["keyColor"]
+         end if
+      end if
+   	put tWhiteKey["KeyPath"] into tPath
+   	fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+   	------------------------------------------------------------------------------------------------------------------ F
+   	put element 4 of tWhiteKeysList into tWhiteKey
+      if tWhiteKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+      else
+         if tWhiteKey["keyColor"] is nothing then
+            set the paint of this canvas to solid paint with mNaturalsColor
+         else
+            set the paint of this canvas to solid paint with tWhiteKey["keyColor"]
+         end if
+      end if
+   	put tWhiteKey["KeyPath"] into tPath
+      fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+   	------------------------------------------------------------------------------------------------------------------ G
+   	put element 5 of tWhiteKeysList into tWhiteKey
+      if tWhiteKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+      else
+         if tWhiteKey["keyColor"] is nothing then
+            set the paint of this canvas to solid paint with mNaturalsColor
+         else
+            set the paint of this canvas to solid paint with tWhiteKey["keyColor"]
+         end if
+      end if
+   	put tWhiteKey["KeyPath"] into tPath
+   	fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+   	------------------------------------------------------------------------------------------------------------------ A
+   	put element 6 of tWhiteKeysList into tWhiteKey
+      if tWhiteKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+      else
+         if tWhiteKey["keyColor"] is nothing then
+            set the paint of this canvas to solid paint with mNaturalsColor
+         else
+            set the paint of this canvas to solid paint with tWhiteKey["keyColor"]
+         end if
+      end if
+   	put tWhiteKey["KeyPath"] into tPath
+   	fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+   	------------------------------------------------------------------------------------------------------------------ B
+   	put element 7 of tWhiteKeysList into tWhiteKey
+      if tWhiteKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+      else
+         if tWhiteKey["keyColor"] is nothing then
+            set the paint of this canvas to solid paint with mNaturalsColor
+         else
+            set the paint of this canvas to solid paint with tWhiteKey["keyColor"]
+         end if
+      end if
+   	put tWhiteKey["KeyPath"] into tPath
+   	fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+   	------------------------------------------------------------------------------------------ Black Keys ------------------------------------------------------------------------------------------
+      put tOctave["OctaveBlackKeysList"] into tBlackKeysList
+      ------------------------------------------------------------------------------------------------------------------ C#Db
+   	put element 1 of tBlackKeysList into tBlackKey
+      if tBlackKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+      else
+         if tBlackKey["keyColor"] is nothing then
+            set the paint of this canvas to solid paint with mAccidentalsColor
+         else
+            set the paint of this canvas to solid paint with tBlackKey["keyColor"]
+         end if
+      end if
+   	put tBlackKey["KeyPath"] into tPath
+   	fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+      ------------------------------------------------------------------------------------------------------------------ D#Eb
+   	put element 2 of tBlackKeysList into tBlackKey
+      if tBlackKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+      else
+         if tBlackKey["keyColor"] is nothing then
+            set the paint of this canvas to solid paint with mAccidentalsColor
+         else
+            set the paint of this canvas to solid paint with tBlackKey["keyColor"]
+         end if
+      end if
+   	put tBlackKey["KeyPath"] into tPath
+   	fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+   	------------------------------------------------------------------------------------------------------------------ F#Gb
+   	put element 3 of tBlackKeysList into tBlackKey
+      if tBlackKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+      else
+         if tBlackKey["keyColor"] is nothing then
+            set the paint of this canvas to solid paint with mAccidentalsColor
+         else
+            set the paint of this canvas to solid paint with tBlackKey["keyColor"]
+         end if
+      end if
+   	put tBlackKey["KeyPath"] into tPath
+      fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+   	------------------------------------------------------------------------------------------------------------------ G#Ab
+   	put element 4 of tBlackKeysList into tBlackKey
+      if tBlackKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+      else
+         if tBlackKey["keyColor"] is nothing then
+            set the paint of this canvas to solid paint with mAccidentalsColor
+         else
+            set the paint of this canvas to solid paint with tBlackKey["keyColor"]
+         end if
+      end if
+   	put tBlackKey["KeyPath"] into tPath
+   	fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+   	------------------------------------------------------------------------------------------------------------------ A#Bb
+   	put element 5 of tBlackKeysList into tBlackKey
+      if tBlackKey["KeyHilited"] then
+         set the paint of this canvas to solid paint with mHiliteColor
+      else
+         if tBlackKey["keyColor"] is nothing then
+            set the paint of this canvas to solid paint with mAccidentalsColor
+         else
+            set the paint of this canvas to solid paint with tBlackKey["keyColor"]
+         end if
+      end if
+   	put tBlackKey["KeyPath"] into tPath
+   	fill tPath on this canvas
+      set the paint of this canvas to solid paint with mStrokeColor
+      stroke tPath on this canvas
+   end repeat
+end handler
+
+-- this handler is called when a card containg the widget is opened
+public handler OnOpen()
+   OnGeometryChanged()
+   redraw all
+end handler
+
+end widget

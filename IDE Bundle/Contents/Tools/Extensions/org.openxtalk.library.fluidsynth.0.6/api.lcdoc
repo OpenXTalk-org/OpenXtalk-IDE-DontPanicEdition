@@ -1,0 +1,361 @@
+Library: 
+
+Type: 
+
+version: 0.6
+
+author: Paul McClernan,FerrusLogic
+
+
+Name: fsContinuousController
+
+Type: command
+
+Syntax: fsContinuousController  <pMIDIChanNum>, <pController>, <pControllerVal>
+
+Summary: The send a controller with a single data byte value to on a given channel
+
+Example: fsContinuousController 1,7,127 -- channel 1, Volume Controller = 7, Data Byte 1 = 127
+
+Parameters: 
+
+pChannel: MIDI Channel to send the controller value on, 1 to 16
+
+pController: The number of the MIDI Controller to set values for
+
+pControllerVal: The value byte one
+
+Description: Sends a controller message with a single data byte value to a given channel
+
+
+
+
+Name: fsPitchBend
+
+Type: command
+
+Syntax: fsPitchBend <pPitchBendCoarseNFine>,<pMIDIChanNum>
+
+Summary: The send pitchbend with fine range from 0 to 16384, 8192 is centered (no bend)
+
+Example:
+fsPitchBend 1,0 -- Pitchbend Maximum Down, channel 1
+fsPitchBend 1,16384 -- Pitchbend Maximum Up, channel 1
+fsPitchBend 1,8192 -- Centered / No Bend, channel 1
+
+Parameters: 
+
+pPitchBendCoarseNFine: The number of the pitch bend 'position'
+
+pMIDIChanNum: MIDI Channel to send the bend value on, 1 to 16
+
+Description: The send pitchbend with fine range from 0 to 16384, 8192 is centered (no bend)
+
+
+
+
+Name: fsSetTempoBPM
+
+Type: handler
+
+Syntax: fsSetTempoBPM(<pBPM>)
+
+Summary: Set playback tempo in beats per minute
+
+Example: fsSetTempoBPM 120 -- Set playback tempo to 120 BPM
+
+Description: Sets the default playback tempo in beats per minute for currenlty loaded MIDI sequence
+
+
+Parameters:
+:
+
+
+
+
+Name: fsGetTempoBPM
+
+Type: handler
+
+Syntax: fsGetTempoBPM()
+
+Summary: Get the playback tempo in beats per minute
+
+Example: put fsSetTempoBPM() into fld "Tempo"
+
+Description: Gets the default playback tempo in beats per minute for currenlty loaded MIDI sequence
+
+
+
+
+Name: fsMIDIPlayerPause
+
+Type: handler
+
+Syntax: fsMIDIPlayerPause()
+
+Summary: Stops playback
+
+Example: fsMIDIPlayerPause
+
+Description: Pause playback of the currently playing sequence stated with fsMIDIPlayerPlay.
+
+
+
+
+Name: fsGetCPULoad
+
+Type: function
+
+Syntax: fsGetCPULoad()
+
+Summary: Check the ammount of CPU load the FluidSynth library is currently using.
+
+Example: get fsGetCPULoad()
+
+Returns: The ammount of CPU load the FluidSynth library is currently using.
+
+Description: Returns the ammount of CPU load the FluidSynth library is currently using.
+
+
+
+
+Name: fsNoteOn
+
+Type: command
+
+Syntax: fsNoteOn <MIDINoteNumber>,pMIDIVelocityNumber,<pMIDIChannelNumber>
+
+Summary: Immediately sends a MIDI Note On message with the given pitch and velocity on the given channel.
+
+Example: fsNoteOn 1,60,127 -- 1=MIDI channel 1, 60=Middle C, 127=Full velocity
+
+Parameters: 
+
+pMIDINoteNum: The number of the pitch to turn on, 0 to 127, 60 = Middle C
+
+pMIDIVeloNum: The velocity to play the given pitch at, 0 to 127
+
+pMIDIChanNum: The MIDI Channel to play the note on, 1 to 16
+
+Description: Immediately sends a MIDI Note On message with the given pitch and velocity on the given channel.
+
+
+
+
+Name: fsNoteOff
+
+Type: command
+
+Syntax: fsNoteOff <MIDIChannelNumber>, <MIDINoteNumber>
+
+Summary: Immediately sends a MIDI Note Off message with the given pitch and velocity on the given channel.
+
+Example: fsNoteOff 1,60 -- Turns off Middle C on MIDI channel 1
+
+Parameters: 
+
+pMIDINoteNum: The number of the pitch to turn off, 0 to 127, 60 = Middle C
+
+pMIDIChanNum: The MIDI Channel to send the message to, 0 to 15, 0 = Channel 1
+
+Description: Immediately sends a MIDI Note Off message with the given pitch on the given channel.
+
+
+
+
+Name: fsMIDIPlayerTotalTicks
+
+Type: handler
+
+Syntax: fsMIDIPlayerTotalTicks()
+
+Summary: Returns ending position of playing sequence in MIDI ticks.
+
+Example: if fsMIDIPlayerCurrentTick() >= fsMIDIPlayerTotalTicks() then send playStop to me
+
+Description: Returns the ending MIDI-tick position of the currently loaded MIDI file.
+
+Note:
+MIDI Ticks are an arbitrary value based on song tempo as opposed to static
+measurement like microseconds.
+
+
+
+Name: fsMIDIPlayerStop
+
+Type: handler
+
+Syntax: fsMIDIPlayerStop()
+
+Summary: Stops playback
+
+Example: fsMIDIPlayerStop
+
+Description: Stops playback of the currently playing sequence stated with fsMIDIPlayerPlay.
+
+
+
+
+Name: fsProgramChange
+
+Type: command
+
+Syntax: fsProgramChange(<pChannel>,<pProgramNum>)
+
+Summary: Sends Program Change message on the given channel
+
+Example: fsProgramChange 1,2 -- Channel 1, Change to Program 2
+
+Parameters: 
+
+pChannel: MIDI Channel to send the value on, 1 to 16
+
+pProgramNum: The program number to change to, range 0 to 127
+
+Description: Sends Program Change message on the given channel.
+
+
+
+
+Name: fsMIDIPlayerCurrentTick
+
+Type: handler
+
+Syntax: fsMIDIPlayerCurrentTick()
+
+Summary: Returns the current position of a loaded sequence in MIDI ticks.
+
+Example: if fsMIDIPlayerCurrentTick() >= fsMIDIPlayerTotalTicks() then send playStop to me
+
+Description: Returns the current MIDI-tick position of the currently playing MIDI file.
+
+Note:
+MIDI Ticks are an arbitrary value based on song tempo as opposed to static
+measurement like microseconds.
+
+
+
+Name: fsMIDIPlayerStatus
+
+Type: handler
+
+Syntax: fsMIDIPlayerStatus()
+
+Summary: Checks to see if MIDI Data is currently being played back
+
+Example:  if fsMIDIPlayerStatus() is "playing" then fsMIDIPlayerStop
+
+Description: A boolean that indicates if MIDI Data is currently being played back.
+
+
+
+
+Name: fsMIDIPlayerPlay
+
+Type: handler
+
+Syntax: fsMIDIPlayerPlay()
+
+Summary: Plays the data that was loaded with fsLoadMIDIFile
+
+Example: fsMIDIPlayerPlay
+
+Description: Plays the data that was loaded with either AVMIDIPlayerLoad or AVMIDIPlayerLoadURLs
+
+
+
+
+Name: fsEnsureInitialize
+
+Type: function
+
+Syntax: fsEnsureInitialize()
+
+Summary: Setup the libFluidSynth Engine .
+
+Example: fsEnsureInitialize()
+
+Returns: True on success, false or error string on failure.
+
+Description: Attempts to load an instance of libFluidSynth.
+
+
+
+
+Name: fsGetSoundFontCount
+
+Type: function
+
+Syntax: fsGetSoundFontCount()
+
+Summary: Get the number of SoundFonts that are loaded by the FluidSynth library
+
+Example: get fsGetSoundFontCount()
+
+Returns: The number of SoundFonts that are loaded by the FluidSynth library.
+
+Description: Returns the number of SoundFonts that are loaded by the FluidSynth library.
+
+
+
+
+Name: fsLoadMIDIFile
+
+Type: handler
+
+Syntax: fsLoadMIDIFile(<pFilename>)
+
+Summary: Loads a MIDI file from and a Soundbank file from file paths and prepares for playback.
+
+Example: fsLoadMIDIFile "/Users/Me/MIDIMusic.mid"
+
+Parameters: 
+
+MIDIfilePath: the file path to a MIDI file
+
+SoundFontPath: the file path to a SoundBank SF2 or DLS file
+
+Description:
+Loads a MIDI file from and a Soundbank file in either SoundFont2 or
+Downloadable Sound DLS format from absolute file paths passed in and
+"prerolls" the data, preparing it for playback.
+
+
+
+Name: fsLoadSoundFont
+
+Type: handler
+
+Syntax: fsLoadSoundFont(<pFilename>)
+
+Summary: Loads a Soundbank file (SF2 or DLS) for use with MIDI playback
+
+Example: fsLoadMIDIFile "/Path/To?My/Soundbank.sf2"
+
+Parameters: 
+
+SoundFontPath: the file path to a SoundBank SF2 or DLS file
+
+Description:
+Give a file path fsLoadSoundFont attempts tp load a Soundbank file in either SoundFont2 (.sf2) or
+Downloadable Sound DLS format (.dls) for use with MIDI playback.
+
+
+
+Name: fsGetGain
+
+Type: handler
+
+Syntax: fsGetGain()
+
+Summary:
+Sets the playback volume gain globally for libFluidSynth
+Example:
+fsGetGain 1.5 -- incresing gain too much will result in clipping or distortion
+
+Description: Sets the playback volume gain globally for libFluidSynth
+
+
+
+

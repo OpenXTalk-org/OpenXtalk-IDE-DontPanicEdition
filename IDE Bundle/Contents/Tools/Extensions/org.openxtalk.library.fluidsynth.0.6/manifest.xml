@@ -1,0 +1,55 @@
+<package version="0.0">
+  <name>org.openxtalk.library.fluidsynth</name>
+  <title>OpenXTalk.org FluidSynth</title>
+  <author>Paul McClernan,FerrusLogic</author>
+  <version>0.6</version>
+  <license>community</license>
+  <type>library</type>
+  <requires name="com.livecode.foreign"/>
+  <requires name="com.livecode.engine"/>
+  <requires name="com.livecode.arithmetic"/>
+  <requires name="com.livecode.binary"/>
+  <requires name="com.livecode.list"/>
+  <requires name="com.livecode.logic"/>
+  <requires name="com.livecode.string"/>
+  <requires name="com.livecode.type"/>
+  <requires name="com.livecode.assert"/>
+  <metadata key="userVisible">true</metadata>
+  <metadata key="_ide">true</metadata>
+  <handler name="fsSetMIDIInTargetScriptObj" parameters="in optional string" return="optional any"/>
+  <handler name="fsInitMIDIinput" parameters="in optional string,in optional string" return="any"/>
+  <handler name="fsEnsureInitialize" parameters="" return="optional any"/>
+  <handler name="fsGetCPULoad" parameters="" return="optional any"/>
+  <handler name="fsGetSoundFontCount" parameters="" return="optional integer"/>
+  <handler name="fsMIDIFileToSoundFile" parameters="in string,in string,in string" return="any"/>
+  <handler name="fsLoadSoundFont" parameters="in string" return="optional any"/>
+  <handler name="fsGetSoundFontByID" parameters="in integer" return="optional Pointer"/>
+  <handler name="fsListLoadedSoundFonts" parameters="" return="string"/>
+  <handler name="fsGetSoundFontNameByIndex" parameters="in optional integer" return="optional string"/>
+  <handler name="fsMIDIPlayerInit" parameters="" return="optional any"/>
+  <handler name="fsMIDIPlayerSetLoop" parameters="in number" return="nothing"/>
+  <handler name="fsLoadMIDIFile" parameters="in string" return="optional any"/>
+  <handler name="fsMIDIPlayerCurrentTick" parameters="" return="optional any"/>
+  <handler name="fsMIDIPlayerTotalTicks" parameters="" return="optional any"/>
+  <handler name="fsMIDIPlayerStop" parameters="" return="any"/>
+  <handler name="fsMIDIPlayerPause" parameters="" return="any"/>
+  <handler name="fsMIDIPlayerPlay" parameters="" return="optional any"/>
+  <handler name="fsMIDIPlayerStatus" parameters="" return="optional any"/>
+  <handler name="fsSetTempoMillisecsPerQuarterNote" parameters="in optional integer" return="any"/>
+  <handler name="fsSetTempoBPM" parameters="in optional integer" return="any"/>
+  <handler name="fsGetTempoBPM" parameters="" return="optional any"/>
+  <handler name="fsSystemReset" parameters="" return="any"/>
+  <handler name="fsSetGain" parameters="in optional number" return="optional any"/>
+  <handler name="fsGetGain" parameters="" return="optional any"/>
+  <handler name="fsNoteOn" parameters="in integer,in integer,in integer" return="any"/>
+  <handler name="fsNoteOff" parameters="in integer,in integer" return="any"/>
+  <handler name="fsPitchBend" parameters="in integer,in integer" return="any"/>
+  <handler name="fsProgramChange" parameters="in integer,in integer" return="any"/>
+  <handler name="fsBankSelect" parameters="in integer,in integer" return="any"/>
+  <handler name="fsAllNotesOff" parameters="in integer" return="any"/>
+  <handler name="fsAllSoundsOff" parameters="in integer" return="any"/>
+  <handler name="fsContinuousController" parameters="in integer,in integer,in integer" return="any"/>
+  <handler name="fsSetReverb" parameters="in integer,in number,in number,in number,in number" return="any"/>
+  <handler name="fsSetChorus" parameters="in integer,in integer,in number,in number,in number,in integer" return="any"/>
+  <handler name="fsStopDriver" parameters="" return="any"/>
+</package>

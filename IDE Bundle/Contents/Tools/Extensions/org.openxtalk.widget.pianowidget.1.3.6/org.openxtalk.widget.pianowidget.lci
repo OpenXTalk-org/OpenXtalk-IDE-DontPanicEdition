@@ -1,0 +1,47 @@
+import module org.openxtalk.widget.pianowidget
+  use com.livecode.canvas
+  use com.livecode.library.widgetutils
+  use com.livecode.byte
+  use com.livecode.char
+  use com.livecode.list
+  use com.livecode.arithmetic
+  use com.livecode.binary
+  use com.livecode.string
+  use com.livecode.logic
+  use com.livecode.type
+  use com.livecode.typeconvert
+  use com.livecode.array
+  use com.livecode.widget
+  use com.livecode.sort
+  use com.livecode.engine
+  handler getChromaticNumberForNoteName(in pKey as String) returns optional Number
+  handler getSharpOrFlatToSharpAndFlat(in pKey as String) returns String
+  handler setLowOctave(in pTonicAndScale as String) returns nothing
+  handler getLowOctave() returns String
+  handler setHighOctave(in pTonicAndScale as String) returns nothing
+  handler getHighOctave() returns String
+  variable mChordFormula as String
+  handler getChordFormula() returns String
+  variable mChordPreset as String
+  handler setAccidentalsColor(in pTonicAndScale as String) returns nothing
+  handler getAccidentalsColor() returns String
+  handler setNaturalsColor(in pTonicAndScale as String) returns nothing
+  handler getNaturalsColor() returns String
+  handler setBorderWidth(in pBorderWidth as Number) returns nothing
+  handler OnStopEditing() returns optional any
+  handler OnSave(out rProperties as Array) returns optional any
+  handler OnLoad(in pProperties as Array) returns optional any
+  variable mPianoMouseButtonDown as Boolean
+  handler OnMouseUp() returns optional any
+  handler OnMouseDown() returns optional any
+  handler OnMouseMove() returns optional any
+  handler OnMouseCancel() returns optional any
+  handler hitTestPath(in pPoint as Point, in pPath as Path, in pStrokeWidth as Number, in pWithin as Boolean) returns Boolean
+  handler unhighlightChordFormula(in pKeyNum as Number) returns optional any
+  handler highlightChordFormula(in pKeyNum as Number) returns optional any
+  handler getOctaveFromNoteNumber(in pKeyNum as Number) returns optional any
+  handler OnCreate() returns optional any
+  handler OnGeometryChanged() returns optional any
+  handler OnPaint() returns optional any
+  handler OnOpen() returns optional any
+end module

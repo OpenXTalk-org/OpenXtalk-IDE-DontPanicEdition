@@ -3299,22 +3299,22 @@ on revIDECreateObject pObjectTypeID, pTarget, pLoc
    if not __objectTypeIsControl(pObjectTypeID) then
       return __revIDEError("Object must be a control")
    end if
-
+   
    if not exists(pTarget) then return __revIDEError("Cannot create object. Target does not exist: " && pTarget)
    if not pObjectTypeID begins with "com.livecode" and not pObjectTypeID begins with "org.openxtalk" then return __revIDEError("No such object type ID: " && pTarget)
-
+   
    if sClassicObjectProperties is empty then __objectPropertiesRead
    # Set the default stack to the target we're creating the object on
    set the defaultstack to revIDEStackOfObject(pTarget)
-
+   
    if pLoc is empty then
       put the loc of this card of the defaultStack into pLoc
    end if
-
+   
    # Create the object
    lock screen
    lock messages
-
+   
    local tPropInfoA, tObjPropsA
    # Get the engine control type
    if pObjectTypeID begins with "com.livecode.interface.classic" or pObjectTypeID begins with "org.openxtalk.interface.classic" then
@@ -3326,10 +3326,10 @@ on revIDECreateObject pObjectTypeID, pTarget, pLoc
          put round(the cTabButtonWidth of stack "revPreferences" / 2), round(the cTabButtonHeight of stack "revPreferences" / 2) into tCreateRect
          put item 1 of tCreateRect + the cTabButtonWidth of stack "revPreferences" into item 3 of tCreateRect
          put item 2 of tCreateRect + the cTabButtonHeight of stack "revPreferences" into item 4 of tCreateRect
-
+         
          local lDataGrid
          put true into lDataGrid -- select data grid at end not single control
-
+         
          unlock messages
          # tObjectId is passed by reference and will have the data grid group id placed into it
          addDataGridToStack the short name of this stack, tCreateRect, empty, empty, tCreatedControlID
@@ -3345,12 +3345,13 @@ on revIDECreateObject pObjectTypeID, pTarget, pLoc
       else
          local tObjectType
          put sClassicObjectProperties[pObjectTypeID]["type"] into tObjectType
-
+         
          if tObjectType is empty then return __revIDEError("Invalid classic control type ID: " && pTarget)
-
+         
          # A classic control
          do "create" && tObjectType
          put the long ID of the last control into tCreatedControlID
+         -- put tCreatedControlID
       end if
       put sClassicObjectProperties[pObjectTypeID]["properties"] into tObjPropsA
    else
@@ -3365,13 +3366,13 @@ on revIDECreateObject pObjectTypeID, pTarget, pLoc
             answer warning revIDELocalise(tMessage) with "Cancel" and "Continue"
             if it is "Cancel" then exit revIDECreateObject
          end if
-
+         
          create widget as pObjectTypeID
          put the long id of the last control into tCreatedControlID
-
+         
          put revIDEExtensionProperties(pObjectTypeID, false) into tObjPropsA
          union tObjPropsA with sClassicObjectProperties["com.livecode.interface.classic.widget"]["properties"]
-
+         
          local tSize
          put revIDEExtensionProperty(pObjectTypeID, "preferredsize") into tSize
          if tSize is not empty then
@@ -3382,26 +3383,32 @@ on revIDECreateObject pObjectTypeID, pTarget, pLoc
          return false
       end try
    end if
-
+   
    __setPropertiesToDefaults tCreatedControlID, tObjPropsA
-
+   
    ## Set the size of the object to the size set in the Preferences
    __setSizeToPreference tCreatedControlID, pObjectTypeID
-
+   
    set the loc of tCreatedControlID to pLoc
-
+   
+   if pObjectTypeID begins with "com.livecode.interface.classic.OvalButton" then
+      -- ANSWER BINGO
+      set the opaque of tCreatedControlID to true
+      -- set the opaque of the last control to true
+   end if
+   
    unlock messages
    unlock screen
-
+   
    ## Prevent passing of ideNewControl message for objects created on IDE stacks
    if revIDEObjectIsOnIDEStack(tCreatedControlID) is false then
       // AL-2015-04-08: [[ Bug 14822 ]] Ensure 'edited' status of stack is set
       revIDESetEdited the short name of this stack
       ideMessageSend "ideNewControl", tCreatedControlID
    end if
-
    return tCreatedControlID
 end revIDECreateObject
+
 
 on revIDECloneObject pLongID
    if not exists(pLongID) then return __revIDEError("Cannot create object. Target does not exist:" && pLongID)
@@ -4169,10 +4176,12 @@ function revIDEWebPageURL pKey
    switch pKey
       case "extensions"
          -- "http://www.livecode.com/products/extensions/"
-         return "https://openxtalk-org.github.io/OpenXTalk-Playground/widgets/"
+         return "https://openxtalk-org.github.io/OXT_Resource_Depot_Repo"
+         -- maybe open extenion manager to Repo tab instead but I
+         -- want to redo repo as a regular stack that pulls data direct from server
+         -- The Emscripten remote stack was a work-around for Github hosted CORS problem
          break
    end switch
-
 end revIDEWebPageURL
 
 function revIDEFrameBehavior
@@ -4201,17 +4210,14 @@ on revIDESetCursor pCursor
    if pCursor is among the items of "busy,watch,array,cross,hand,ibeam,plus,help" then
       do "set the cursor to" && pCursor
    end if
-
    lock messages
    local tDefaultStack
    put the defaultstack into tDefaultStack
    set the defaultstack to "revidelibrary"
-
    # Load the image for the cursor if it doesn't exists
    if there is not an image pCursor of me then
       local tImagePath
       put revIDEThemePath() & slash & pCursor & ".png" into tImagePath
-
       if there is not a file tImagePath then exit revIDESetCursor
       set the filename of the templateimage to tImagePath
       set the visible of the templateimage to false
@@ -4219,7 +4225,6 @@ on revIDESetCursor pCursor
       set the id of it to revIDENewIconID()
       reset the templateimage
    end if
-
    if there is an image pCursor then
       set the cursor to the ID of image pCursor
    end if
@@ -4243,7 +4248,8 @@ on revIDEShowLoading pMessage
 end revIDEShowLoading
 
 /**
-Use along with [revIDEShowLoading] to instruct the IDE when a task is running slowly. Once the task is complete, call revIDEHideLoading to reset the IDE to its normal mode
+Use along with [revIDEShowLoading] to instruct the IDE when a task is running slowly.
+Once the task is complete, call revIDEHideLoading to reset the IDE to its normal mode
 tag:affordances
 */
 on revIDEHideLoading
@@ -4336,10 +4342,11 @@ on revPutArray pArray
 end revPutArray
 
 /**
-summary: Converts an array into a human readable format that can be output to the message box when debugging.
+Summary: Converts an array into a human readable format that can be output to the message box when debugging.
+Parameters:
 pArray (Array): The array you which to convert
-returns (String): A text representation of the array with indented with the tab character for readability
-*/
+Returns (String): A text representation of the array with indented with the tab character for readability
+**/
 function revFormatArrayForDisplay pArray
    if (the keys of pArray) is empty then
       put "not an array"
@@ -4512,10 +4519,8 @@ on revIDEPositionPalette pStackName
             break
       end switch
    end if
-
    # AL-2015-09-15: [[ Bug 15745 ]] Ensure palettes don't get placed off screen
    revIDEEnsureOnscreen pStackName
-
 end revIDEPositionPalette
 
 constant kToolsMenubarGap = 25
@@ -4647,12 +4652,9 @@ example: revIDEOpenPalette "inspector"
 */
 command revIDEOpenPalette pPaletteName
    local tExistingPalette, tPalette, tPaletteID
-
    local tStackName
    put revIDEPaletteToStackName(pPaletteName) into tStackName
-
    if there is not a stack tStackName then return __revIDEError("No such palette:" && pPaletteName)
-
    hide stack tStackName
    switch pPaletteName
       case "Start Center"
@@ -4698,7 +4700,7 @@ command revIDEOpenPalette pPaletteName
             else
                put "guide" into tWhich
             end if
-            revIDEGenerateDictionaryHTML tWhich
+            revIDEGenerateDictionaryHTML tWhichdi
             launch url ("file:" & revIDEGetDictionaryUrl(tWhich))
          else
             toplevel stack tStackName
@@ -4973,10 +4975,16 @@ on revIDEInstallAPI pAPIFolder, pExtensionName, pAuthor
    revIDERegenerateBuiltAPIs
 end revIDEInstallAPI
 
+/**
+
+**/
 on revIDEGoToLCSDictionaryEntry pTag, pType
    revIDEGoToDictionaryEntry "script", pTag, pType
 end revIDEGoToLCSDictionaryEntry
 
+/**
+
+**/
 on revIDEGoToDictionaryEntry pLibrary, pTag, pType
    if revIDEBrowserWidgetUnavailable() then
       revIDEGenerateDictionaryHTML "api", pLibrary, pTag, pType
@@ -4987,6 +4995,9 @@ on revIDEGoToDictionaryEntry pLibrary, pTag, pType
    revIDEMessageSend "ideOpenPalette", "dictionary"
 end revIDEGoToDictionaryEntry
 
+/**
+
+**/
 command revIDEGoToExtensionAPI pKind
    local tType
    put revIDEExtensionProperty(pKind, "type") into tType
@@ -6212,6 +6223,10 @@ on revIDESetGradientProperty pObject, pProperty, pValue
       end switch
    end repeat
 end revIDESetGradientProperty
+
+on revIDEGetGradientProperty pObject, pProperty, pValue
+   return the pProperty of pObject
+end revIDEGetGradientProperty
 
 private function __resolveStackFilePath pBasePath, pOtherPath
    set the itemdelimiter to "/"
@@ -8422,10 +8437,16 @@ on revIDEActionDuplicate
 end revIDEActionDuplicate
 
 on revIDEDuplicateCard
-   clone this card -- as "Cloned Card" && (the millisecs)
-   -- put the long name of this card into tCard
-   -- dispatch "clone this card" to tCard
-   ---send "clone this card" to tCard in 0 secs
+   -- put the target &cr& the selectedObjects &cr& the selectedChunk &cr& the topStack &cr& the defaultStack
+   lock screen
+   lock messages
+   put the defaultStack into tStoreDefaultStack
+   set the defaultStack to the topStack
+   clone this card ---send "clone this card" to tCard in 0 secs
+   set the defaultStack to tStoreDefaultStack
+   unlock screen
+   unlock messages
+   -- put cr&Cr&cr& the target &cr& the selectedObjects &cr& the selectedChunk &cr& the topStack &cr& the defaultStack after message
 end revIDEDuplicateCard
 
 on revIDESelectAll
@@ -9682,10 +9703,8 @@ end revIDERotateImages
 on revIDEActionRotateGraphicBy -- handles arbitrary rotate values for Graphics via dialog box
    modal "revRotate"
    if the cRotateGraphic of stack "revRotate" is empty then exit revIDEActionRotateGraphicBy
-
    local tRotateGraphic
    put the cRotateGraphic of stack "revRotate" into tRotateGraphic
-
    revIDEActionRotateGraphic tRotateGraphic
 end revIDEActionRotateGraphicBy
 
@@ -9698,7 +9717,6 @@ on revIDERotateGraphics pGraphics, pAngle
    if not revIDEEnsureControlsOfType(pGraphics, "graphic") then
       exit revIDERotateGraphics
    end if
-
    lock screen
    repeat for each line tLine in pGraphics
       revRotatePoly tLine, pAngle
@@ -9707,6 +9725,10 @@ on revIDERotateGraphics pGraphics, pAngle
    unlock screen
 end revIDERotateGraphics
 
+/**
+Check a list of controls to ensure they're all of a certain object type such as
+."buttons","widget","field","inage",etc
+**/
 function revIDEEnsureControlsOfType pControls, pType
    repeat for each line tControl in pControls
       if word 1 of tControl is not pType then
@@ -9734,7 +9756,6 @@ on revIDESetModeOfStack pStack, pMode
 end revIDESetModeOfStack
 
 ////////////////////////////////////////////////////////////////////////////////
-
 # Parameters
 #   pModeNumber : the value of the "mode" property of an open stack
 # Returns
@@ -9757,31 +9778,27 @@ private function stackModeName pModeNumber
    end switch
 end stackModeName
 
--- Suspend Development Tools
---   Removes all IDE related backscripts and stacks so that an application can
---   run as if almost built as a standalone.
---   This affects:
---     - the frontscripts
---     - the backscripts
---     - the openstacks
---     - the current tool
---     - the windowBoundingRect
---     - the script debug mode
---
---  Note at present, holding down shift will cause *all* back and front
---  scripts to be removed including library scripts such as Table, PrintBack etc.
---
+/** Suspend Development Tools
+Description:
+Removes all IDE related backscripts and stacks so that an application can
+run as if almost built as a standalone.
+This affects:
+     - the frontscripts
+     - the backscripts
+     - the openstacks
+     - the current tool
+     - the windowBoundingRect
+     - the script debug mode
+Note at present, holding down shift will cause *all* back and front
+scripts to be removed including library scripts such as Table, PrintBack etc.
+*/
 command revIDESuspendDevelopmentTools
    global gREVRestore
-
    -- Store the old setting of scriptdebugmode and disable it
    put revIDEGetPreference("cREVScriptDebugMode") into gREVRestore["scriptdebugmode"]
-
    revIDESetPreference "cREVScriptDebugMode",false
-
    # OK-2008-05-23 : Suspend any script editors.
    send "revSESuspendEditors" to revScriptEditorMain()
-
    -- Remove front and back scripts that pertain to the IDE
    -- If the shift-key is down, we remove *all* 'rev' front and back scripts, including
    -- the library scripts.
@@ -9820,7 +9837,6 @@ command revIDESuspendDevelopmentTools
    end if
    delete last char of tRemoveBackList
    delete last char of tRemoveFrontList
-
    -- Close all Revolution IDE stacks
    local tList, tMode, tClosedStacksList
    put the openStacks into tList
@@ -9841,35 +9857,29 @@ command revIDESuspendDevelopmentTools
       end if
    end repeat
    delete last char of tClosedStacksList
-
    -- Switch to browser tool
    put the tool into gREVRestore["tool"]
    choose browse tool
-
    put tRemoveBackList into gREVRestore["backscripts"]
    put tRemoveFrontList into gREVRestore["frontScripts"]
    put tClosedStacksList into gREVRestore["stacks"]
-
    -- Reset the windowBoundingRect
    local tWindowRect
    put revIDEStackScreenRect(the short name of the topStack, true) into tWindowRect
    set the windowBoundingRect to tWindowRect
-
    -- Show the restore dialog
    lock recent
    palette "revRestore"
    unlock recent
-
    -- Setup the default menubar to one specific to this mode
    set the defaultMenuBar to the long id of group "Restore Development Tools" of stack "revRestore"
-
    unlock messages
 end revIDESuspendDevelopmentTools
 
--- Restore Development Tools
---
--- Reverts the IDE to the state it was before 'Suspend Development Tools' was called.
---
+/** Restore Development Tools
+Description:
+revIDERestoreDevelopmentTools reverts the IDE to the state it was before 'Suspend Development Tools' was called.
+*/
 command revIDERestoreDevelopmentTools
    global gREVRestore, gREVDontLoadMenus, gREVDontError
    lock messages
@@ -9969,7 +9979,6 @@ on revIDEGoCard pMoveSpecifier
    if the milliseconds - sMoveBuffers[pMoveSpecifier] < kMoveBufferSize then
       exit revIDEGoCard
    end if
-
    set the defaultStack to the topStack
    local tCommand
    put "go " & pMoveSpecifier into tCommand
@@ -9989,7 +9998,6 @@ function revIDEStackIsWindow pStackName
    if revIDEStackIsIDEWindow(pStackName) then
       return true
    end if
-
    return not revIDEStackNameIsIDEStack(pStackName)
 end revIDEStackIsWindow
 
@@ -11156,7 +11164,6 @@ private on revIDEGenerateDistributedGuide
       put return & tab & "}," after tGuideData
    end repeat
    delete the last char of tGuideData
-
    # Write out to apropriate location
    revIDESetUTF8FileContents tGuideJSONFile, tGuideData
 end revIDEGenerateDistributedGuide

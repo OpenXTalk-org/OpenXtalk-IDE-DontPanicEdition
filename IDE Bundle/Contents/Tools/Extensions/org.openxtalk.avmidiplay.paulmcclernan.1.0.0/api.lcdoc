@@ -1,0 +1,212 @@
+Library: org.openxtalk.avmidiplay.paulmcclernan
+
+Type: library
+
+Summary: This Library is a wrapper for macOS & iOS AVIMIDIPlayer, useful for playing MIDI musical performance data.
+
+Description:
+This Library is a wrapper for macOS & iOS AVIMIDIPlayer.
+
+>*Note:* This library is provided as-is under GPL3 license.
+> Please share and share a like.
+
+version: 1.0.0
+
+author: Paul McClernan
+
+
+Name: AVMIDIPlayerLoadURLs
+
+Type: handler
+
+Syntax: AVMIDIPlayerLoadURLs(<MIDIFileURL>,<SoundFontURL>)
+
+Summary: Loads a MIDI file from and a Soundbank file from URLs and prepares for playback.
+
+Example: AVMIDIPlayerLoad "file:///Users/Me/MIDIMusic.mid","file:///System/Library/Components/CoreAudio.component/Contents/Resources/gs_instruments.dls"
+
+Parameters: 
+
+MIDIFileURL: A local file URL that points to a MIDI file
+
+SoundFontURL: A local file URL that points to SoundBank SF2 or DLS file
+
+Description:
+Loads a MIDI file from and a Soundbank file in either SoundFont2 or
+Downloadable Sound DLS format from local file URLs passed in and
+"prerolls" the data, preparing it for playback.
+
+
+
+Name: AVMIDIPlayerGetCurrentPosition
+
+Type: handler
+
+Syntax: AVMIDIPlayerGetCurrentPosition()
+
+Summary: Returns the current position of playing sequence in seconds and microseconds.
+
+Example:
+function SecsToHrsMinSecs pSecs -- in seconds.millisecs
+   lock screen
+   split pSecs by "."
+   put trunc(pSecs[1]) into deltaTime
+   put trunc(deltaTime div 3600) into h -- hours
+   put trunc((deltaTime - (h * 3600)) / 60) into m -- minutes
+   put deltaTime - (h * 3600) - (m * 60) into s -- seconds
+   put format( "%01i:%02i:%02i", h, m, s ) &":"& pSecs[2] into displayTime
+   return displayTime
+end SecsToHrsMinSecs
+put SecsToHrsMinSecs(AVMIDIPlayerSetCurrentPosition())
+
+Example: set the thumbPosition of scrollBar "PlayBackProgress" to AVMIDIPlayerSetCurrentPosition()
+
+Description:
+Returns the current position of playback in seconds and microseconds.
+Use for displaying the current playback progress or current time within a sequence.
+Note that current position will continue to increment past the sequence duration
+until a stop command is issued.
+
+
+
+Name: AVMIDIPlayerPlay
+
+Type: handler
+
+Syntax: AVMIDIPlayerPlay()
+
+Summary: Plays the data that was loaded with either AVMIDIPlayerLoad or AVMIDIPlayerLoadURLs
+
+Example: AVMIDIPlayerPlay
+
+Description: Plays the data that was loaded with either AVMIDIPlayerLoad or AVMIDIPlayerLoadURLs
+
+
+
+
+Name: AVMIDIPlayerLoad
+
+Type: handler
+
+Syntax: AVMIDIPlayerLoad(<MIDIfilePath>,<SoundFontPath>)
+
+Summary: Loads a MIDI file from and a Soundbank file from file paths and prepares for playback.
+
+Example: AVMIDIPlayerLoad "/Users/Me/MIDIMusic.mid","/System/Library/Components/CoreAudio.component/Contents/Resources/gs_instruments.dls"
+
+Parameters: 
+
+MIDIfilePath: the file path to a MIDI file
+
+SoundFontPath: the file path to a SoundBank SF2 or DLS file
+
+Description:
+Loads a MIDI file from and a Soundbank file in either SoundFont2 or
+Downloadable Sound DLS format from absolute file paths passed in and
+"prerolls" the data, preparing it for playback.
+
+
+
+Name: AVMIDIPlayerIsPlaying
+
+Type: handler
+
+Syntax: AVMIDIPlayerIsPlaying()
+
+Summary: Checks to see if MIDI Data is currently being played back
+
+Example:  if AVMIDIPlayerIsPlaying() then AVMIDIPlayerStop
+
+Description: A boolean that indicates if MIDI Data is currently being played back.
+
+
+
+
+Name: AVMIDIPlayerStop
+
+Type: handler
+
+Syntax: AVMIDIPlayerStop()
+
+Summary: Stops playback
+
+Example: AVMIDIPlayerStop
+
+Description: Stops playback of data playback stated with AVMIDIPlayerPlay.
+
+
+
+
+Name: AVMIDIPlayerDuration
+
+Type: handler
+
+Syntax: AVMIDIPlayerDuration()
+
+Summary: Returns the length of a loaded sequence in seconds and microseconds.
+
+Example:
+function SecsToHrsMinSecs pSecs -- in seconds.millisecs
+   lock screen
+   split pSecs by "."
+   put trunc(pSecs[1]) into deltaTime
+   put trunc(deltaTime div 3600) into h -- hours
+   put trunc((deltaTime - (h * 3600)) / 60) into m -- minutes
+   put deltaTime - (h * 3600) - (m * 60) into s -- seconds
+   put format( "%01i:%02i:%02i", h, m, s ) &":"& pSecs[2] into displayTime
+   return displayTime
+end SecsToHrsMinSecs
+put "The MIDI Sequence is " & SecsToHrsMinSecs(AVMIDIPlayerDuration()) & " long"
+
+Example: set the endValue of scrollbar "PlayBackProgress" to AVMIDIPlayerDuration()
+
+Description:
+Returns the length of a sequence in seconds and microseconds. A sequence
+must first be loaded into memory using AVMIDIPlayerLoad or AVMIDIPlayetLoadURLs.
+
+
+
+Name: AVMIDIPlayerSetCurrentPosition
+
+Type: handler
+
+Syntax: AVMIDIPlayerSetCurrentPosition(<pNewPosition>)
+
+Summary: Sets the current position in seconds.microseconds for a sequence to play from.
+
+Example: AVMIDIPlayerSetCurrentPosition(the thumbPosition of scrollBar "PlayBackProgress")
+
+Example: AVMIDIPlayerSetCurrentPosition 10.1 -- sets the position to 10 and 1/10th of a second.
+
+Description:
+Sets the current position in seconds.microseconds for a sequence to play from.
+A sequence must first be loaded into memory using AVMIDIPlayerLoad or AVMIDIPlayetLoadURLs
+before the current position can be set.
+Use for "scrubbing" to different points within a sequence or for pause-resume functionality.
+
+Parameters:
+:
+
+
+
+
+Name: AVMIDIPlayerSetRate
+
+Type: handler
+
+Syntax: AVMIDIPlayerSetRate(<playbackRate>)
+
+Summary: Sets the decimal rate of playback; 1.0 being original, 0.5 half, and 2.0 double speed.
+
+Example: AVMIDIPlayerSetRate 0.75 -- 3/4 the speed of original MIDI file tempo.
+
+Parameters: 
+
+playbackRate: a decimal number to set the playback rate to.
+
+Description:
+Sets the decimal rate of playback; 1.0 being the original tempo of the MIDI File.
+Set playbackRate to 0.5 for half the speed or the original tempo or 2.0 to double the speed.
+
+
+

@@ -17,6 +17,8 @@ on setAsBehavior pTarget
 end setAsBehavior
 
 on openStack
+   lock messages
+   -- set the cantModify of me to false -- true
    local tMinWidth
    put kDictionaryMinWidth + kScrollbarFudge into tMinWidth
    lock screen
@@ -33,8 +35,9 @@ on openStack
    revIDEGenerateDictionaryHTML sTab, sEntry["library"], sEntry["entry"], sEntry["type"]
    put empty into sEntry
    showTab sTab
-   set the cantModify of me to true
    unlock screen
+   set the cantModify of me to true
+   unlock messages
 end openStack
 
 on resizeStack
@@ -54,13 +57,14 @@ on showTab pTab
    put pTab into sTab
    revIDEEnsureDictionaryUrl pTab
    local tUrl
-   -- launch document revIDEGetDictionaryUrl(guide)
    put "file://" & revIDEGetDictionaryUrl(pTab) into tUrl
    replace " " with "%20" in tUrl
+   -- set the url of widget "Dictionary" of me to empty
    set the url of widget "Dictionary" of me to tUrl
 end showTab
 
 on browserNavigateComplete
+   lock screen
    if sEntry is not empty then
       do "goEntryName('" & sEntry["library"] & "','" & sEntry["entry"] & "','" & sEntry["type"] & "')" in widget "Dictionary" of me
       put empty into sEntry
@@ -68,6 +72,9 @@ on browserNavigateComplete
    if the mode of me is not 0 then
       resizeStack
    end if
+   wait 1
+   do "document.getElementsByClassName('navbar-form navbar-right col-md-4')[0].style.visibility = 'hidden';" in widget "Dictionary" of stack revDictionary
+   unlock screen
 end browserNavigateComplete
 
 on navigateToEntry pLibrary, pEntry, pType
@@ -77,20 +84,21 @@ on navigateToEntry pLibrary, pEntry, pType
    if the mode of me is not 0 then
       browserNavigateComplete
    end if
+   set the cantModify of me to true
    toplevel me
 end navigateToEntry
 
 on linkClicked pLink
-   launch url pLink
+   put pLink
+   -- launch url pLink
 end linkClicked
 
-on showUpgradeOptions pEdition, pDisplayName
-   put urlEncode(pDisplayName) into pDisplayName
-   replace "+" with "%20" in pDisplayName
-
-   launch url revEnvironmentEditionProperty("edition_external_url", pEdition) & \
-         "?utm_source=ide&utm_medium=docs&utm_campaign="&pDisplayName
-end showUpgradeOptions
+--on showUpgradeOptions pEdition, pDisplayName
+--   --   put urlEncode(pDisplayName) into pDisplayName
+--   --   replace "+" with "%20" in pDisplayName
+--   --   launch url revEnvironmentEditionProperty("edition_external_url", pEdition) & \
+--   --         "?utm_source=ide&utm_medium=docs&utm_campaign="&pDisplayName
+--end showUpgradeOptions
 
 # bug 17819 enable cmd+c in dictionary
 on commandKeyDown pWhich
