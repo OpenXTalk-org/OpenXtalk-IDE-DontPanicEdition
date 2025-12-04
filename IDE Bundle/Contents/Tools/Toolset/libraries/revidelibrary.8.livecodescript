@@ -381,6 +381,7 @@ private function __propertyInfoFilename
 end __propertyInfoFilename
 
 private function __classicToolsOrderFilename
+   -- this is the file the IDE reads to determine the list of 'classic tools'
    return "classicToolsOrder.tsv"
 end __classicToolsOrderFilename
 
@@ -420,6 +421,12 @@ private on __objectPropertiesRead
       # Get the name of the object
       set the itemdel to "."
       if the last item of tObjectType is "tsv" then delete the last item of tObjectType
+      -- tperry (put this in on Linux to disable the player until it's fixed) 21-11-2023 (part 2 of 2)
+      if the platform contains "linux" then
+        if (the cDisablePlayerTool of stack "revPreferences" is true) then
+          if tObjectType contains "classic.Player" then next repeat
+        end if
+      end if
       if tObjectType is empty then next repeat
 
       __setPropertyDataOfObjectFromFile tObjectType, tObjectDefinitionsPath & slash & tFile, tPropertiesInfo
@@ -620,6 +627,10 @@ function idePropertyNames pObjectType
    sort tProps
    return tProps
 end idePropertyNames
+
+on ideResumeStack
+   pass ideResumeStack -- this is to prevent recursive error (tperry 30-11-24)
+end ideResumeStack
 
 /**
 A list of the object types, in 'type ID' form
@@ -3299,22 +3310,22 @@ on revIDECreateObject pObjectTypeID, pTarget, pLoc
    if not __objectTypeIsControl(pObjectTypeID) then
       return __revIDEError("Object must be a control")
    end if
-   
+
    if not exists(pTarget) then return __revIDEError("Cannot create object. Target does not exist: " && pTarget)
    if not pObjectTypeID begins with "com.livecode" and not pObjectTypeID begins with "org.openxtalk" then return __revIDEError("No such object type ID: " && pTarget)
-   
+
    if sClassicObjectProperties is empty then __objectPropertiesRead
    # Set the default stack to the target we're creating the object on
    set the defaultstack to revIDEStackOfObject(pTarget)
-   
+
    if pLoc is empty then
       put the loc of this card of the defaultStack into pLoc
    end if
-   
+
    # Create the object
    lock screen
    lock messages
-   
+
    local tPropInfoA, tObjPropsA
    # Get the engine control type
    if pObjectTypeID begins with "com.livecode.interface.classic" or pObjectTypeID begins with "org.openxtalk.interface.classic" then
@@ -3326,10 +3337,10 @@ on revIDECreateObject pObjectTypeID, pTarget, pLoc
          put round(the cTabButtonWidth of stack "revPreferences" / 2), round(the cTabButtonHeight of stack "revPreferences" / 2) into tCreateRect
          put item 1 of tCreateRect + the cTabButtonWidth of stack "revPreferences" into item 3 of tCreateRect
          put item 2 of tCreateRect + the cTabButtonHeight of stack "revPreferences" into item 4 of tCreateRect
-         
+
          local lDataGrid
          put true into lDataGrid -- select data grid at end not single control
-         
+
          unlock messages
          # tObjectId is passed by reference and will have the data grid group id placed into it
          addDataGridToStack the short name of this stack, tCreateRect, empty, empty, tCreatedControlID
@@ -3345,9 +3356,9 @@ on revIDECreateObject pObjectTypeID, pTarget, pLoc
       else
          local tObjectType
          put sClassicObjectProperties[pObjectTypeID]["type"] into tObjectType
-         
+
          if tObjectType is empty then return __revIDEError("Invalid classic control type ID: " && pTarget)
-         
+
          # A classic control
          do "create" && tObjectType
          put the long ID of the last control into tCreatedControlID
@@ -3366,13 +3377,13 @@ on revIDECreateObject pObjectTypeID, pTarget, pLoc
             answer warning revIDELocalise(tMessage) with "Cancel" and "Continue"
             if it is "Cancel" then exit revIDECreateObject
          end if
-         
+
          create widget as pObjectTypeID
          put the long id of the last control into tCreatedControlID
-         
+
          put revIDEExtensionProperties(pObjectTypeID, false) into tObjPropsA
          union tObjPropsA with sClassicObjectProperties["com.livecode.interface.classic.widget"]["properties"]
-         
+
          local tSize
          put revIDEExtensionProperty(pObjectTypeID, "preferredsize") into tSize
          if tSize is not empty then
@@ -3383,23 +3394,23 @@ on revIDECreateObject pObjectTypeID, pTarget, pLoc
          return false
       end try
    end if
-   
+
    __setPropertiesToDefaults tCreatedControlID, tObjPropsA
-   
+
    ## Set the size of the object to the size set in the Preferences
    __setSizeToPreference tCreatedControlID, pObjectTypeID
-   
+
    set the loc of tCreatedControlID to pLoc
-   
+
    if pObjectTypeID begins with "com.livecode.interface.classic.OvalButton" then
       -- ANSWER BINGO
       set the opaque of tCreatedControlID to true
       -- set the opaque of the last control to true
    end if
-   
+
    unlock messages
    unlock screen
-   
+
    ## Prevent passing of ideNewControl message for objects created on IDE stacks
    if revIDEObjectIsOnIDEStack(tCreatedControlID) is false then
       // AL-2015-04-08: [[ Bug 14822 ]] Ensure 'edited' status of stack is set
@@ -12432,7 +12443,8 @@ end revIDEObjectsAreSelectable
 on revIDEFindMoreWidgets
    lock screen
    revIDEOpenPalette "extension manager"
-   send "showExtensionStore" to stack revIDEPaletteToStackName("extension manager")
+   send "showExtensionStore" to \
+         stack revIDEPaletteToStackName("extension manager")
    unlock screen
 end revIDEFindMoreWidgets
 
@@ -12501,3 +12513,121 @@ command ideSetWindowBoundingRect
       set the windowBoundingRect to tWindowRect
    end if
 end ideSetWindowBoundingRect
+
+function tMakeObjTextSmaller tThisObject
+   -- makes text of selected object smaller (text menu > size > smaller)
+   put the textSize of tThisObject into tCurSize
+   if not (isNumber(tCurSize)) then put "14" into tCurSize
+   subtract 2 from tCurSize
+   if tCurSize <1 then put 1 into tCurSize
+   return tCurSize
+end tMakeObjTextSmaller
+
+function tMakeObjTextBigger tThisObject
+   -- makes text of selected object bigger (text menu > size > bigger)
+   put the textSize of tThisObject into tCurSize
+   if not (isNumber(tCurSize)) then put "14" into tCurSize
+   add 2 to tCurSize
+   return tCurSize
+end tMakeObjTextBigger
+
+function tNameNewStack tStackID
+   local tExistsAlready
+   local tResponse
+   local tRandomName
+   put false into tExistsAlready
+   -- clean up stack name
+   if word 1 of tStackID is "stack" then delete word 1 of tStackID
+   replace "'" with "" in tStackID
+   replace QUOTE with "" in tStackID
+   put tRandName() into tRandomName
+   put ("Stack_" & tRandomName) into tRandomName
+   if the last char of tRandomName is "_" then delete last char of tRandomName
+   ask "<b>Please rename this stack</b><BR><br>Old name: " & tStackID & "<br><br>" & "New name: " with tRandomName
+   put it into tResponse
+   if there is a stack (tResponse) then put true into tExistsAlready
+   if tResponse is empty or tResponse is cancel or tResponse is tStackID or (tExistsAlready is true) then
+      -- not acceptable. We ask again
+      Answer "You need to pick a unique stack name."
+      send tNameNewStack(tStackID) to me in 10 ticks
+   else
+      set the title of stack (tStackID) to it
+      set the name of stack (tStackID) to it
+   end if
+end tNameNewStack
+
+function tRandName
+   local tRandNames
+   local tOldDelim
+   local tRandTotals
+   local tSecs
+   local tDateForm
+   put the itemdelimiter into tOldDelim
+   set the itemdelimiter to ","
+   put "" into tDateForm
+   if the cRenameWithDateStamp of stack "revPreferences" is true then
+      put the seconds into tSecs
+      convert tSecs to dateItems
+      put item 3 of tSecs into tDateForm -- Day
+      put "_" & item 2 of tSecs after tDateForm -- Month
+      put "_" & item 1 of tSecs & "_" after tDateForm -- Year
+   end if
+   --
+   put "" into tRandNames
+   if the cRenameWithRandChars of stack "revPreferences" is true then
+      put "BSDs,Bern,Bret,Clay,Cote,Dare,East,Edna,Eris,Etna,Evan,Giza,Grus,Head,Irma,Jess,Juno,Kern,Lily,Lulu,Moss,Oahu,Roeg,STOL,Suva,Togo,Wasp,Watt,Webb,Yule,aced,ares,auto,beak,boat,bode,bold,bosh,bugs,burs,cape,cord,dabs,dams,dots,ease,else,ergs,excl,feud,flag,frat,from,geez,glow,gnus,gunk,hats,haws,hurl,iffy,imps,jeer,join,junk,just,lash,lees,lent,lint,lorn,loth,mean,mite,moth,nite,nose,pace,pant,pays,pine,pray,rate,root,rosy,scar,shim,side,sots,spit,spot,sulk,swan,teak,tell,thud,urea,wary,wive,yack" into tRandNames
+      put the number of items in tRandNames into tRandTotals
+      -- reusing var names here
+      put random(tRandTotals) into tRandTotals
+      put item tRandTotals of tRandNames into tRandNames
+      put the number of chars in tRandNames into tRandTotals
+      put random(tRandTotals) into tRandTotals
+      put random(9) into char tRandTotals of tRandNames
+   end if
+   put tDateForm & tRandNames into tRandNames
+   set the itemdelimiter to tOldDelim
+   if the last char of tRandNames is "_" then delete last char of tRandNames
+   return tRandNames
+end tRandName
+
+
+function fixthemebtn tid tStackName
+   -- support theming of btns (to make up for shortcoming of engine)
+   -- tperry 13-09-2025
+   put "50,50,50" into tDarkGrey-- very dark grey
+   put "225,225,255" into tLightGrey-- very light grey
+   put "48,113,250" into tDefaultBtnColour -- MacOS blue default colour
+   put "86,84,93" into tMacBtnCol -- MacOS dark background for button
+
+   if the cUseThemeDark of stack "revPreferences" is true then
+      -- dark mode
+      if there is a btn tid of stack tStackName then
+         set the foregroundColor of btn id tID of stack tStackName to black -- black text
+         if the platform contains "mac" then
+            if the height of btn id tID of stack tStackName <50 then
+               set the backgroundColor of btn id tID of stack tStackName to tMacBtnCol
+               set the style of btn id tID of stack tStackName to "roundRect"
+               set the borderWidth of btn id tID of stack tStackName to 0
+               set the foregroundColor of btn id tID of stack tStackName to white
+               if the default of btn id tID of stack tStackName is true then set the backgroundColor of btn id tID of stack tStackName to tDefaultBtnColour
+            end if
+         else
+            -- not mac, but dark mode on another platform
+            if the height of btn id tID of stack tStackName <50 then
+               set the backgroundColor of btn id tID of stack tStackName to ""
+               set the style of btn id tID of stack tStackName to "roundRect"
+               set the borderWidth of btn id tID of stack tStackName to 0
+               set the foregroundColor of btn id tID of stack tStackName to ""
+            end if
+         end if
+      else
+         -- light mode
+
+         set the foregroundColor of btn id tID of stack tStackName to ""
+         set the backgroundColor of btn id tID of stack tStackName to ""
+         if the height of btn id tID of stack tStackName <40 then set the borderWidth of btn id tID of stack tStackName to 2
+         if the height of btn id tID of stack tStackName <40 then set the style of btn id tID of stack tStackName to "standard"
+
+      end if
+   end if
+end fixthemebtn
