@@ -1,1 +1,0 @@
-# Enable setting the 'hilite' property of checkbox and radio button from PI

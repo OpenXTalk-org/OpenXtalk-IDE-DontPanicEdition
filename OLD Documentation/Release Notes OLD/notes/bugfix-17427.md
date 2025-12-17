@@ -1,1 +1,0 @@
-# Apply label field size preference to default field

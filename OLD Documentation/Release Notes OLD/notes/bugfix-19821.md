@@ -1,1 +1,0 @@
-# Set the default of the Mac S/B to 64-bit

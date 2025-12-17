@@ -1,1 +1,0 @@
-# Object Inspector cannot be locked in LiveCode 8 

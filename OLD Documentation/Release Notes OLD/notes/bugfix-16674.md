@@ -1,1 +1,0 @@
-# Properties Inspector should remember fillgradients

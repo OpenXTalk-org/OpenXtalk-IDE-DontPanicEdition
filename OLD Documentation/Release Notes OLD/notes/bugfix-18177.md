@@ -1,1 +1,0 @@
-# Reinstate text properties and graphic effects to datagrid inspector

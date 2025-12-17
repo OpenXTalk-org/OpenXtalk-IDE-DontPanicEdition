@@ -1,1 +1,0 @@
-# Ensure dragging object from tools palette is smooth

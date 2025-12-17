@@ -1,1 +1,0 @@
-# Script editor should open on first attempt

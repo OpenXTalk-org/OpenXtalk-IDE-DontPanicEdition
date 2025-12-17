@@ -1,1 +1,0 @@
-# The tool palette was empty (except for the run/design choices)

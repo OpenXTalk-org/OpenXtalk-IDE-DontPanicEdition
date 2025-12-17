@@ -1,1 +1,0 @@
-# Ensure the Property Inspector shows the correct value for lockLoc

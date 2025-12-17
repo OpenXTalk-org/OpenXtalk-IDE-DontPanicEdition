@@ -1,1 +1,0 @@
-# Cannot open stack in 8.0.0 dp 7 when the extension is not .livecode

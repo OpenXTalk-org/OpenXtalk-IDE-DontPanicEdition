@@ -1,1 +1,0 @@
-# Add 8.0 file format as an option in "Save as.." dialog

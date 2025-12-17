@@ -1,1 +1,0 @@
-# Allow right-click contextual menu for data grids in project browser

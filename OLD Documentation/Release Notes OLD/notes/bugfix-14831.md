@@ -1,1 +1,0 @@
-# Open script-only stacks in script editor when they are opened

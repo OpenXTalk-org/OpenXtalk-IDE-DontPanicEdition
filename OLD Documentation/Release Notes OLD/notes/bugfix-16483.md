@@ -1,1 +1,0 @@
-# Graphic Effects not working

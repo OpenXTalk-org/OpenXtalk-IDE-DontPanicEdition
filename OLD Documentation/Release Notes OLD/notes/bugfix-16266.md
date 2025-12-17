@@ -1,1 +1,0 @@
-# Improve the "Copy Files" extension list

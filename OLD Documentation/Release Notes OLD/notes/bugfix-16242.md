@@ -1,1 +1,0 @@
-# defaultFolder is changed in 8.0 IDE

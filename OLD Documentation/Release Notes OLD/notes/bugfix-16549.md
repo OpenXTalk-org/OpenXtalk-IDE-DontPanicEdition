@@ -1,1 +1,0 @@
-# Right mouse click in Script editor -"Find in docs" does not open Docs

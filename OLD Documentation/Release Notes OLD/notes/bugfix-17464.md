@@ -1,1 +1,0 @@
-# Prevent uninstall of IDE widgets via extension manager

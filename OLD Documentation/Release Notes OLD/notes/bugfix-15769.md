@@ -1,1 +1,0 @@
-# Add new card option to stack contextual menu

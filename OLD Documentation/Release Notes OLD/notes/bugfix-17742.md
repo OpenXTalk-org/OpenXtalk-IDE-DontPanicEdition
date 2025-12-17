@@ -1,1 +1,0 @@
-# Selecting browse tool should exit edit group mode

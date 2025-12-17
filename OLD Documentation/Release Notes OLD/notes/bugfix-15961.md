@@ -1,1 +1,0 @@
-# When button style is opaque, script editor doesn't prepopulate script with mouseUp handler

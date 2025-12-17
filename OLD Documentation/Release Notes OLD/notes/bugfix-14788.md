@@ -1,1 +1,0 @@
-# Deleting lots of selected controls redraws after each delete

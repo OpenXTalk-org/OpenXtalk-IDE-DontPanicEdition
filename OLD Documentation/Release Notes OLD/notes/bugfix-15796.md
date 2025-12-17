@@ -1,1 +1,0 @@
-# Selecting a checkbox adds a border

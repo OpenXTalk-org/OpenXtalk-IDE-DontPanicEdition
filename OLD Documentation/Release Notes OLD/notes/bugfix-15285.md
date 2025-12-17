@@ -1,1 +1,0 @@
-# IDE: Property inspector string value should change property when clicking outside the field.

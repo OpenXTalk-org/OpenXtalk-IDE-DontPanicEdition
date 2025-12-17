@@ -1,1 +1,0 @@
-# Allow object functions to be executed when not first line in msg box

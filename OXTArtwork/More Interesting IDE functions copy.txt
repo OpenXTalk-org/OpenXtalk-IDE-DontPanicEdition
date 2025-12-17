@@ -1,0 +1,25 @@
+revIDENamedColorToRGB("gray97")
+revIDERGBToNamedColor("128,128,128")
+
+revIDEGetGeometry
+revIDESetGeometry btn 1 of stack "revTools"
+
+revGetGeometry()
+
+revIDESetRectProperty() revIDESetRectProperty()
+
+revIDESetRectProperty the selectedObject, item x of "width,height,left,right,top,bottom,resize,", pValueInPixels
+revIDESetRectProperty the selectedObject, "width",48; revIDESetRectProperty the selectedObject, "height",16;
+
+dispatch "updateProjectView" to stack "revIDEProjectBrowser"
+
+revIDEGoToDictionaryEntry pLibrary, pTag, pType
+revIDEGoToDictionaryEntry "SCRIPT", "STACK",1
+
+revIDEGoToObjectAPI pObjectID
+
+revIDEPropertiesOfObjects pObjectList, pPropertyList
+
+put revIDEGraphicTools() INTO tObj;put ArrayToJSON( tObj , true) & cr & cr after msg
+
+revIDEFindMoreWidgets -- opens extension manager into the extension store tab

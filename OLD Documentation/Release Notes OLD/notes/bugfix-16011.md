@@ -1,1 +1,0 @@
-# Error in the PI when setting a color property to a named color

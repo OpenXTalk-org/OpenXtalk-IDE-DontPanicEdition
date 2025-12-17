@@ -1,1 +1,0 @@
-# Prevent over-enthusiastic save prompts

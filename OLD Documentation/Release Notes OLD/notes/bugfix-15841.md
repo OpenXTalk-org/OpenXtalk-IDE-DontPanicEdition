@@ -1,1 +1,0 @@
-# GUI preferences not changing sort order of objects in project browser

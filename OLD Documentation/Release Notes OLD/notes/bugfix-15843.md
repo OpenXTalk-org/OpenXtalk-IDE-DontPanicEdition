@@ -1,1 +1,0 @@
-# Right click context menu stops working after Send Message from Card context menu

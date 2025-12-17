@@ -1,1 +1,0 @@
-# Ensure a newly created group (via the menubar) is selected

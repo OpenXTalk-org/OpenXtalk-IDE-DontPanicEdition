@@ -1,1 +1,0 @@
-# Default iPhone 6 Plus screen should be 414 X 736

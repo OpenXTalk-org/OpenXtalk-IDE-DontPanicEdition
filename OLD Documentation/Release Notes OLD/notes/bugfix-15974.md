@@ -1,1 +1,0 @@
-# Font and Text Size appear disabled in Property Inspector 

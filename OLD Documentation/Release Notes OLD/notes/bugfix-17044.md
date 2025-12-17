@@ -1,1 +1,0 @@
-# Improve menubar UI and trigger actions on mouseUp not mouseDown

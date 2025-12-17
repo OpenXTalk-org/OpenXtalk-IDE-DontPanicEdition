@@ -1,1 +1,0 @@
-# Property Inspector no longer gives access to the Table properties

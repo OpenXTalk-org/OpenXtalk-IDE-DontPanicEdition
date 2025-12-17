@@ -1,1 +1,0 @@
-# Property Inspector not respecting Preference setting

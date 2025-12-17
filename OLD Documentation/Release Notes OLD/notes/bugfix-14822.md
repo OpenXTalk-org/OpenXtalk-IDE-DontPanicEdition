@@ -1,1 +1,0 @@
-# Edited status of stack not being set, so close stack request not triggering save dialog

@@ -1,1 +1,0 @@
-# Setting stackFiles in PI causes an error if you "cancel" the file dialog or select multiple files

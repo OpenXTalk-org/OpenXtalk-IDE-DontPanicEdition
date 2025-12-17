@@ -1,1 +1,0 @@
-# Add icon for editing script to inspector palette actions

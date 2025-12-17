@@ -1,1 +1,0 @@
-# Dashes in property inspector should be a string propert

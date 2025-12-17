@@ -1,1 +1,0 @@
-# Right clicking a widget in edit mode doesn't give a context menu.

@@ -1,1 +1,0 @@
-# Don't encode/decode iOS app name in standalone settings

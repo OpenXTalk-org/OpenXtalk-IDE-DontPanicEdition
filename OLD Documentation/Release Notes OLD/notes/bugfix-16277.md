@@ -1,1 +1,0 @@
-# ideStackDeleted parameter should be stack not card

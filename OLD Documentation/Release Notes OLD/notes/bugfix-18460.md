@@ -1,1 +1,0 @@
-# Mark stack as edited when property changed from the PI

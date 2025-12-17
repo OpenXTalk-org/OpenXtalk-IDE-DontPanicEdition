@@ -1,1 +1,0 @@
-# PI can open up (close to) off screen

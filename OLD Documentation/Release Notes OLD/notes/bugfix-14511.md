@@ -1,1 +1,0 @@
-# Accessing documentation for widget via right click menu

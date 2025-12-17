@@ -1,1 +1,0 @@
-# IDE Window menu is not refreshed

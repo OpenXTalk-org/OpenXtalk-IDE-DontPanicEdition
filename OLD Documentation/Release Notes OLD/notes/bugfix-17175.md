@@ -1,1 +1,0 @@
-# Initialise property inspector correctly

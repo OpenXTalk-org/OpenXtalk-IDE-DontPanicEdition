@@ -1,1 +1,0 @@
-# Update the Project Browser correctly when Paste into Group is used

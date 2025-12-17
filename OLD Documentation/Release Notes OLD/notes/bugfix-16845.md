@@ -1,1 +1,0 @@
-# Reinstate missing color/pattern/brushwidth options in tools palette

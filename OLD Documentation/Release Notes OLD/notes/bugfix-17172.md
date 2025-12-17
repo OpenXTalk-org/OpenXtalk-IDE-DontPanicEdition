@@ -1,1 +1,0 @@
-# Open standalone settings for correct stack via contextual menu

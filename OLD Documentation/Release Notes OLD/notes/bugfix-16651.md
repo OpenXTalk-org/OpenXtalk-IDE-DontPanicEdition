@@ -1,1 +1,0 @@
-# Message Box minimum height should allow single line result field

@@ -1,1 +1,0 @@
-# Reflect property setting in enum property dropdown, even if invalid

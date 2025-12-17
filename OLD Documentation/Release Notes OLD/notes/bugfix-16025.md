@@ -1,1 +1,0 @@
-# Datagrid invisible while dragging out 

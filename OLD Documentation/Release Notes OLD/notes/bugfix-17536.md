@@ -1,1 +1,0 @@
-# Fix or mitigate effect of nudging many controls at once

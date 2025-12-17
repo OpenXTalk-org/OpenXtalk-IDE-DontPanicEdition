@@ -1,1 +1,0 @@
-# Open file doesn't recognise .mc as valid livecode stack extension

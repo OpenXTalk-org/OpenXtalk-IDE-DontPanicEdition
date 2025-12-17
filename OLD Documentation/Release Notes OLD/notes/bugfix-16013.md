@@ -1,1 +1,0 @@
-# Dragging controls is extremely slow/jerky

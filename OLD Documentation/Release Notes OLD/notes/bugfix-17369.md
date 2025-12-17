@@ -1,1 +1,0 @@
-# Maintain showIcon state of toolbar icons

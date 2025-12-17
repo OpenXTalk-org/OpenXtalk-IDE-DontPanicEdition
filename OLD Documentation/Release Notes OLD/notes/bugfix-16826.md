@@ -1,1 +1,0 @@
-# Geometry Manager settings should work

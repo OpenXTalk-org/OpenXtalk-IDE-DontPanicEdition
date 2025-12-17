@@ -1,1 +1,0 @@
-# Error when using <Uninstall> button in Extension Builder

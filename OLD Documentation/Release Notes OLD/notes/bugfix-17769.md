@@ -1,1 +1,0 @@
-# Ordering stacks by chosen preference in project browser

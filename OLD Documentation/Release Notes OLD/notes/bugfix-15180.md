@@ -1,1 +1,0 @@
-# Can't put values of debug variables from the message box

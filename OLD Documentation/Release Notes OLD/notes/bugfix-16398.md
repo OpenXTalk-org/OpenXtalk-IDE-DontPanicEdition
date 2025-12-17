@@ -1,1 +1,0 @@
-# Loss standalone settings and custom property when modify custom properties

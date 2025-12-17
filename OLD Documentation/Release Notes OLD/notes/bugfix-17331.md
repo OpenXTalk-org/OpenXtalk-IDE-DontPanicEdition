@@ -1,1 +1,0 @@
-# Reinstate tooltips in point editor

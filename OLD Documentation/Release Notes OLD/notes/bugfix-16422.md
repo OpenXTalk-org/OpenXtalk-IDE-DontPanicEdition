@@ -1,1 +1,0 @@
-# Application Browser Preferences issue on Livecode 8 Startup

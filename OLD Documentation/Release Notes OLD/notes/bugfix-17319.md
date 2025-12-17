@@ -1,1 +1,0 @@
-# Add an 'Install' button to the Extensions Manager

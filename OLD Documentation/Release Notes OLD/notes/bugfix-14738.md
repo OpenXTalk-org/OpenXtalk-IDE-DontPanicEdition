@@ -1,1 +1,0 @@
-# Inspect menu missing from property inspector

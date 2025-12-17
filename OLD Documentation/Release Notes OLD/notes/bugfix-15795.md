@@ -1,1 +1,0 @@
-# Progress bar icon missing from tools palette

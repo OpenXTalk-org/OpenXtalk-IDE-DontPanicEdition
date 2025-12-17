@@ -1,1 +1,0 @@
-# Change the displayed gradient smoothly when dragging gradient stop
