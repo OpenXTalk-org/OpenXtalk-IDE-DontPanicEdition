@@ -1,0 +1,29 @@
+import module org.openxtalk.hh.svgtext
+  use com.livecode.engine
+  use com.livecode.canvas
+  use com.livecode.math
+  use com.livecode.widget
+  use com.livecode.arithmetic
+  use com.livecode.array
+  use com.livecode.list
+  use com.livecode.logic
+  use com.livecode.string
+  use com.livecode.binary
+  use com.livecode.char
+  use com.livecode.byte
+  use com.livecode.type
+  use com.livecode.mathfoundation
+  use com.livecode.typeconvert
+  handler OnCreate() returns optional any
+  handler OnSave(out rProp as Array) returns optional any
+  handler OnLoad(in rProp as Array) returns optional any
+  handler OnPaint() returns optional any
+  handler OnTimer() returns optional any
+  handler OnMouseUp() returns optional any
+  handler OnMouseEnter() returns optional any
+  handler OnMouseLeave() returns optional any
+  handler OnMouseRelease() returns optional any
+  handler OnMouseDown() returns optional any
+  handler setScaleY(in pValue as Number) returns nothing
+  handler setSVGFontName(in pName as String) returns optional any
+end module

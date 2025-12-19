@@ -1,0 +1,807 @@
+Library: org.openxtalk.hh.svgtext
+
+Type: widget
+
+Summary:
+SVGText v151 [-hh fecit, Sep 2016/Oct 2018]
+
+Widget SVGText displays (short) text as a SVG.
+This uses SVG paths of one of two fonts: font 'ComfortaaSVG' or 'AclonicaSVG'.
+Also a path with svg instructions is an optional input.
+Several (documented) properties are available for the display.
+
+The following handlers are "passed" to LC Script (you can use them in your widget's script):
+mouseEnter, mouseLeave, mouseRelease, mouseUp.
+
+version: 1.5.3
+
+author: Hermann Hoch
+
+
+Name: svgFontName
+
+Type: property
+
+Syntax: set the svgFontName of <widget> to <pName>
+get the svgFontName of <widget> -- returns "A","B" or "C"
+
+Summary: Sets or gets the svgFontName.
+
+Parameters: 
+
+pName: The svgFontName of the svgFont
+
+Example: set the svgFontName of widget "SVG_Text" to "A"
+
+Description:
+Use the svgFontName property to set the svgFont by choosing the svgFontName.
+Currently only "A" (AclonicaSVG), "B" (Bitstream MONO VeraSansBold) or "C" (ComfortaaSVG)
+are available. Default is "C".
+
+
+
+Name: grabMe
+
+Type: property
+
+Syntax: set the grabMe of <widget> to <pTrueOrFalse>
+get the grabMe of <widget>
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the grabMe of widget "SVG_Text" to not \
+    the grabMe of widget "SVG_Text"
+
+Summary: If set to true grabMe causes a mouseDown in the svgText's bounds to grab the widget.
+
+Description: Use the grabMe property to grab the widget by mouseDown on the svgText's bounds. These bounds are shown as a dashed light gray rectangle (transformed as the svgTextPath) while grabMe is true.
+
+
+
+
+Name: mouseDown
+
+Type: message
+
+Syntax: mouseDown pMouseBtnNum
+
+Example:
+on mouseDown pMouseButton
+   if pMouseButton = 1 then
+      set the strokeColor of me to 100,0,0,127
+   end if
+end mouseDown
+
+Name: mouseUp
+
+Type: message
+
+Syntax: mouseUp pMouseBtnNum
+
+Example:
+on mouseUp pMouseButton
+   if pMouseButton = 1 then
+      set the strokeColor of me to 0,0,0,0
+   end if
+end mouseUp
+
+Name: mouseEnter
+
+Type: message
+
+Syntax: mouseEnter
+
+Name: mouseLeave
+
+Type: message
+
+Syntax: mouseLeave
+
+
+
+
+Name: hiliteNow
+
+Type: property
+
+Syntax: set the hiliteNow of <widget> to <pTrueOrFalse>
+get the hiliteNow of <widget>
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the hiliteNow of widget "SVG_Text" to not \
+    the hiliteNow of widget "SVG_Text"
+
+Summary: If set to true hilightNow causes the svgText path to constantly show its pushColor.
+
+Description: Use the hiliteNow property to cause the svgText path to constantly show it's pushColor by script. Use the widget's showHilite property for "autohilighting" the svgText when clicked.
+
+
+
+
+Name: pathRotate
+
+Type: property
+
+Syntax: set the pathRotate of <widget> to <pAngle>
+get the pathRotate of <widget>
+
+Parameters: 
+
+pAngle:
+The angle of rotation of the svgText in degrees
+is any integer, negative or positive.
+[<pAngle> is equivalent to 360 + <pAngle>]
+
+Example:
+-- rotate 30 degress cw
+set the pathRotate of widget "SVG_Text" to  30
+-- rotate 15 degress ccw
+set the pathRotate of widget "SVG_Text" to -15
+
+Summary:
+The angle of rotation of the svgText (= path).
+** The canvas bounds are adjusted after rotating. **
+
+Description:
+Use the pathRotate property to rotate the svgText <pAngle> degrees clockwise (cw).
+You may also give negative angles which rotate their absolute value counterclockwise (ccw)
+For example -15 cw is equivalent to 360-15 cw is equivalent to 15 ccw.
+You may also use "the pathAngle" as a synonym for "the pathRotate".
+[Note that pathRotate, pathAngleX and pathAngleY do _not_ depend on each other, their effects act additive.]
+
+
+
+Name: builtInImg
+
+Type: property
+
+Syntax: set the builtInImg of <widget> to <pString>
+
+Parameters: 
+
+pString: is the name of a 'widget-built-in' image to use for the pattern.
+
+Example: set the builtInImg of widget "SVG_Text" to "water.jpg"
+
+Summary: Chooses one of the widget-built-in images as the available pattern
+
+Description:
+Sets the name of the image to use as a pattern to one of the widget-built-in images. This is typically set from the popup menu in the property inspector.
+Available choices are currently buchenberg.jpg, burg.jpg, water.jpg, gs01.png, gs02.png, gs03.png, gs04.png, gs05.png, gs06.png, gs07.png, gs08.png, gs09.png, gs10.png, gs11.png, gs12.png, patt01.jpg and patt02.jpg.
+
+
+
+Name: filename
+
+Type: property
+
+Syntax: set the filename of <widget> to <pPath>
+
+Parameters: 
+
+pPath: is a full valid filePath to an image to use for the pattern.
+
+Example: set the filename of widget "SVG_Text" to "/Users/admin/pictures/water.jpg"
+
+Summary: Sets any LC-readable image by its filePath as the available pattern.
+
+Description: Sets the filePath of the image to use as the pattern. This is typically set from the popup menu in the property inspector (and it's 'answer file'-dialog button right of the filename's text box).
+
+
+
+
+Name: showHilite
+
+Type: property
+
+Syntax: set the showHilite of <widget> to <pTrueOrFalse>
+get the showHilite of <widget>
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the showHilite of widget "SVG_Text" to not \
+    the showHilite of widget "SVG_Text"
+
+Summary: showHilite determines whether the svgText "hilights" on mouseDown (using the pushColor of the widget).
+
+Description: Use the showHilite property to determine whether the widget's color indicates a mouseDown (a 'push') on the svgText's bounding box.
+
+
+
+
+Name: stroke
+
+Type: property
+
+Syntax: set the stroke of <widget> to <pTrueOrFalse>
+get the stroke of <widget>
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the stroke of widget "SVG_Text" to not \
+    the stroke of widget "SVG_Text"
+
+Summary: If set to true property stroke causes the svgText's path to be stroked (outlined) with the current strokeColor.
+
+Description: Use the stroke property to fill the svgText's path. Setting the stroke of the widget (for the svgText path) to false sets the fill of the widget (for the svgText path) to true.
+
+
+
+
+Name: pathRotateY
+
+Type: property
+
+Syntax: set the pathRotateY of <widget> to <pTrueOrFalse>
+get the pathRotateY of widget "SVG_Text"
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the pathRotateY of widget "SVG_Text" to not \
+    the pathRotateY of widget "SVG_Text"
+
+Summary: The pathRotateY causes the pathScaleY to rotate  the widget's path in y-direction (around its x-axis).
+
+Description:
+Use property pathRotateY to set the action range of pathScaleY from -1 (=flip vertical) to +1 (= unscaled y-coordinate). Use then pathScaleY for rotating.
+** It needs property resizeProportional set to true for working as 'expected'. **
+
+
+
+Name: pathRotateX
+
+Type: property
+
+Syntax: set the pathRotateX of <widget> to <pTrueOrFalse>
+get the pathRotateX of widget "SVG_Text"
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the pathRotateX of widget "SVG_Text" to not \
+    the pathRotateX of widget "SVG_Text"
+
+Summary: The pathRotateX causes the pathScaleX to rotate  the widget's path in x-direction (around its y-axis).
+
+Description:
+Use property pathRotateX to set the action range of pathScaleX from -1 (=flip vertical) to +1 (= unscaled x-coordinate). Use then pathScaleX for rotating.
+** It needs property resizeProportional set to true for working as 'expected'. **
+
+
+
+Name: pushColor
+
+Type: property
+
+Syntax: set the pushColor of <widget> to <pColor>
+get the pushColor of <widget>
+
+Summary: Sets or gets the color of the chars fill and outline used while pushed ("hilight color").
+
+Parameters: 
+
+pColor: The push color of the text, in RGB or RGBA format
+
+Example:
+set the pushColor of widget "SVG_Text" to "255,127,0"
+-- returns a _four-item_ string
+get the pushColor of widget "SVG_Text" -- "255,127,0,255"
+set the pushColor of widget "SVG_Text" to "255,127,0,127"
+
+Description:
+Use the pushColor property to set the color of the chars fill when pushed ("hilight").
+The color is in the form of a 3 or 4 item string, the 4th optional item being the alpha value, all integers between 0 and 255.
+[You may also use numbers containing a decimal point between 0.0 and 1.0, for example "0.2,0.1,0.2".
+.: The "get" always returns _four_ items in the integer form (each in range 0-255). :.
+
+
+
+Name: pathTranslateX
+
+Type: property
+
+Syntax: set the pathTranslateX of <widget> to <pTranslate>
+get the pathTranslateX of <widget>
+
+Parameters: 
+
+pTranslate:
+The pathTranslateX of the svgText in current units ('pixels')
+is any number. [Negative values shift left, positive values shift right.]
+
+Example:
+-- don't translate
+set the pathTranslateX of widget "SVG_Text" to   0
+-- shift 90.5 right
+set the pathTranslateX of widget "SVG_Text" to  90.5
+-- shift 42.2 left
+set the pathTranslateX of widget "SVG_Text" to -42.2
+
+Summary:
+The pathTranslateX amount is _added_ to each x-coordinate of the svgText (= path).
+** The canvas bounds are _NOT_ adjusted after translating. **
+
+Description:
+Use the pathTranslateX property to shift the svgText in x-direction
+(_after rotation, scaling and skewing_).
+
+
+
+Name: strokeColor
+
+Type: property
+
+Syntax: set the strokeColor of <widget> to <pColor>
+get the strokeColor of <widget>
+
+Summary: Sets or gets the color of the path outline (stroke).
+
+Parameters: 
+
+pColor: The stroke (outline) color of the text, in RGB or RGBA format
+
+Example:
+set the strokeColor of widget "SVG_Text" to "255,127,0"
+-- returns a _four-item_ string
+get the strokeColor of widget "SVG_Text" -- "255,127,0,255"
+set the strokeColor of widget "SVG_Text" to "255,127,0,127"
+
+Description:
+Use the strokeColor property to set the color of the path outline.
+The color is in the form of a 3 or 4 item string, the 4th optional item being the alpha value, all integers between 0 and 255.
+[You may also use numbers containing a decimal point between 0.0 and 1.0, for example "0.2,0.1,0.2".
+.: The "get" always returns _four_ items in the integer form (each in range 0-255). :.
+
+
+
+Name: pathTranslateY
+
+Type: property
+
+Syntax: set the pathTranslateY of <widget> to <pTranslate>
+get the pathTranslateY of <widget> -- returns a number
+
+Parameters: 
+
+pTranslate:
+The pathTranslateY of the svgText in current units ('pixels')
+is any number. [Negative values shift up, positive values shift down.]
+
+Example:
+-- don't translate
+set the pathTranslateY of widget "SVG_Text" to   0
+-- shift 90.5 down
+set the pathTranslateY of widget "SVG_Text" to  90.5
+-- shift 42.2 up
+set the pathTranslateY of widget "SVG_Text" to -42.2
+
+Summary:
+The pathTranslateY amount is _added_ to each y-coordinate of the svgText (= path).
+** The canvas bounds are _NOT_ adjusted after translating. **
+
+Description:
+Use the pathTranslateY property to shift the svgText in x-direction
+(_after rotation, scaling and skewing_).
+
+
+
+Name: svgText
+
+Type: property
+
+Syntax: set the svgText of <widget> to <pString>
+get the svgText of <widget>
+
+Summary:
+Sets the chars of the text display.
+["the text of widget" is a synonym of "the svgText of widget"]
+
+Parameters: 
+
+pString: The chars of the widget's text display, containing no newline or tab.
+
+Example: set the svgText of widget "SVG_Text" to "Thistle"
+
+Description:
+Use the svgText property to set the (unicode-)string to display.
+Unavailable chars are converted to "_" (underscore).
+
+
+
+Name: usePatternStroke
+
+Type: property
+
+Syntax: set the usePatternStroke of <widget> to <pTrueOrFalse>
+get the usePatternStroke of <widget>
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the usePatternStroke of widget "SVG_Text" to not \
+    the usePatternStroke of widget "SVG_Text"
+
+Summary: If set to true property usePatternStroke causes the svgText's Stroke (outline) to be filled with the current pattern image.
+
+Description: Use the usePatternStroke property to determine the stroke (outline) of the svgText's path. If true then a pattern paint is used for stroking, else the strokeColor.
+
+
+
+
+Name: strokeWidth
+
+Type: property
+
+Syntax: set the strokeWidth of <widget> to <pWidth>
+get the strokeWidth of <widget>
+
+Parameters: 
+
+pWidth: A positive number
+
+Example: set the strokeWidth of widget "SVG_Text" to 4.2
+
+Summary:
+Set or get the strokeWidth property for stroking (outlining) the svgText's path.
+The bounds of the path are accordingly adjusted.
+
+Description:
+Use the strokeWidth property to determine the with of a stroked path. It's not poss
+to set the strokeWidth to a value smaller than 1. Set the stroke property to false to disable to have no stroke/outline.
+
+
+
+Name: fillColor
+
+Type: property
+
+Syntax: set the fillColor of <widget> to <pColor>
+get the fillColor of <widget>
+
+Summary: Sets or gets the color of the chars fill.
+
+Parameters: 
+
+pColor: The color of the text, in RGB or RGBA format
+
+Example:
+set the fillColor of widget "SVG_Text" to "255,127,0"
+-- returns a _four-item_ string
+get the fillColor of widget "SVG_Text" -- "255,127,0,255"
+set the fillColor of widget "SVG_Text" to "255,127,0,127"
+
+Description:
+Use the fillColor property to set the color of the chars fill.
+The color is in the form of a 3 or 4 item string, the 4th optional item being the alpha value, all integers between 0 and 255.
+[You may also use numbers containing a decimal point between 0.0 and 1.0, for example "0.2,0.1,0.2".
+.: The "get" always returns _four_ items in the integer form (each in range 0-255). :.
+
+
+
+Name: scalePattern
+
+Type: property
+
+Syntax: set the scalePattern of <widget> to <pTrueOrFalse>
+get the scalePattern of <widget>
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the scalePattern of widget "SVG_Text" to not \
+    the scalePattern of widget "SVG_Text"
+
+Summary: If set to true property scalePattern causes the the current pattern image to be scaled to fit.
+
+Description: Use the scalePattern property to determine the dimensions of the pattern. If true then a pattern paint is scaled to fit. Else the unscaled pattern is repeated (if small enough).
+
+
+
+
+Name: pathScaleX
+
+Type: property
+
+Syntax: set the pathScaleX of <widget> to <pScale>
+get the pathScaleX of <widget>
+
+Parameters: 
+
+pScale:
+The pathScaleX of the svgText is any number.
+[Negative values scale the _horizontally flipped_ svgText.]
+
+Example:
+-- don't scale
+set the pathScaleX of widget "SVG_Text" to 1
+-- compress horizontally
+set the pathScaleX of widget "SVG_Text" to 0.62
+-- stretch horizontally
+set the pathScaleX of widget "SVG_Text" to 1.62
+-- flip horizontally
+set the pathScaleX of widget "SVG_Text" to -1.0
+
+Summary:
+Each x-coordinate of the svgText (= path) is _multiplied_ by the pathScaleX amount.
+** The canvas bounds are adjusted after scaling. **
+Thus the effect is 'limited' if the resizeProportional property is set to true!
+
+Description: Use the pathScaleX property to scale the svgText in x-direction (_before rotation_).
+
+
+
+
+Name: inputPathInstructions
+
+Type: property
+
+Syntax: set the inputPathInstructions of <widget> to <pTrueOrFalse>
+get the inputPathInstructions of widget "SVG_Text"
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the inputPathInstructions of widget "SVG_Text" to not \
+    the inputPathInstructions of widget "SVG_Text"
+
+Summary: Property inputPathInstructions determines the 'input mode' which is svgText or svgTextPath.
+
+Description: Use the inputPathInstructions property to determine the 'input mode'. If set to true then the svgTextPath is used, which may be edited or copied from widget "SVG Icon" is used, Else (= default) the svgText is used as input and translated to a svgTextPath.
+
+
+
+
+Name: pathAngleY
+
+Type: property
+
+Syntax: set the pathAngleY of <widget> to <pAngle>
+get the pathAngleY of <widget>
+
+Parameters: 
+
+pAngle:
+The angle of Y-rotation (Y-skew) in degrees
+is any integer, negative or positive.
+[<pAngle> is equivalent to 360 + <pAngle>]
+
+Example:
+-- Y-rotate 30 degress cw
+set the pathAngleY of widget "SVG_Text" to  30
+-- Y-rotate 15 degress ccw
+set the pathAngleY of widget "SVG_Text" to -15
+
+Summary:
+The angle of Y-rotation (Y-skew) of the svgText (= path).
+** The canvas bounds are adjusted after skewing. **
+
+Description:
+Use the pathAngleY property to Y-rotate (= Y-shear = Y-skew) the svgText <pAngle> degrees clockwise (cw).
+You may also give negative angles which Y-rotate their absolute value counterclockwise (ccw)
+For example -15 cw is equivalent to 360-15 cw is equivalent to 15 ccw.
+[Note that pathRotate, pathAngleX and pathAngleY do _not_ depend on each other, their effects act additive.]
+
+
+
+Name: pathAngleX
+
+Type: property
+
+Syntax: set the pathAngleX of <widget> to <pAngle>
+get the pathAngleX of <widget>
+
+Parameters: 
+
+pAngle:
+The angle of X-rotation (X-skew) in degrees
+is any integer, negative or positive.
+[<pAngle> is equivalent to 360 + <pAngle>]
+
+Example:
+-- X-rotate 30 degress cw
+set the pathAngleX of widget "SVG_Text" to  30
+-- X-rotate 15 degress ccw
+set the pathAngleX of widget "SVG_Text" to -15
+
+Summary:
+The angle of X-rotation (X-skew) of the svgText (= path).
+** The canvas bounds are adjusted after skewing. **
+
+Description:
+Use the pathAngleX property to X-rotate (= X-shear = X-skew) the svgText <pAngle> degrees clockwise (cw).
+You may also give negative angles which X-rotate their absolute value counterclockwise (ccw)
+For example -15 cw is equivalent to 360-15 cw is equivalent to 15 ccw.
+[Note that pathRotate, pathAngleX and pathAngleY do _not_ depend on each other, their effects act additive.]
+
+
+
+Name: resizeProportional
+
+Type: property
+
+Syntax: set the resizeProportional of <widget> to <pTrueOrFalse>
+get the resizeProportional of widget "SVG_Text"
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the resizeProportional of widget "SVG_Text" to not \
+    the resizeProportional of widget "SVG_Text"
+
+Summary:
+Property resizeProportional determines the 'mode of scaling' for resizing the widget.
+** The canvas bounds are adjusted to fit the smaller of width and height. **
+
+Description: Use the resizeProportional to scale proportionally both in x- and y-direction.
+
+
+
+
+Name: pathScaleY
+
+Type: property
+
+Syntax: set the pathScaleY of <widget> to <pScale>
+get the pathScaleY of <widget>
+
+Parameters: 
+
+pScale:
+The pathScaleY of the svgText is any number.
+[Negative values scale the _vertically flipped_ svgText.]
+
+Example:
+ -- don't scale
+set the pathScaleY of widget "SVG_Text" to 1
+-- compress vertically
+set the pathScaleY of widget "SVG_Text" to 0.62
+-- stretch vertically
+set the pathScaleY of widget "SVG_Text" to 1.62
+-- flip vertically
+set the pathScaleY of widget "SVG_Text" to -1.0
+
+Summary:
+Each y-coordinate of the svgText (= path) is _multiplied_ by the pathScaleY amount.
+** The canvas bounds are adjusted after scaling. **
+Thus the effect is 'limited' if the resizeProportional property is set to true!
+
+Description: Use the pathScaleY property to scale the svgText in y-direction (_before rotation_).
+
+
+
+
+Name: resetAllSliders
+
+Type: property
+
+Syntax: set the resetAllSliders of <widget> to true
+
+Summary: 
+
+Parameters: 
+
+true: No other choice.
+
+Example: set the resetAllSliders of widget "SVG_Text" to true
+
+Description: The resetAllSliders property can only be set to true. It is set to false immediately after doing the "true"-Action: All angles become zero, all scales become 1, the strokeWidth becomes 2 and the size of the widget is to the default "250,250".
+
+
+
+
+Name: usePatternFill
+
+Type: property
+
+Syntax: set the usePatternFill of <widget> to <pTrueOrFalse>
+get the usePatternFill of <widget>
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the usePatternFill of widget "SVG_Text" to not \
+    the usePatternFill of widget "SVG_Text"
+
+Summary: If set to true property usePatternFill causes the svgText's path to be filled with the current pattern image.
+
+Description: Use the usePatternFill property to determine the fill of the svgText's path. If true then a pattern paint is used for fill, else the fillColor.
+
+
+
+
+Name: useShadow
+
+Type: property
+
+Syntax: set the useShadow of <widget> to <pTrueOrFalse>
+get the useShadow of <widget>
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the useShadow of widget "SVG_Text" to not \
+    the useShadow of widget "SVG_Text"
+
+Summary: If set to true useShadow applies a (fixed, but scaled) dropShadow effect to the widget.
+
+Description: Use the useShadow property to add adropShadow effect to the svgText's path. (No property of the effect is currently adjustable).
+
+
+
+
+Name: svgTextPath
+
+Type: property
+
+Syntax: get the svgTextPath of <widget>
+set the svgTextPath of <widget> to <pString>
+
+Parameters: 
+
+pString: is a string of svgPath instructions
+
+Summary:
+Gets or sets the instructions (=path) of the widget's display.
+Set property inputPathInstructions to true in order to use the svgTextPath!
+
+Example:
+get the svgTextPath of widget "SVG_Text"
+set the svgTextPath of <widget> to "M1152 1088Q1152 1114 1133 1133 1114 1152 1088 1152L448 1152Q422 1152 403 1133 384 1114 384 1088 384 1062 403 1043 422 1024 448 1024L1088 1024Q1114 1024 1133 1043 1152 1062 1152 1088ZM640 640Q640 693 602.5 730.5 565 768 512 768 459 768 421.5 730.5 384 693 384 640 384 587 421.5 549.5 459 512 512 512 565 512 602.5 549.5 640 587 640 640ZM1152 640Q1152 693 1114.5 730.5 1077 768 1024 768 971 768 933.5 730.5 896 693 896 640 896 587 933.5 549.5 971 512 1024 512 1077 512 1114.5 549.5 1152 587 1152 640ZM1408 896Q1408 766 1357 647.5 1306 529 1220.5 443.5 1135 358 1016.5 307 898 256 768 256 638 256 519.5 307 401 358 315.5 443.5 230 529 179 647.5 128 766 128 896 128 1026 179 1144.5 230 1263 315.5 1348.5 401 1434 519.5 1485 638 1536 768 1536 898 1536 1016.5 1485 1135 1434 1220.5 1348.5 1306 1263 1357 1144.5 1408 1026 1408 896ZM1536 896Q1536 1105 1433 1281.5 1330 1458 1153.5 1561 977 1664 768 1664 559 1664 382.5 1561 206 1458 103 1281.5 0 1105 0 896 0 687 103 510.5 206 334 382.5 231 559 128 768 128 977 128 1153.5 231 1330 334 1433 510.5 1536 687 1536 896Z"
+
+Description: Use the svgTextPath property to get the path of the current display. You may then use it for example as a path with the SVG-Icon widget. Use the inputPathInstructions check to use the path instructions as input.
+
+
+
+
+Name: fill
+
+Type: property
+
+Syntax: set the fill of <widget> to <pTrueOrFalse>
+get the fill of <widget>
+
+Parameters: 
+
+pTrueOrFalse: is true or false
+
+Example:
+set the fill of widget "SVG_Text" to not \
+    the fill of widget "SVG_Text"
+
+Summary: If set to true property fill causes the svgText's path to be filled with the current fillColor.
+
+Description: Use the fill property to fill the svgText's path. Setting the fill of the widget (for the svgText path) to false sets the stroke of the widget (for the svgText path) to true.
+
+
+
+

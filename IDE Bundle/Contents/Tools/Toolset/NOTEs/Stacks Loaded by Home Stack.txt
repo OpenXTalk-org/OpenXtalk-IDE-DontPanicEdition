@@ -1,0 +1,135 @@
+revSaveAsEmscriptenStandalone,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revsaveasemscriptenstandalone.livecodescript
+RevDataGridLibraryBehaviorsColumnGroupButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorscolumngroupbuttonbehavior.livecodescript
+Page Setup,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revpagesetup.rev
+revIDEDeveloperExtensionLibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revidedeveloperextensionlibrary.livecodescript
+revStandaloneSettingsInclusionsBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingsinclusionsbehavior.livecodescript
+revCursors,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revcursors.rev
+revStandaloneSettingsStacksBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingsstacksbehavior.livecodescript
+revDocsParser,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revdocsparser.livecodescript
+revwidgettrackerlibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revwidgettrackerlibrary.livecodescript
+revStandaloneSettings,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettings.8.rev
+RevDataGridLibraryBehaviorsVerticalScrollbarButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorsverticalscrollbarbuttonbehavior.livecodescript
+revwelcome,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/welcome/revwelcome.livecodescript
+RevDataGridLibraryBehaviorsHeaderButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorsheaderbuttonbehavior.livecodescript
+revSplashStackBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/splash/revsplashstackbehavior.livecodescript
+revStandaloneSettingsEmscriptenBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingsemscriptenbehavior.livecodescript
+revNewScriptEditor,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/script editor/revscripteditor.8.rev
+revGeneralPatterns,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revgeneralpatterns.rev
+revIDEProjectBrowser,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/project browser/revideprojectbrowser.livecode
+RevDataGridLibraryBehaviorsDefaultHeaderButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorsdefaultheaderbuttonbehavior.livecodescript
+RevDataGridLibraryBehaviorsDropIndicatorButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorsdropindicatorbuttonbehavior.livecodescript
+revdebuggerlibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revdebuggerlibrary.livecodescript
+revMenuManager,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revmenumanager.rev
+revOnlineLibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revonlinelibrary.rev
+revDictionary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/dictionary/revdictionary.livecode
+revreshapelibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revreshapelibrary.livecodescript
+revInspector,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/inspector/revinspector.livecodescript
+Page Setup Dialog,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revpagesetupdialog.rev
+revSaveAsIOSStandalone,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revsaveasiosstandalone.livecodescript
+revprofileslibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revprofileslibrary.livecodescript
+revReplicate,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revreplicate.rev
+revcommonlibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revcommonlibrary.livecodescript
+RevDataGridLibraryBehaviorsDefaultColumnButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorsdefaultcolumnbuttonbehavior.livecodescript
+revRulersH,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revrulersh.rev
+revanimationlibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revanimationlibrary.livecodescript
+revLibURL,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revliburl.livecodescript
+Print Dialog,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revprintdialog.rev
+revgeometrylibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revgeometrylibrary.livecodescript
+revPaletteBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/behaviors/revpalettebehavior.livecodescript
+revStandaloneSettingsIosBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingsiosbehavior.livecodescript
+revStandaloneSettingsGeneralBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingsgeneralbehavior.livecodescript
+revIDEProjectBrowserLibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revideprojectbrowserlibrary.livecodescript
+revStandaloneSettingsLinuxBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingslinuxbehavior.livecodescript
+revStartCenter,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/start center/revStartCenter.livecode
+revStandaloneSettingsInclusionsRowBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingsinclusionsrowbehavior.livecodescript
+revDeployLibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revdeploylibrary.livecodescript
+revRotate,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revrotate.livecode
+revStartCenterBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/start center/revStartCenterBehavior.livecodescript
+revAbout,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revabout.rev
+revhtml5urllibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revhtml5urllibrary.livecodescript
+revIconChooser,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/reviconchooser.rev
+LiveCodeAppDeployer,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revmobiledeployer.rev
+revIDEExtensionManagerBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/extension manager/revideextensionmanagerbehavior.livecodescript
+revLinuxCursors,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revlinuxcursors.rev
+revIDEExtensionManagerStoreBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/extension manager/revideextensionmanagerstorebehavior.livecodescript
+revInspectorBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/behaviors/revinspectorbehavior.livecodescript
+Printer Chooser,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revprinterchooser.rev
+Ask Dialog,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revaskdialog.rev
+revIDESnippetViewer,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/snippet viewer/revidesnippetviewer.livecode
+revStandaloneSettingsCopyFilesBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingscopyfilesbehavior.livecodescript
+revStandaloneSettingsNew,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/inspector/revstandalonesettingsnew.livecodescript
+revErrorDisplay,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/reverrordisplay.livecodescript
+revrulersscriptlibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revrulersscriptlibrary.livecodescript
+RevDataGridLibraryBehaviorsHeaderMaskButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorsheadermaskbuttonbehavior.livecodescript
+revCoreStackBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/behaviors/revcorestackbehavior.livecodescript
+revSplash,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/splash/revSplash.livecode
+revStandaloneSettingsBugReportsBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingsbugreportsbehavior.livecodescript
+revprintlibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revprintlibrary.livecodescript
+revStandaloneSettingsMacBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingsmacbehavior.livecodescript
+Answer Dialog,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revanswerdialog.rev
+revExtensionBuilder,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/extension builder/revextensionbuilder.livecode
+revProjectBrowserBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/project browser/revprojectbrowserbehavior.livecodescript
+revPreferencesGUI,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revpreferencesgui.rev
+revmetadatalibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revmetadatalibrary.livecodescript
+RevDataGridLibraryBehaviorsFieldEditorButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorsfieldeditorbuttonbehavior.livecodescript
+revinitialisationlibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revinitialisationlibrary.livecodescript
+revSaveAsAndroidStandalone,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revsaveasandroidstandalone.livecodescript
+revOnline,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revonline.rev
+revExtensionBuilderBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/extension builder/revextensionbuilderbehavior.livecodescript
+revdatabaselibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revdatabaselibrary.livecodescript
+revbackscriptlibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revbackscriptlibrary 2.livecodescript
+RevDataGridLibraryBehaviorsActionControlHolderBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorsactioncontrolholderbehavior.livecodescript
+revnomessageslibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revnomessageslibrary.livecodescript
+RevDataGridLibraryBehaviorsDgListMessageCatcherButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorsdglistmessagecatcherbuttonbehavior.livecodescript
+revMessageWatcher,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revmessagewatcher.rev
+revTools,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/tools/revtools.livecodescript
+revMenuBar,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/menubar/revmenubar.livecodescript
+revIdeMessageHandlerLibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revidemessagehandlerlibrary.livecodescript
+revVariableWatcher,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revvariablewatcher.rev
+revidelibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revidelibrary.8.livecodescript
+revIDEExtensionManagerListBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/extension manager/revideextensionmanagerlistbehavior.livecodescript
+revStandaloneSettingsBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingsbehavior.livecodescript
+revIDEDocumentationLibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revidedocumentationlibrary.livecodescript
+revIDEExtensionManager,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/extension manager/revideextensionmanager.livecode
+revshortcutslibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revshortcutslibrary.livecodescript
+revDataGridLibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary.rev
+revPlugInEditor,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revplugineditor.rev
+revOnlineStackBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/behaviors/revonlinestackbehavior.livecodescript
+RevDataGridLibraryBehaviorsRowChainedBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorsrowchainedbehavior.livecodescript
+revbackscriptlibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revbackscriptlibrary.livecodescript
+revDeployLibraryIOS,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revdeploylibraryios.livecodescript
+revSBLibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revsblibrary.livecodescript
+RevDataGridLibraryBehaviorsSwipeControlHolderBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/bahaviorsswipecontrolholderbehavior.livecodescript
+Message Box,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/message box/revmessagebox.8.rev
+revAddLibraryStack,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revaddlibrarystack.livecode
+revtablelibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revtablelibrary.livecodescript
+revIDEExtensionManagerRowBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/extension manager/revideextensionmanagerrowbehavior.livecodescript
+revideextensionlibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revideextensionlibrary.livecodescript
+revSearch,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revsearch.rev
+revSaveAsStandalone,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revsaveasstandalone.livecodescript
+revRestore,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revrestore.livecode
+revDeployLibraryAndroid,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revdeploylibraryandroid.livecodescript
+revfrontscriptlibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revfrontscriptlibrary.livecodescript
+revxmlrpclibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revxmlrpclibrary.livecodescript
+revSaving,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revsaving.livecode
+revRulersV,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revrulersv.rev
+revMacCursors,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revmaccursors.rev
+File Selector,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revfileselector.rev
+revFileAssociations,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revfileassociations.livecode
+revCore,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revCore.8.livecode
+RevDataGridLibraryBehaviorsHorizontalScrollbarButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorshorizontalscrollbarbuttonbehavior.livecodescript
+RevDataGridLibraryBehaviorsTrackDragDropButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorstrackdragdropbuttonbehavior.livecodescript
+revResourceCenter,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revresourcecenter.rev
+revIcons,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revicons.rev
+RevDataGridLibraryBehaviorsDataGridButtonBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revdatagridlibrary/behaviorsdatagridbuttonbehavior.livecodescript
+revAboutCardBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/behaviors/revaboutcardbehavior.livecodescript
+Color Chooser,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revcolorchooser.rev
+revImageLibrary,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revimagelibrary.rev
+revBrushpopup,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/tools/revBrushpopup.livecode
+revInspectorTemplate,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/inspector/revinspectortemplate.livecodescript
+revGeneralIcons,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/revgeneralicons.rev
+revdeploylibraryemscripten,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/libraries/revdeploylibraryemscripten.livecodescript
+revStandaloneSettingsWindowsBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingswindowsbehavior.livecodescript
+revTutorial,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/tutorial/revtutorial.livecodescript
+revStandaloneSettingsAndroidBehavior,/Users/pmcclernan/Desktop/OpenXTalk/OpenXTalk.app/Contents/Tools/Toolset/palettes/standalone settings/revstandalonesettingsandroidbehavior.livecodescript
+revPreferences,/Users/pmcclernan/Library/Preferences/RunRev/openxtalk7.rev

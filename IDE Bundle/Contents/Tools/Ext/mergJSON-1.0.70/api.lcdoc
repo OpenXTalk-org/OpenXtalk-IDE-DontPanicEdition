@@ -5,9 +5,9 @@ type: library
 Description:
 mergJSON is an external for encoding and decoding [JSON](http://json.org).
 
-This external has been implemented to encode/decode UTF8 JSON to a LiveCode 
-array as quickly as possible. Currently externals can not work with 
-multi-dimensional LiveCode arrays so the intention is it is used with two 
+This external has been implemented to encode/decode UTF8 JSON to an
+array as quickly as possible. Currently externals can not work with
+multi-dimensional arrays so the intention is it is used with two
 functions like this:
 
     function ArrayToJSON pArray,pForceRootType,pPretty
@@ -46,17 +46,17 @@ Platforms: mobile,desktop,server
 Summary: The function encodes an array as JSON.
 
 Description:
-If the external encounters \} as the first char of an array element it will 
-assume the string is already encoded. This is how the recursive function is 
+If the external encounters \} as the first char of an array element it will
+assume the string is already encoded. This is how the recursive function is
 able to translate a multi-dimensional array into JSON. It's also the only way to
-get an empty array or object into your JSON by setting the element value 
+get an empty array or object into your JSON by setting the element value
 to \}\[\] or \}\{\}.
 
-If a value looks like a real number it is encoded as an IEEE 754 double. In 
+If a value looks like a real number it is encoded as an IEEE 754 double. In
 order to represent the number uniquely a double may need a precision of 15 to 17
-decimal places. What this means is that any encoded then decoded doubles may 
-need to be formatted or rounded to the precision you require before displaying 
-it to a user because something like 0.657679 when converted to a double will 
+decimal places. What this means is that any encoded then decoded doubles may
+need to be formatted or rounded to the precision you require before displaying
+it to a user because something like 0.657679 when converted to a double will
 become 0.65767900000000001.
 
 Parameters:
@@ -64,15 +64,15 @@ pVariableName (string):  The name of the variable to encode as JSON. All strings
 must be UTF8 encoded.
 pForceRootType (string):  The root type for JSON conversion may be forced using
 this optional parameter. In the case of a numerically and sequentially keyed
-array starting from 1 the array will be encoded as an ordered list in JSON. 
+array starting from 1 the array will be encoded as an ordered list in JSON.
 Use `object` as the parameter value to force the array to be encoded as an
-object instead. In some cases when encoding scalar variables a number (or 
+object instead. In some cases when encoding scalar variables a number (or
 something that looks like a number) might need to be encoded as a string.
-Use `string` as the parameter value to force the number to be encoded as a 
+Use `string` as the parameter value to force the number to be encoded as a
 string instead.
-pPretty (boolean):  Use this optional parameter which defaults to false to 
-pretty print the JSON. If true the JSON will formatted with whitespace and 
-object names will be alphabetically sorted. 
+pPretty (boolean):  Use this optional parameter which defaults to false to
+pretty print the JSON. If true the JSON will formatted with whitespace and
+object names will be alphabetically sorted.
 Returns: The array encoded as JSON.
 
 Example:
@@ -102,8 +102,8 @@ Platforms: mobile,desktop,server
 Parameters:
 pJSON (string): The UTF8 encoded JSON to decode.
 pVariableName (string):  The name of the variable to decode the JSON into.
-Returns: A list of array keys that must be further decoded. As the externals 
-interface can not deal with multi-dimensional arrays a recursive function must 
+Returns: A list of array keys that must be further decoded. As the externals
+interface can not deal with multi-dimensional arrays a recursive function must
 be used to decode deeply nested JSON.
 
 Example:

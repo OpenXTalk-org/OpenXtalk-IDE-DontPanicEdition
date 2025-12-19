@@ -5,7 +5,7 @@ type: library
 Description:
 This file contains the interface definitions for 'rrehardcopy' - an
 external providing access to the iOS AirPrint facility, allowing printing
-of PDFs from LiveCode apps.
+of PDFs from apps.
 
 Tags: Externals
 

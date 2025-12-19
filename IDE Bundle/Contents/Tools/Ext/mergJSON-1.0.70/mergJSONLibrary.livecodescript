@@ -4,9 +4,9 @@ on revLoadLibrary
    if the target is not me then
       pass revLoadLibrary
    end if
-   
+
    insert the script of me into back
-   
+
    if the environment contains "development" then
       set the _ideoverride of me to true
    end if
@@ -16,7 +16,7 @@ on revUnloadLibrary
    if the target is not me then
       pass revUnloadLibrary
    end if
-   
+
    remove the script of me from back
 end revUnloadLibrary
 
@@ -34,7 +34,7 @@ object.
 
 /**
 
-Parse JSON to a LiveCode array
+Parse JSON to a xTalk array
 
 Example:
 local tProfile
@@ -49,22 +49,22 @@ end if
 Parameters:
 pJSON (string): A UTF8 encoded JSON string
 
-Returns: A LiveCode array
+Returns: A xTalk array
 
 Description:
-JSON arrays are translated to LiveCode numerically indexed arrays 
-with keys 1...N and JSON objects are translated to LiveCode array
+JSON arrays are translated to numerically indexed arrays
+with keys 1...N and JSON objects are translated to xTalk array
 key -> value pairs.
 
 */
 
 function JSONToArray pJSON
    local tArray,tRecurse, tKeys
-   
+
    put mergJSONDecode(pJSON,"tArray") into tRecurse
    if tArray is an array then
       put the keys of tArray into tKeys
-      
+
       split tRecurse by return as set
       repeat for each line tKey in tKeys
          if tRecurse[tKey] then
@@ -73,7 +73,7 @@ function JSONToArray pJSON
             put textDecode(tArray[tKey],"UTF8") into tArray[tKey]
          end if
       end repeat
-   
+
       return tArray
    else
       return textDecode(tArray,"UTF8")
@@ -82,7 +82,7 @@ end JSONToArray
 
 /**
 
-Parse a LiveCode array to JSON
+Parse a xTalk array to JSON
 
 Example:
 local tMessage
@@ -90,13 +90,13 @@ ask question "What do you want to send?"
 if it is not empty then
    put it into tMessage["text"]
    put ArrayToJSON(tMessage) into tMessage
-   
+
    set the httpHeaders to "Content-type: application/json"
    post tMessage to url kSlackWebhookURL
 end if
 
 Parameters:
-pArray (array): A LiveCode array
+pArray (array): A xTalk array
 pForceRootType (optional enum): Force an element value to be represented
 as a JSON type other than the default
 
@@ -106,8 +106,8 @@ as a JSON type other than the default
 Returns: A UTF8 encoded JSON string
 
 Description:
-By default LiveCode numerically indexed arrays with keys 1...N are
-translated to JSON arrays and LiveCode array key -> value pairs are
+By default numerically indexed arrays with keys 1...N are
+translated to JSON arrays and array key -> value pairs are
 translated to JSON objects.
 
 */

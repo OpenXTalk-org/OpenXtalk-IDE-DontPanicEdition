@@ -17,7 +17,7 @@ Type: function
 
 Syntax: ArrayToJSON(<pArray>,<pForceRootType>,<pPretty>)
 
-Summary: Parse a LiveCode array to JSON
+Summary: Parse an array to JSON
 
 Example:
 local tMessage
@@ -30,9 +30,9 @@ if it is not empty then
    post tMessage to url kSlackWebhookURL
 end if
 
-Parameters: 
+Parameters:
 
-pArray: A LiveCode array
+pArray: An array
 
 pForceRootType:
 Force an element value to be represented
@@ -44,8 +44,8 @@ as a JSON type other than the default
 Returns: A UTF8 encoded JSON string
 
 Description:
-By default LiveCode numerically indexed arrays with keys 1...N are
-translated to JSON arrays and LiveCode array key -> value pairs are
+By default numerically indexed arrays with keys 1...N are
+translated to JSON arrays and array key -> value pairs are
 translated to JSON objects.
 
 
@@ -56,7 +56,7 @@ Type: function
 
 Syntax: JSONToArray(<pJSON>)
 
-Summary: Parse JSON to a LiveCode array
+Summary: Parse JSON to an array
 
 Example:
 local tProfile
@@ -68,16 +68,13 @@ else
    -- do something interesting with the profile
 end if
 
-Parameters: 
+Parameters:
 
 pJSON: A UTF8 encoded JSON string
 
-Returns: A LiveCode array
+Returns: An array
 
 Description:
-JSON arrays are translated to LiveCode numerically indexed arrays 
-with keys 1...N and JSON objects are translated to LiveCode array
+JSON arrays are translated to numerically indexed arrays
+with keys 1...N and JSON objects are translated to an array
 key -> value pairs.
-
-
-

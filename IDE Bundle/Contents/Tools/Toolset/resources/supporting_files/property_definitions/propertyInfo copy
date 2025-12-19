@@ -1,0 +1,209 @@
+Property : optional getter : optional setter	Label	Section	Editor	User Visible	Read Only	Group	Default	Options	Subsection	min	max	step
+-----	-----	-----	-----	-----	-----	-----	-----	-----	-----	-----	-----	-----
+alwaysBuffer	Buffer	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+angle	Rotation	Basic	com.livecode.pi.number	TRUE	FALSE		0			0	359	1
+antialiased	Antialiased	Basic	com.livecode.pi.boolean	TRUE	FALSE
+arcAngle	Arc	Basic	com.livecode.pi.number	TRUE	FALSE					0	360	1
+armedIcon	Armed icon	Icons	com.livecode.pi.imageid	TRUE	FALSE		0
+autoHilite	Auto hilite	Basic	com.livecode.pi.boolean	TRUE	FALSE
+autoTab	Tab on return	Basic	com.livecode.pi.boolean	TRUE	FALSE
+backgroundBehavior	Behave like a background	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+backgroundColor	Fill color	Colors	com.livecode.pi.color	TRUE	FALSE	Background fill
+backgroundPattern	Fill pattern	Colors	com.livecode.pi.pattern	TRUE	FALSE	Background fill
+basicTableObject:revIDEGetTableProperty:revIDESetTableProperty	Basic table object	Table	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+behavior	Behavior	Advanced	com.livecode.pi.script	TRUE	FALSE
+blendLevel	Blend level	Colors	com.livecode.pi.number	TRUE	FALSE					0	100	1
+borderColor	Border/grid color	Colors	com.livecode.pi.color	TRUE	FALSE	Border fill
+borderPattern	Border/grid pattern	Colors	com.livecode.pi.pattern	TRUE	FALSE	Border fill
+borderWidth	Border width	Basic	com.livecode.pi.integer	TRUE	FALSE					0		1
+bottom::revIDESetRectProperty	Bottom	Position	com.livecode.pi.integer	TRUE	FALSE		no_default					1
+bottomColor	Inset bevel color	Colors	com.livecode.pi.color	TRUE	FALSE	Bottom bevel fill
+bottomPattern	Inset bevel pattern	Colors	com.livecode.pi.pattern	TRUE	FALSE	Bottom bevel fill
+boundingRect	Bounding rect	Basic	com.livecode.pi.string	TRUE	FALSE
+callbacks	Callbacks	Callbacks	com.livecode.pi.string	TRUE	FALSE
+cantAbort	User can't abort scripts	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+cantDelete	Can't delete	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+cantModify	Can't modify	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+cellEdit:revIDEGetTableProperty:revIDESetTableProperty	Cell editing	Table	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+cellFormat:revIDEGetTableProperty:revIDESetTableProperty	Cell formatting	Table	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+clipsToRect	Clip child controls to rect	Position	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+colorOverlay	Color overlay	Effects	com.livecode.pi.graphicEffect	TRUE	FALSE			popup:effectColor,effectBlendMode
+currentFrame	Frame	Basic	com.livecode.pi.integer	TRUE	FALSE		1			1		1
+currentNode	Current node	Quicktime	com.livecode.pi.string	TRUE	FALSE
+currentTime	Time	Basic	com.livecode.pi.integer	TRUE	FALSE		0			0		1
+customProperties:revIDECustomPropertiesGet:revIDECustomPropertiesSet	Custom Properties	Custom	com.livecode.pi.customprops	TRUE	FALSE		no_default
+darkMode	Dark Mode	Basic	com.livecode.pi.boolean	TRUE	FALSE
+dashes	Dashed lines	Basic	com.livecode.pi.string	TRUE	FALSE
+decorations	Controls	Basic	com.livecode.pi.decorations	TRUE	FALSE
+default	Default button	Basic	com.livecode.pi.boolean	TRUE	FALSE
+destroyStack	Purge stack on close	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+destroyWindow	Purge window on close	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+disabled	Disabled	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+disabledIcon	Disabled icon	Icons	com.livecode.pi.imageid	TRUE	FALSE		0
+dontDither	Don't dither	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+dontSearch	Don't search	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+dontWrap	Don't wrap	Basic	com.livecode.pi.boolean	TRUE	FALSE
+dropShadow	Drop shadow	Effects	com.livecode.pi.graphicEffect	TRUE	FALSE			popup:effectColor,effectBlendMode,effectFilter,effectSize,effectSpread,effectDistance,effectAngle
+effectAngle	Angle	Effects	com.livecode.pi.number	TRUE	FALSE					0	360	1
+effectBlendMode	Blend mode	Effects	com.livecode.pi.enum	TRUE	FALSE		normal	normal,multiply,colorDodge
+effectColor	Color	Effects	com.livecode.pi.colorwithalpha	TRUE	FALSE		0,0,0,255
+effectDistance	Distance	Effects	com.livecode.pi.number	TRUE	FALSE		3			0	359	1
+effectFilter	Filter	Effects	com.livecode.pi.enum	TRUE	FALSE		box3pass	gaussian,box3pass,box2pass,box1pass
+effectSize	Size	Effects	com.livecode.pi.number	TRUE	FALSE		3			0	255	1
+effectSpread	Spread	Effects	com.livecode.pi.number	TRUE	FALSE		0			0	255	1
+enabledTracks	Track is enabled	Tracks	com.livecode.pi.text	TRUE	TRUE
+endArrow	End arrow	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+endTime	End	Basic	com.livecode.pi.integer	TRUE	FALSE					0		1
+endValue	End value	Basic	com.livecode.pi.number	TRUE	FALSE		100					1
+externals	External references	externalRefs	com.livecode.pi.text	TRUE	FALSE
+filename	Source	Basic	com.livecode.pi.file	TRUE	FALSE
+fillGradient:revIDEGetGradientProperty:revIDESetGradientProperty	Fill gradient	Colors	com.livecode.pi.gradient	TRUE	FALSE			popup:gradientType,gradientRamp,gradientQuality,gradientRepeat,gradientMirror,gradientWrap,gradientFrom,gradientTo,gradientVia
+firstIndent	First indent	Basic	com.livecode.pi.integer	TRUE	FALSE		0					1
+fixedLineHeight	Fixed line height	Text	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+focusBorder	Focus border	Basic	com.livecode.pi.boolean	TRUE	FALSE
+focusColor	Focus color	Colors	com.livecode.pi.color	TRUE	FALSE	Focus fill
+focusPattern	Focus pattern	Colors	com.livecode.pi.pattern	TRUE	FALSE	Focus fill
+foregroundColor	Text color	Colors	com.livecode.pi.color	TRUE	FALSE	Foreground fill
+foregroundPattern	Text pattern	Colors	com.livecode.pi.pattern	TRUE	FALSE	Foreground fill
+formatForPrinting	Format for printing	Basic	com.livecode.pi.boolean	TRUE	FALSE
+gradientType	Type	Gradients	com.livecode.pi.enum	TRUE	FALSE		No Gradient	No Gradient,Linear,Radial,Conical,Diamond,Spiral,XY,SqrtXY
+gradientRamp	Ramp	Gradients	com.livecode.pi.gradientramp	TRUE	FALSE
+gradientQuality	Quality	Gradients	com.livecode.pi.enum	TRUE	FALSE		Normal	Normal,Good
+gradientRepeat	Repeat	Gradients	com.livecode.pi.integer	TRUE	FALSE		0					1
+gradientMirror	Mirror	Gradients	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+gradientWrap	Wrap	Gradients	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+gradientFrom	From	Gradients	com.livecode.pi.point	TRUE	FALSE		no_default			1		1
+gradientTo	To	Gradients	com.livecode.pi.point	TRUE	FALSE		no_default			1		1
+gradientVia	Via	Gradients	com.livecode.pi.point	TRUE	FALSE		no_default			1		1
+height	Height	Position	com.livecode.pi.integer	TRUE	FALSE					1		1
+hGrid	Horizontal grid	Table	com.livecode.pi.boolean	TRUE	FALSE
+hilited	Hilited	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+hiliteBorder	Hilite border	Icons	com.livecode.pi.boolean	TRUE	FALSE
+hiliteColor	Text hilite color	Colors	com.livecode.pi.color	TRUE	FALSE	Hilite fill
+hiliteIcon	Hilite icon	Icons	com.livecode.pi.imageid	TRUE	FALSE		0
+hilitePattern	Text hilite pattern	Colors	com.livecode.pi.pattern	TRUE	FALSE	Hilite fill
+hotspot	Hotspot	Basic	com.livecode.pi.point	TRUE	FALSE
+hotspots	Hotspots	Quicktime	com.livecode.pi.string	TRUE	TRUE
+hoverIcon	Hover icon	Icons	com.livecode.pi.imageid	TRUE	FALSE		0
+hScrollbar	Horizontal scrollbar	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+icon	Icon	Icons	com.livecode.pi.imageid	TRUE	FALSE		0
+iconGravity	Gravity	Icons	com.livecode.pi.enum	TRUE	FALSE			,left,top,right,bottom,topLeft,topRight,bottomLeft,bottomRight,center,resize
+iconic	Minimized	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+id	ID	Basic	com.livecode.pi.imageID	TRUE	FALSE
+ink	Ink	Colors	com.livecode.pi.enum	TRUE	FALSE		srcCopy	blendClear,blendSrc,blendDst,blendSrcOver,blendDstOver,blendSrcIn,blendDstIn,blendSrcOut,blendDstOut,blendSrcAtop,blendDstAtop,blendXor,blendPlus,blendMultiply,blendScreen,blendOverlay,blendDarken,blendLighten,blendDodge,blendBurn,blendHardLight,blendSoftLight,blendDifference,blendExclusion,srcCopy
+innerGlow	Inner glow	Effects	com.livecode.pi.graphicEffect	TRUE	FALSE			popup:effectColor,effectBlendMode,effectFilter,effectSize,effectSpread
+innerShadow	Inner shadow	Effects	com.livecode.pi.graphicEffect	TRUE	FALSE			popup:effectColor,effectBlendMode,effectFilter,effectSize,effectSpread,effectDistance,effectAngle
+kind	Kind	Basic	com.livecode.pi.string	TRUE	TRUE		no_default
+label	Label	Basic	com.livecode.pi.text	TRUE	FALSE
+layer	Layer	Position	com.livecode.pi.integer	TRUE	FALSE		no_default			1		1
+layerMode	Layer mode	Advanced	com.livecode.pi.enum	TRUE	FALSE		Static	Static,Dynamic
+left::revIDESetRectProperty	Left	Position	com.livecode.pi.integer	TRUE	FALSE		no_default					1
+lineInc	Scroll distance on arrow click	Basic	com.livecode.pi.number	TRUE	FALSE		512
+lineSize	Line thickness	Basic	com.livecode.pi.number	TRUE	FALSE		1
+linkColor	Link color	Colors	com.livecode.pi.color	TRUE	FALSE
+linkHiliteColor	Link click color	Colors	com.livecode.pi.color	TRUE	FALSE
+linkVisitedColor	Link visited color	Colors	com.livecode.pi.color	TRUE	FALSE
+listBehavior	List behavior	Basic	com.livecode.pi.boolean	TRUE	FALSE
+location	Location	Position	com.livecode.pi.point	TRUE	FALSE		no_default
+lockLoc	Lock size and position	Position	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+lockText	Lock text	Basic	com.livecode.pi.boolean	TRUE	FALSE
+looping	Loop	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+mainStack	Main stack	Basic	com.livecode.pi.enum	TRUE	FALSE			execute:get ideMainStacks(); sort it
+margins	Margins	Text	com.livecode.pi.string	TRUE	FALSE
+mark	Marked	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+markerDrawn	Draw shape at vertices	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+markerFilled	Marker filled	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+markerLineSize	Marker line thickness	Basic	com.livecode.pi.number	TRUE	FALSE		1
+markerPoints	Marker points	Basic	com.livecode.pi.text	TRUE	FALSE
+maxColumnCount:revIDEGetTableProperty:revIDESetTableProperty	Maximum editable column	Table	com.livecode.pi.number	TRUE	FALSE
+maxHeight	Max height	Position	com.livecode.pi.number	TRUE	FALSE		65535
+maxWidth	Max width	Position	com.livecode.pi.number	TRUE	FALSE		65535
+menuLines	Number of lines to display	Basic	com.livecode.pi.integer	TRUE	FALSE		5			1		1
+menuMode	Menu mode	basic	com.livecode.pi.string	FALSE	FALSE			cascade,combobox,option,popup,pulldown
+menuMouseButton	Access with mouse button:	Basic	com.livecode.pi.enum	TRUE	FALSE		1	1,2,3,0
+menuName	Menu panel stack	Basic	com.livecode.pi.string	TRUE	FALSE
+minHeight	Min height	Position	com.livecode.pi.number	TRUE	FALSE		32
+minWidth	Min width	Position	com.livecode.pi.number	TRUE	FALSE		32
+mirrored	Mirrored	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+multipleHilites	Multiline Hilites	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+name	Name	Basic	com.livecode.pi.string	TRUE	FALSE		no_default
+nonContiguousHilites	Non-contiguous	Basic	com.livecode.pi.boolean	TRUE	FALSE
+number	Number	Advanced	com.livecode.pi.integer	TRUE	TRUE		no_default			1		1
+numberFormat	Value format	Basic	com.livecode.pi.string	TRUE	FALSE
+opaque	Opaque	Basic	com.livecode.pi.boolean	TRUE	FALSE
+orientation	Orientation	Basic	com.livecode.pi.enum	TRUE	TRUE			Horizontal,Vertical
+outerGlow	Outer glow	Effects	com.livecode.pi.graphicEffect	TRUE	FALSE			popup:effectColor,effectBlendMode,effectFilter,effectSize,effectSpread
+pageInc	Scroll distance on bar click	Basic	com.livecode.pi.number	TRUE	FALSE		8192
+palindromeFrames	Repeat in reverse	Basic	com.livecode.pi.boolean	TRUE	FALSE
+pan	Pan	Quicktime	com.livecode.pi.number	TRUE	FALSE
+playLoudness	Volume	Basic	com.livecode.pi.integer	TRUE	FALSE					0	100	1
+playRate	Speed	Basic	com.livecode.pi.integer	TRUE	FALSE
+playSelection	Play selection only	Basic	com.livecode.pi.boolean	TRUE	FALSE
+points	Points	Basic	com.livecode.pi.text	TRUE	FALSE
+polySides	Sides	Basic	com.livecode.pi.number	TRUE	FALSE		8
+profile	Property profile	Profiles	com.livecode.pi.propertyProfile	TRUE	FALSE
+radioBehavior	Hilite one radio button at a time	Basic	com.livecode.pi.boolean	TRUE	FALSE		TRUE
+repeatCount	Repeat	Basic	com.livecode.pi.integer	TRUE	FALSE					0		1
+resizable	Resizable	Position	com.livecode.pi.boolean	TRUE	FALSE		TRUE
+resizeQuality	Resize quality	Basic	com.livecode.pi.enum	TRUE	FALSE		normal	best,good,normal
+right::revIDESetRectProperty	Right	Position	com.livecode.pi.integer	TRUE	FALSE		no_default					1
+roundRadius	Corner radius	Basic	com.livecode.pi.number	TRUE	FALSE
+scaleFactor	Scale factor	Basic	com.livecode.pi.number	TRUE	FALSE
+scrollbarWidth	Scrollbar width	Basic	com.livecode.pi.enum	TRUE	FALSE		16	12,16,20
+selectGroupedControls	Select grouped controls	Basic	com.livecode.pi.boolean	TRUE	FALSE		TRUE
+shadow	Shadow	Icons	com.livecode.pi.boolean	TRUE	FALSE
+shadowColor	Shadow color	Colors	com.livecode.pi.color	TRUE	FALSE	Shadow fill
+shadowOffset	Shadow offset	Icons	com.livecode.pi.integer	TRUE	FALSE		4			-128	127	1
+shadowPattern	Shadow pattern	Colors	com.livecode.pi.pattern	TRUE	FALSE	Shadow fill
+sharedBehavior	Shared group	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+sharedHilite	Shared hilite	Basic	com.livecode.pi.boolean	TRUE	FALSE
+sharedText	Share text	Basic	com.livecode.pi.boolean	TRUE	FALSE
+showBadge	Controller toggle	Basic	com.livecode.pi.boolean	TRUE	FALSE
+showBorder	Show border	Basic	com.livecode.pi.boolean	TRUE	FALSE		TRUE
+showController	Controller	Basic	com.livecode.pi.boolean	TRUE	FALSE
+showFocusBorder	Focus border	Basic	com.livecode.pi.boolean	TRUE	FALSE
+showLines	Text baselines	Table	com.livecode.pi.boolean	TRUE	FALSE
+showName	Show name	Basic	com.livecode.pi.boolean	TRUE	FALSE
+showSelection	Hilite selection	Basic	com.livecode.pi.boolean	TRUE	FALSE
+showValue	Show value	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+size	Size in bytes	Basic	com.livecode.pi.integer	TRUE	TRUE
+stackFiles::revIDESetStackFilesProperty	Stack files	Stack Files	com.livecode.pi.stackfiles	TRUE	FALSE
+startAngle	Start	Basic	com.livecode.pi.number	TRUE	FALSE		0			0	360	1
+startArrow	Start arrow	Basic	com.livecode.pi.boolean	TRUE	FALSE
+startTime	Start	Basic	com.livecode.pi.integer	TRUE	FALSE					0		1
+startupIconic	Open minimized	Basic	com.livecode.pi.boolean	TRUE	FALSE
+startValue	Start value	Basic	com.livecode.pi.number	TRUE	FALSE		0					1
+strokeGradient::revIDESetGradientProperty	Stroke gradient	Colors	com.livecode.pi.gradient	TRUE	FALSE			popup:gradientType,gradientRamp,gradientQuality,gradientRepeat,gradientMirror,gradientWrap,gradientFrom,gradientTo,gradientVia
+style	Style	Basic	com.livecode.pi.enum	TRUE	FALSE
+styledText	Contents	Contents	com.livecode.pi.styledText	TRUE	FALSE		no_default
+systemWindow	Float above everything	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+tabGroupBehavior	Contents focus with keyboard	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+tabStops	Tab stops	Table	com.livecode.pi.string	TRUE	FALSE
+text	Text	Basic	com.livecode.pi.text	FALSE	FALSE			tabStops|15
+textAlign	Text align	Text	com.livecode.pi.textalign	TRUE	FALSE
+textFont	Font	Text	com.livecode.pi.font	TRUE	FALSE
+textHeight	Text height	Text	com.livecode.pi.integer	TRUE	FALSE				4		1
+textSize	Text size	Text	com.livecode.pi.integer	TRUE	FALSE					1		1
+textStyle	Text style	Text	com.livecode.pi.textstyle	TRUE	FALSE
+theme	Theme	Basic	com.livecode.pi.enum	TRUE	FALSE			Native|native,Legacy Look-and-Feel|legacy
+themeclass	Theme as	Basic	com.livecode.pi.enum	TRUE	FALSE			Pushbutton|button,Checkbox|checkbox,Radio button|radiobutton,Tab button|tabbutton,Tab pane|tabpane,Label|label,Input field|inputfield,List|list,Menu|menu,Menu item|menuitem,Option menu|optionmenu,Pull-down menu|pulldownmenu,Combo box|combobox,Popup menu|popupmenu,Progress bar|progressbar,Scrollbar|scrollbar,Slider|slider,Spin arrows|spinarrows,Window|window,Message box|messagebox,Rich text|richtext,Tooltip|tooltip
+threeD	3-D	Basic	com.livecode.pi.boolean	TRUE	FALSE
+thumbPosition	Current value	Basic	com.livecode.pi.number	TRUE	FALSE		50					1
+thumbSize	Thumb size	Basic	com.livecode.pi.number	FALSE	FALSE		1
+tilt	Tilt	Quicktime	com.livecode.pi.number	TRUE	FALSE
+title	Title	Basic	com.livecode.pi.string	TRUE	FALSE
+toggleHilites	Click to toggle	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+tooltip	Tooltip	Basic	com.livecode.pi.text	TRUE	FALSE
+top::revIDESetRectProperty	Top	Position	com.livecode.pi.integer	TRUE	FALSE		no_default					1
+topColor	Outset bevel color	Colors	com.livecode.pi.color	TRUE	FALSE	Top bevel fill
+topPattern	Outset bevel pattern	Colors	com.livecode.pi.pattern	TRUE	FALSE	Top bevel fill
+tracks	Tracks	Tracks	com.livecode.pi.text	TRUE	TRUE
+traversalOn	Focus with keyboard	Basic	com.livecode.pi.boolean	TRUE	FALSE
+underlineLinks	Underline links	Colors	com.livecode.pi.boolean	TRUE	FALSE		TRUE
+vGrid	Vertical grid	Table	com.livecode.pi.boolean	TRUE	FALSE
+visible	Visible	Basic	com.livecode.pi.boolean	TRUE	FALSE		TRUE
+visitedIcon	Visited icon	Icons	com.livecode.pi.imageid	TRUE	FALSE		0
+vScrollbar	Vertical scrollbar	Basic	com.livecode.pi.boolean	TRUE	FALSE		FALSE
+width	Width	Position	com.livecode.pi.integer	TRUE	FALSE					1		1
+windowShape	Shape	Basic	com.livecode.pi.imageID	TRUE	FALSE
+zoom	Zoom	Quicktime	com.livecode.pi.number	TRUE	FALSE		0

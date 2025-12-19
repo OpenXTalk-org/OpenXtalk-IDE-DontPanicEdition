@@ -1,0 +1,145 @@
+<package version="0.0">
+  <name>org.openxtalk.hh.svgtext</name>
+  <title>hhSVGT</title>
+  <author>Hermann Hoch</author>
+  <version>1.5.3</version>
+  <license>community</license>
+  <type>widget</type>
+  <requires name="com.livecode.engine"/>
+  <requires name="com.livecode.canvas"/>
+  <requires name="com.livecode.math"/>
+  <requires name="com.livecode.widget"/>
+  <requires name="com.livecode.arithmetic"/>
+  <requires name="com.livecode.array"/>
+  <requires name="com.livecode.list"/>
+  <requires name="com.livecode.logic"/>
+  <requires name="com.livecode.string"/>
+  <requires name="com.livecode.binary"/>
+  <requires name="com.livecode.char"/>
+  <requires name="com.livecode.byte"/>
+  <requires name="com.livecode.type"/>
+  <requires name="com.livecode.mathfoundation"/>
+  <requires name="com.livecode.typeconvert"/>
+  <metadata key="preferredSize">250,250</metadata>
+  <metadata key="svgicon">M0 63.5 C 0 127,0 127,127.5 127 C 255 127,255 127,255 63.5 C 255 0,255 0,127.5 0 C 0 0,0 0,0 63.5 M56.592 35.258 C 56.731 35.398,57.150 38.209,57.522 41.506 C 58.198 47.5,58.198 47.5,49.849 47.5 C 37.518 47.5,32.093 50.569,34.958 55.922 C 35.546 57.021,40.107 60.027,45.094 62.603 C 51.827 66.080,54.806 68.261,56.670 71.077 C 61.307 78.084,59.616 87.141,52.682 92.429 C 46.986 96.774,41.421 98.186,27.802 98.743 C 13.439 99.330,14.740 100.111,13.657 90.250 C 13.190 86,13.190 86,22.575 86 C 32.881 86,39.467 84.146,40.286 81.015 C 41.224 77.426,38.562 74.537,30.595 70.5 C 21.440 65.861,17.639 62.467,15.985 57.455 C 14.358 52.524,15.503 47.635,19.299 43.312 C 23.310 38.744,29.302 36.054,37.854 34.981 C 43.510 34.272,55.787 34.454,56.592 35.258 M85.410 56 C 90.240 68.101,94.554 78.224,94.995 78.497 C 95.437 78.770,99.705 69.207,104.480 57.247 C 109.255 45.286,113.477 35.171,113.862 34.769 C 114.823 33.765,128.013 38.153,127.945 39.454 C 127.915 40.029,122.173 53.550,115.185 69.5 C 102.480 98.5,102.480 98.5,94.667 98.5 C 86.854 98.5,86.854 98.5,74.025 69 C 66.969 52.775,61.388 39.301,61.623 39.059 C 61.993 38.676,74.526 34.372,76.064 34.1 C 76.374 34.045,80.579 43.9,85.410 56 M182.364 39.640 C 183.526 48.119,183.981 47.640,174.146 48.278 C 156.948 49.392,147 56.598,147 67.941 C 147 76.548,153.398 83.740,163 85.926 C 171.297 87.816,170.898 88.285,171.216 76.250 C 171.5 65.5,171.5 65.5,178.847 65.5 C 186.194 65.5,186.194 65.5,186.051 81.463 C 185.973 90.242,185.664 97.667,185.366 97.963 C 184.366 98.953,165.549 98.256,159.490 97.004 C 141.973 93.384,131.031 81.750,131.010 66.718 C 130.991 53.775,137.532 45.106,151.844 39.105 C 158.902 36.145,163.822 35.242,173.614 35.110 C 181.728 35,181.728 35,182.364 39.640 M245 41.5 C 245 48,245 48,234.5 48 C 224 48,224 48,224 73 C 224 98,224 98,215.891 98 C 207.783 98,207.783 98,208.024 83.250 C 208.156 75.138,208.205 63.888,208.132 58.250 C 208 48,208 48,197.5 48 C 187 48,187 48,187 42.167 C 187 38.958,187.3 36.033,187.667 35.667 C 188.033 35.3,201.083 35,216.667 35 C 245 35,245 35,245 41.5Z</metadata>
+  <property name="widgetVersion" get="string"/>
+  <property name="iAmDown" get="boolean" set="boolean"/>
+  <metadata key="iAmDown.user_visible">false</metadata>
+  <property name="iAmUp" get="boolean" set="boolean"/>
+  <metadata key="iAmUp.user_visible">false</metadata>
+  <property name="truePathBounds" get="string"/>
+  <metadata key="truePathBounds.user_visible">false</metadata>
+  <property name="svgFontName" get="string" set="string"/>
+  <metadata key="svgFontName.editor">com.livecode.pi.enum</metadata>
+  <metadata key="svgFontName.options">A = Aclonica,B = Bitstream VeraMono,C = Comfortaa</metadata>
+  <property name="resetAllSliders" get="boolean" set="boolean"/>
+  <metadata key="resetAllSliders.editor">com.livecode.pi.boolean</metadata>
+  <property name="fillColor" get="string" set="string"/>
+  <metadata key="fillColor.section">Colors</metadata>
+  <metadata key="fillColor.editor">com.livecode.pi.colorwithalpha</metadata>
+  <property name="strokeColor" get="string" set="string"/>
+  <metadata key="strokeColor.section">Colors</metadata>
+  <metadata key="strokeColor.editor">com.livecode.pi.colorwithalpha</metadata>
+  <property name="pushColor" get="string" set="string"/>
+  <metadata key="pushColor.section">Colors</metadata>
+  <metadata key="pushColor.editor">com.livecode.pi.colorwithalpha</metadata>
+  <property name="showHilite" get="boolean" set="boolean"/>
+  <metadata key="showHilite.section">Colors</metadata>
+  <property name="hiliteNow" get="boolean" set="boolean"/>
+  <metadata key="hiliteNow.section">Colors</metadata>
+  <property name="svgText" get="string" set="string"/>
+  <metadata key="svgText.section">Contents</metadata>
+  <metadata key="svgText.editor">com.livecode.pi.string</metadata>
+  <property name="svgTextPath" get="any" set="string"/>
+  <metadata key="svgTextPath.section">Contents</metadata>
+  <metadata key="svgTextPath.editor">com.livecode.pi.text</metadata>
+  <property name="inputPathInstructions" get="boolean" set="boolean"/>
+  <metadata key="inputPathInstructions.section">Contents</metadata>
+  <metadata key="inputPathInstructions.editor">com.livecode.pi.boolean</metadata>
+  <property name="pathRotate" get="number" set="number"/>
+  <metadata key="pathRotate.user_visible">false</metadata>
+  <property name="pathAngle" get="number" set="number"/>
+  <metadata key="pathAngle.editor">com.livecode.pi.number</metadata>
+  <metadata key="pathAngle.min">0</metadata>
+  <metadata key="pathAngle.max">360</metadata>
+  <metadata key="pathAngle.step">1</metadata>
+  <metadata key="pathAngle.default">0</metadata>
+  <property name="pathAngleX" get="number" set="number"/>
+  <metadata key="pathAngleX.editor">com.livecode.pi.number</metadata>
+  <metadata key="pathAngleX.min">0</metadata>
+  <metadata key="pathAngleX.max">360</metadata>
+  <metadata key="pathAngleX.step">1</metadata>
+  <metadata key="pathAngleX.default">0</metadata>
+  <property name="pathAngleY" get="number" set="number"/>
+  <metadata key="pathAngleY.editor">com.livecode.pi.number</metadata>
+  <metadata key="pathAngleY.min">0</metadata>
+  <metadata key="pathAngleY.max">360</metadata>
+  <metadata key="pathAngleY.step">1</metadata>
+  <metadata key="pathAngleY.default">0</metadata>
+  <property name="pathScaleX" get="number" set="number"/>
+  <metadata key="pathScaleX.editor">com.livecode.pi.number</metadata>
+  <metadata key="pathScaleX.min">-3</metadata>
+  <metadata key="pathScaleX.max">3</metadata>
+  <metadata key="pathScaleX.step">0.1</metadata>
+  <metadata key="pathScaleX.default">1</metadata>
+  <property name="pathRotateX" get="boolean" set="boolean"/>
+  <property name="pathRotateY" get="boolean" set="boolean"/>
+  <property name="pathScaleY" get="number" set="number"/>
+  <metadata key="pathScaleY.editor">com.livecode.pi.number</metadata>
+  <metadata key="pathScaleY.min">-3</metadata>
+  <metadata key="pathScaleY.max">3</metadata>
+  <metadata key="pathScaleY.step">0.1</metadata>
+  <metadata key="pathScaleY.default">1</metadata>
+  <property name="pathTranslateX" get="number" set="number"/>
+  <metadata key="pathTranslateX.editor">com.livecode.pi.number</metadata>
+  <metadata key="pathTranslateX.min">-64</metadata>
+  <metadata key="pathTranslateX.max">64</metadata>
+  <metadata key="pathTranslateX.step">2</metadata>
+  <metadata key="pathTranslateX.default">0</metadata>
+  <property name="pathTranslateY" get="number" set="number"/>
+  <metadata key="pathTranslateY.editor">com.livecode.pi.number</metadata>
+  <metadata key="pathTranslateY.min">-64</metadata>
+  <metadata key="pathTranslateY.max">64</metadata>
+  <metadata key="pathTranslateY.step">2</metadata>
+  <metadata key="pathTranslateY.default">0</metadata>
+  <property name="resizeProportional" get="boolean" set="boolean"/>
+  <property name="grabMe" get="boolean" set="boolean"/>
+  <property name="usePatternFill" get="boolean" set="boolean"/>
+  <metadata key="usePatternFill.section">Colors</metadata>
+  <property name="scalePattern" get="boolean" set="boolean"/>
+  <metadata key="scalePattern.section">Colors</metadata>
+  <property name="usePatternStroke" get="boolean" set="boolean"/>
+  <metadata key="usePatternStroke.section">Colors</metadata>
+  <property name="builtInImg" get="string" set="string"/>
+  <metadata key="builtInImg.editor">com.livecode.pi.enum</metadata>
+  <metadata key="builtInImg.options">buchenberg.jpg,burg.jpg,gs01.png,gs02.png,gs03.png,gs04.png,gs05.png,gs06.png,gs07.png,gs08.png,gs09.png,gs10.png,gs11.png,gs12.png,patt01.jpg,patt02.jpg,water.jpg</metadata>
+  <metadata key="builtInImg.section">Colors</metadata>
+  <property name="filename" get="string" set="string"/>
+  <metadata key="filename.editor">com.livecode.pi.file</metadata>
+  <metadata key="filename.section">Colors</metadata>
+  <property name="fill" get="boolean" set="boolean"/>
+  <metadata key="fill.section">Colors</metadata>
+  <property name="stroke" get="boolean" set="boolean"/>
+  <metadata key="stroke.section">Colors</metadata>
+  <property name="strokeWidth" get="number" set="number"/>
+  <metadata key="strokeWidth.editor">com.livecode.pi.number</metadata>
+  <metadata key="strokeWidth.min">1</metadata>
+  <metadata key="strokeWidth.max">32</metadata>
+  <metadata key="strokeWidth.step">1</metadata>
+  <metadata key="strokeWidth.default">2</metadata>
+  <metadata key="strokeWidth.section">Colors</metadata>
+  <property name="useShadow" get="boolean" set="boolean"/>
+  <metadata key="useShadow.section">Colors</metadata>
+  <handler name="OnCreate" parameters="" return="any"/>
+  <handler name="OnSave" parameters="out array" return="any"/>
+  <handler name="OnLoad" parameters="in array" return="any"/>
+  <handler name="OnPaint" parameters="" return="any"/>
+  <handler name="OnTimer" parameters="" return="any"/>
+  <handler name="OnMouseUp" parameters="" return="any"/>
+  <handler name="OnMouseEnter" parameters="" return="any"/>
+  <handler name="OnMouseLeave" parameters="" return="any"/>
+  <handler name="OnMouseRelease" parameters="" return="any"/>
+  <handler name="OnMouseDown" parameters="" return="any"/>
+  <handler name="setScaleY" parameters="in number" return="nothing"/>
+  <handler name="setSVGFontName" parameters="in string" return="any"/>
+</package>
