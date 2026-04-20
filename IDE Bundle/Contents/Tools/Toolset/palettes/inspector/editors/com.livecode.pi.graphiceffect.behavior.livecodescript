@@ -1,9 +1,8 @@
-﻿script "com.livecode.pi.graphiceffect.behavior" with behavior "revInspectorEditorBehavior"
+﻿script "com.livecode.pi.graphiceffect.behavior"
 local sPopupDefaults
 
 on editorInitialize
-   set the editorMinWidth of me to 30
-   set the editorMinHeight of me to 200
+   set the editorMinWidth of me to 25
    set the editorMaxWidth of me to 0
    
    local tPopupData, tDefaultStore
@@ -186,3 +185,11 @@ on toggleStore
    editorUpdate
    updateProperty
 end toggleStore
+
+
+before closestack
+   try
+      set the destroystack of this stack to true
+   catch e
+   end try
+end closestack

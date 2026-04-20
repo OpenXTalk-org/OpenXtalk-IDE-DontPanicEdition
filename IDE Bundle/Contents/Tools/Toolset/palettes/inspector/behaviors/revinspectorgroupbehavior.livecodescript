@@ -136,6 +136,32 @@ setprop rowLabel pLabel
       set the width of field "rowlabel" of me to the formattedwidth of field "rowlabel" of me
       set the height of field "rowlabel" of me to the number of lines in pLabel * kLabelHeight
       set the topleft of field "rowlabel" of me to tTopLeft
+      --- REMOVED was interfering with darkMode appearance switching -- 3/20/26 Paul McClernan
+      --      try
+      --         -- we attempt to set the colours of each section on the inspector
+      --         -- requested by Richmond62 on 9-3-2025
+      --         put the cInspectorLabelColor of stack "revPreferences" into tLabelColour
+      --         if tLabelColour is "" then
+              set the textcolor of field "rowlabel" of me to ""
+      --         else
+      --            set the textcolor of field "rowlabel" of me to tLabelColour
+      --         end if
+      --      catch e
+      --      end try
+      
+      -- we attempt to make the text style bold of each section of the inspector
+      -- if that's turned on in preferences (Requested by Richmond 9-3-2025)
+      if the cInspectorLabelBold of stack "revPreferences" is true then
+         set the textstyle of field "rowlabel" of me to "bold"
+      else
+         set the textstyle of field "rowlabel" of me to "plain"
+      end if
+      -- we might also need to change font size too
+      if the cInspectorLabelSize of stack "revPreferences" is not "" then
+         set the textsize of field "rowlabel" of me to the cInspectorLabelSize of stack "revPreferences"
+      else
+         set the textsize of field "rowlabel" of me to ""
+      end if
    end if
 end rowLabel
 

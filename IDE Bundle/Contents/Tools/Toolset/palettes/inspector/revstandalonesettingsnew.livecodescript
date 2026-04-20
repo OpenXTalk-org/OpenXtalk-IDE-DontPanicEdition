@@ -3,49 +3,34 @@ local sSelectedStack
 
 on preOpenStack
    local tSelected
-   if there is a stack "revPropertyPopup strokeGradient" then
-      stop using stack "revPropertyPopup strokeGradient"
-      close stack "revPropertyPopup strokeGradient"
-      delete stack "revPropertyPopup strokeGradient"
-      send ("delete stack "& quote & "revPropertyPopup strokeGradient" & quote ) to stack "Home"
-      put "stack removed from memory:" & not(there is a stack "revPropertyPopup strokeGradient")
-   end if
-   if there is a stack "revPropertyPopup fillGradient" then
-      stop using stack "revPropertyPopup fillGradient"
-      close stack "revPropertyPopup fillGradient"
-      delete stack "revPropertyPopup fillGradient"
-      send ("delete stack "& quote & "revPropertyPopup fillGradient" & quote ) to stack "Home"
-      put "stack removed from memory:" & not(there is a stack "revPropertyPopup fillGradient")
-   end if
-
    put revIDESelectedObjects() into tSelected
    if tSelected is empty then
       exit preOpenStack
    end if
-
+   
    put revIDEStackOfObject(line 1 of tSelected) into sSelectedStack
-
+   
    if the cRevStandaloneSettings of sSelectedStack is empty then
       dispatch "revDefaultStandaloneSettings" to stack "revSBLibrary" with sSelectedStack
    end if
-
+   
    inspectorTitleUpdate
-
+   
    # Set the inspector behaviour
    dispatch "setAsBehavior" to revIDEInspectorBehavior() with the long id of me
 end preOpenStack
 
-on openStack
+on openStack   
    lock screen
    # Register of IDE messages
    revIDESubscribe "ideSelectedObjectChanged"
    inspectorMessagesRegister
-
+   
    set the navigationDisplayStyle of me to "names"
-
+   
    # Get a list of the properties and groups we'll be displaying
    set the inspectorData of me to revIDEStandaloneSettingsInfo()
-
+   
    set the visible of me to true
    unlock screen
 end openStack
@@ -80,10 +65,10 @@ on inspectorMessagesDeRegister
    revIDEUnsubscribe "ideNewStack"
    revIDEUnsubscribe "ideCloseStack"
    revIDEUnsubscribe "ideNameChanged"
-end inspectorMessagesDeRegister
+end inspectorMessagesDeRegister 
 
 private on inspectorTitleUpdate
-   if sSelectedStack is empty or not exists(sSelectedStack) then
+   if sSelectedStack is empty or not exists(sSelectedStack) then 
       set the title of me to "No stack selected"
    else
       set the title of me to the name of sSelectedStack
@@ -106,11 +91,11 @@ end ideNameChanged
 
 on ideInspectObjects pStack
    put pStack into sSelectedStack
-
+   
    if the cRevStandaloneSettings of sSelectedStack is empty then
       dispatch "revDefaultStandaloneSettings" to stack "revSBLibrary" with sSelectedStack
    end if
-
+   
    # Get a list of the properties and groups we'll be displaying
    set the inspectorData of me to revIDEStandaloneSettingsInfo()
    inspectorTitleUpdate
@@ -133,7 +118,7 @@ on ideSelectedObjectChanged
    # Timing the performance of the inspector
    local tStartTime
    put the milliseconds into tStartTime
-
+   
    # Get the selected objects
    local tSelectedStack
    put revIDEStackOfObject(line 1 of revIDESelectedObjects()) into tSelectedStack
@@ -142,25 +127,25 @@ on ideSelectedObjectChanged
       inspectorClear
       exit ideSelectedObjectChanged
    end if
-
+   
    ideInspectObjects tSelectedStack
 end ideSelectedObjectChanged
 
 on idePreferenceChanged pPreference, pValue
    switch pPreference
       case "idePropertyInspector_labels"
-
+         
          break
    end switch
 end idePreferenceChanged
-
+   
 
 # Sent by the IDE when a property has changed
 on revIDEPropertyChanged
    # Get values for properties in given group
-
+   
    # Set values for all editors
-
+   
    # Layout
 end revIDEPropertyChanged
 
@@ -168,7 +153,7 @@ getProp displayData
    local tSettingsA, tSectionName
    put inspectorSectionGetName() into tSectionName
    put revIDEStandaloneSettings(sSelectedStack, tSectionName) into tSettingsA
-
+   
    # Handle the disabled / enabled state of editors
    local tBuildFor
    switch tSectionName
@@ -178,7 +163,7 @@ getProp displayData
          set the rowEnabled of group "Inclusion Options" of me to tInclusions
          set the rowEnabled of group "Script Libraries" of me to tInclusions
          set the rowEnabled of group "Database Drivers" of me to tInclusions
-
+         
          // TODO : Property profiles
          break
       case "Stacks"
@@ -237,7 +222,7 @@ function inspectorSectionIcon pSection
 end inspectorSectionIcon
 
 function revStandaloneSettingsStackFiles
-
+   
 end revStandaloneSettingsStackFiles
 
 function revStandaloneSettingsRelativePath pPath
@@ -245,16 +230,16 @@ function revStandaloneSettingsRelativePath pPath
 end revStandaloneSettingsRelativePath
 
 on inspectorAddActions
-   addFrameItem "inspectorTarget", "header", "action", "Select stack to inspect", "bullseye", "bullseye", "inspectorTreeMenuDisplay", the long id of me
+   addFrameItem "inspectorTarget", "header", "action", "Select stack to inspect", "bullseye", "bullseye", "inspectorTreeMenuDisplay", the long id of me 
 end inspectorAddActions
 
 on inspectorTreeMenuDisplay
    local tDefaultStack
    local tOpenStacks, tStacks
-
+   
    global gREVShowStacks
    put the defaultStack into tDefaultStack
-
+   
    # Create the button that we're going to popup on this stack
    set the defaultstack to me
    lock messages
@@ -265,9 +250,9 @@ on inspectorTreeMenuDisplay
    set the visible of button "inspectMenu" of me to false
    set the script of button "inspectMenu" of me to "on menuPick pItem;send" && quote & "menuPick pItem" & quote && "to this stack; end menuPick"
    unlock messages
-
+   
    set the defaultStack to tDefaultStack
-
+   
    if gREVShowStacks then put the openStacks into tOpenStacks
    else put revFilterStacksList(the openStacks) into tOpenStacks
    put empty into tStacks
@@ -280,9 +265,9 @@ on inspectorTreeMenuDisplay
    end repeat
    delete last char of tStacks
    sort lines of tStacks by item 2 of each
-
+   
    set the text of button "inspectMenu" of this stack to tStacks
-
+   
    popup button "inspectMenu" of this stack at the mouseloc
 end inspectorTreeMenuDisplay
 

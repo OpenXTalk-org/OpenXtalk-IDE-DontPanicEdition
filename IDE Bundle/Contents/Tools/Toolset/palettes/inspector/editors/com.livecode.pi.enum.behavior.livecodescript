@@ -1,4 +1,4 @@
-﻿script "com.livecode.pi.enum.behavior"
+﻿script "com.livecode.pi.enum.behavior" with behavior "revInspectorEditorBehavior"
 constant kEffectiveTextColor = "100,100,100"
 global gRevLanguageNames
 
@@ -17,6 +17,7 @@ on editorInitialize
       end if
    end repeat
    set the text of button "pulldown" of me to tOptions
+
 end editorInitialize
 
 on editorUpdate
@@ -63,6 +64,9 @@ on editorUpdate
    else
       set the textcolor of button "pulldown" of me to empty
       set the textstyle of button "pulldown" of me to empty
+      -- prevents pulldown / popup menus on mac inspector from losing their text colour on MacOS (tperry 16-10-2025)
+      --if the platform contains "mac" then set the foregroundColor of button "pulldown" of me to black
+      
    end if
    unlock messages
    unlock screen

@@ -1,9 +1,9 @@
 Property : optional getter : optional setter	Label	Section	Editor	User Visible	Read Only	Group	Default	Options	Subsection	min	max	step
-type	graphic tool											
-title	Polygon Graphic											
+type	graphic											
+title	Arrow Graphic											
 												
 -----	-----	-----	-----	-----	-----	-----	-----	-----	-----	-----	-----	-----
-name							Polygon					
+name							Arrow					
 label
 tooltip												
 style							polygon	rectangle,roundrect,line,oval,regular,line,curve,polygon				
@@ -16,7 +16,7 @@ lineSize							1
 dashes												
 startArrow							false					
 endArrow							false					
-points		Basic					0,0\n100,100							
+points		Basic					65,110\n217,110\n217,45\n345,142\n217,239\n217,174\n65,174\n65,110							
 markerDrawn							false					
 markerLineSize							1					
 markerFilled							false					

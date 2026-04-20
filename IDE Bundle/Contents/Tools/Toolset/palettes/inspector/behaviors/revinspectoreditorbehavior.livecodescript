@@ -151,6 +151,7 @@ on editorPopupMenu pMenuText, pLoc
    set the menumode of button "inspectMenu" of me to "popup"
    set the visible of button "inspectMenu" of me to false
    set the text of button "inspectMenu" of me to pMenuText
+   
    unlock messages
    unlock screen
    

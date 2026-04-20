@@ -12,9 +12,9 @@ showName							false
 text	Tabs (one per line)			true			Tab 1\nTab 2\nTab 3
 layerMode
 behavior
-foregroundColor						Text fill	gray50
+foregroundColor						Text fill	127,127,127
 foregroundPattern						Text fill
-backgroundColor							black		
+backgroundColor							0,179,0
 backgroundPattern
 hiliteColor
 hilitePattern

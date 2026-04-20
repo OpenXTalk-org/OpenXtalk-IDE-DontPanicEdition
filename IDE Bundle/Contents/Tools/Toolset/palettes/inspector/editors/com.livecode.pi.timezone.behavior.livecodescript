@@ -88,7 +88,7 @@ on editorUpdate
    lock messages
    if tValue is empty then
       set the label of button "pulldown" of me to " "
-      else
+   else
       set the label of button "pulldown" of me to valueToLabel(tValue)
    end if
    set the enabled of me to tEnabled
@@ -96,6 +96,7 @@ on editorUpdate
       set the textcolor of button "pulldown" of me to "150,150,150"
    else
       set the textcolor of button "pulldown" of me to empty
+      if the platform contains "mac" then set the textcolor of button "pulldown" of me to black
    end if
    unlock messages
    unlock screen

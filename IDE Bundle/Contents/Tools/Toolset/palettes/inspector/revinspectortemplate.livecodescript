@@ -9,75 +9,33 @@ on preOpenStack
    revIDESubscribe "idePropertyChanged",sSelectedObjects
    inspectorTitleUpdate
    inspectorSetLabelsPreference
-
+   
    # Set the inspector behaviour
    dispatch "setAsBehavior" to revIDEInspectorBehavior() with the long id of me
 end preOpenStack
 
-on openStack
+on openStack   
    lock screen
+   
    # Register of IDE messages
    revIDESubscribe "idePreferenceChanged:idePropertyInspector_labels"
+   
    # Get a list of the properties and groups we'll be displaying
    set the inspectorData of me to revIDEPropertiesInfo(sSelectedObjects)
    unlock screen
+   
    set the visible of me to true
 end openStack
 
 on closeStack
    ## Unsubscribe from all messages
    revIDEUnsubscribe "idePreferenceChanged:idePropertyInspector_labels"
-   closeAllPopUps
+   
    set the cSelectedObjects of me to empty
+   
    # Unlock
    put false into sInspectorLock
 end closeStack
-
-on closeAllPopUps  -- popupDismiss
-   lock screen
-   if there is a stack "revPropertyPopup strokeGradient" then
-      stop using stack "revPropertyPopup strokeGradient"
-      close stack "revPropertyPopup strokeGradient"
-      delete stack "revPropertyPopup strokeGradient"
-      send ("delete stack "& quote & "revPropertyPopup strokeGradient" & quote ) to stack "Home"
-      -- put "stack strokeGradient removed from memory:" & not(there is a stack "revPropertyPopup strokeGradient")
-   end if
-   if there is a stack "revPropertyPopup fillGradient" then
-      stop using stack "revPropertyPopup fillGradient"
-      close stack "revPropertyPopup fillGradient"
-      delete stack "revPropertyPopup fillGradient"
-      send ("delete stack "& quote & "revPropertyPopup fillGradient" & quote ) to stack "Home"
-      -- put "stack fillGradient removed from memory:" & not(there is a stack "revPropertyPopup fillGradient")
-   end if
-   if there is a stack "revPropertyPopup dropShadow" then
-      stop using stack "revPropertyPopup dropShadow"
-      close stack "revPropertyPopup dropShadow"
-      delete stack "revPropertyPopup dropShadow"
-      send ("delete stack "& quote & "revPropertyPopup dropShadow" & quote ) to stack "Home"
-      -- put "stack strokeGradient removed from memory:" & not(there is a stack "revPropertyPopup strokeGradient")
-   end if
-   if there is a stack "revPropertyPopup innerShadow" then
-      stop using stack "revPropertyPopup innerShadow"
-      close stack "revPropertyPopup innerShadow"
-      delete stack "revPropertyPopup innerShadow"
-      send ("delete stack "& quote & "revPropertyPopup innerShadow" & quote ) to stack "Home"
-      -- put "stack fillGradient removed from memory:" & not(there is a stack "revPropertyPopup fillGradient")
-   end if
-   if there is a stack "revPropertyPopup outerGlow" then
-      stop using stack "revPropertyPopup outerGlow"
-      close stack "revPropertyPopup outerGlow"
-      delete stack "revPropertyPopup outerGlow"
-      send ("delete stack "& quote & "revPropertyPopup outerGlow" & quote ) to stack "Home"
-      -- put "stack fillGradient removed from memory:" & not(there is a stack "revPropertyPopup fillGradient")
-   end if
-   if there is a stack "revPropertyPopup innerGlow" then
-      stop using stack "revPropertyPopup innerGlow"
-      close stack "revPropertyPopup innerGlow"
-      delete stack "revPropertyPopup innerGlow"
-      send ("delete stack "& quote & "revPropertyPopup innerGlow" & quote ) to stack "Home"
-      -- put "stack fillGradient removed from memory:" & not(there is a stack "revPropertyPopup fillGradient")
-   end if
-end closeAllPopUps
 
 on resizeStack
    resizeInspector
@@ -87,37 +45,45 @@ end resizeStack
 #### PI PROPERTIES #####
 #####################
 setProp cSelectedObjects pSelectedObjects
-   if pSelectedObjects is sSelectedObjects then
+   if pSelectedObjects is sSelectedObjects then 
       exit cSelectedObjects
    end if
-
+   
    if the cLocked of me then
       exit cSelectedObjects
    end if
-   # Unsubscribe the the objects previously
+   
+   # Unsubscribe the the objects previously 
    revIDEUnsubscribe "idePropertyChanged","",sSelectedObjects
+   
    lock screen
+   
    inspectorClear
+   
    put pSelectedObjects into sSelectedObjects
-
+   
    # Keep track of the object 'types' in case they are changed via PI
    put ideObjectTypesFromObjectList(pSelectedObjects) into sObjectTypes
-   if pSelectedObjects is empty then
+   
+   if pSelectedObjects is empty then 
       inspectorTitleUpdate
       set the inspectorData of me to empty
-      closeAllPopUps
       exit cSelectedObjects
    end if
+   
    revIDESubscribe "idePropertyChanged", pSelectedObjects
-
+   
    # Get a list of the properties and groups we'll be displaying
    set the inspectorData of me to revIDEPropertiesInfo(pSelectedObjects)
+   
    inspectorTitleUpdate
+   
    get pSelectedObjects is not revIDESelectedObjects()
    put it into sInspectorLock
    toggleFrameItem "inspectorLock", it
+   
    unlock screen
-
+   
    set the visible of me to true
 end cSelectedObjects
 
@@ -160,8 +126,17 @@ local sPropertyChangedMsg
 
 on idePropertyChanged
    cancel sPropertyChangedMsg
-   send "__IdePropertyChanged" to me in 200 milliseconds
+   if not (the pendingmessages contains "IdePropertyChanged") then send "__IdePropertyChanged" to me in 200 milliseconds -- tperry, 28-11-23 (stops it being sent recursively)
    put the result into sPropertyChangedMsg
+   
+   -- tperry 28-11-23 (added this behaviour for my Properties Inspector)
+     if there is a window "Properties Inspector" then
+       if there is a fld "tObj" of cd 1 of wd "Properties Inspector" then
+         if exists (pObjects) then
+           if not (the pendingmessages contains "tGetSelectedObj") then send tGetSelectedObj to stack "Properties Inspector"
+           end if
+       end if
+     end if 
 end idePropertyChanged
 
 on __IdePropertyChanged
@@ -183,8 +158,9 @@ on inspectorTreeMenuDisplay
    local tObjects, tStack, tDefaultStack
    local tHandlers, tSendMessageList, tLockInspector, tFocusedObject
    put sSelectedObjects into tObjects
+   
    put the defaultStack into tDefaultStack
-
+   
    # Create the button that we're going to popup on this stack
    set the defaultstack to me
    lock messages
@@ -194,13 +170,14 @@ on inspectorTreeMenuDisplay
    set the menumode of button "inspectMenu" of me to "popup"
    set the visible of button "inspectMenu" of me to false
    set the script of button "inspectMenu" of me to "on menuPick pItem;send" && quote & "menuPick pItem" & quote && "to this stack; end menuPick"
+   
    unlock messages
-
+   
    local tInspect
    put "Inspect" & cr into tInspect
-
+   
    put revIDEObjectSelectionMenu(tObjects, "") after tInspect
-
+   
    if the num of lines in tObjects = 1 then
       put the cREVGeneral["handlerList"] of tObjects into tHandlers
       if the cSort of stack "revPreferences" then sort lines of tHandlers
@@ -214,16 +191,16 @@ on inspectorTreeMenuDisplay
          delete last char of tSendMessageList
       end if
    else put "(Send Message" into tSendMessageList
-
+   
    if the cREVLinked of this stack is not empty
    then put "!cLock Inspector" into tLockInspector
    else put "!nLock Inspector" into tLockInspector
-
+   
    set the text of button "inspectMenu" of this stack to tInspect & return & "-" \
          & return & tSendMessageList
-
+   
    popup button "inspectMenu" of this stack at the mouseloc
-
+   
    set the defaultStack to tDefaultStack
 end inspectorTreeMenuDisplay
 
@@ -233,7 +210,7 @@ on menuPick pWhich
    if word 1 of tFocusedObject is "field" \
          and revIDEStackOfObject(tFocusedObject) is the short name of this stack
    then send "closeField" to tFocusedObject
-
+   
    put sSelectedObjects into tObjects
    set the itemDel to "|"
    switch item 1 of pWhich
@@ -247,7 +224,7 @@ on menuPick pWhich
 end menuPick
 
 private on inspectorTitleUpdate
-   if sSelectedObjects is empty then
+   if sSelectedObjects is empty then 
       set the title of me to "No object selected"
    else if the number of lines of sSelectedObjects is 1 then
       if exists(sSelectedObjects) then
@@ -287,7 +264,7 @@ on idePreferenceChanged pPreference
          break
    end switch
 end idePreferenceChanged
-
+   
 command inspectorSetLabelsPreference
    local tValue
    put revIDEGetPreference("idePropertyInspector_labels") into tValue
@@ -299,9 +276,9 @@ end inspectorSetLabelsPreference
 # Sent by the IDE when a property has changed
 on revIDEPropertyChanged
    # Get values for properties in given group
-
+   
    # Set values for all editors
-
+   
    # Layout
 end revIDEPropertyChanged
 
@@ -310,11 +287,11 @@ getProp displayData
 end displayData
 
 getProp viewColumns [pSection]
-   return 2
+   return 1
 end viewColumns
 
 getProp showSubSections [pSection]
-   return false -- true ?
+   return false
 end showSubSections
 
 function inspectorSectionIcon pSection
@@ -323,12 +300,12 @@ end inspectorSectionIcon
 
 # Add to header actions/preferences
 on inspectorAddActions
-   addFrameItem "inspectorTarget", "header", "action", "Select object to inspect", "bullseye", "bullseye", "inspectorTreeMenuDisplay", the long id of me
+   addFrameItem "inspectorTarget", "header", "action", "Select object to inspect", "bullseye", "bullseye", "inspectorTreeMenuDisplay", the long id of me 
    if sSelectedObjects is not empty then
       addFrameItem "inspectorEditScript","header", "action", "Edit script", "lc-edit-script", "lc-edit-script","inspectorEditScript", the long id of me
    end if
    addFrameItem "inspectorLock","header", "toggle", "Lock inspector", "unlock", "lock","inspectorLock", the long id of me
-   addFrameItem "idePropertyInspector_labels", "header", "preference", "Property Labels", "enum","false:Description of option,true:Name of property", "inspectorPropLabelsPrefChanged", the long id of me
+   addFrameItem "idePropertyInspector_labels", "header", "preference", "Property Labels", "enum","false:Description of option,true:Name of OXT property", "inspectorPropLabelsPrefChanged", the long id of me
 end inspectorAddActions
 
 on inspectorPropLabelsPrefChanged pPref, pValue
@@ -350,7 +327,7 @@ on rawKeyDown pKeyNum
          ## end
          if the target contains "field" then pass rawKeyDown
          set the vScroll of group "inspector" of me to \
-               the formattedHeight of group "inspector" of me - the height of group "inspector" of me
+               the formattedHeight of group "inspector" of me - the height of group "inspector" of me 
          break
       case "65365"
          set the vScroll of group "inspector" of me to \
@@ -374,3 +351,4 @@ on rawKeyDown pKeyNum
          pass rawKeyDown
    end switch
 end rawKeyDown
+

@@ -1,4 +1,4 @@
-﻿script "com.livecode.pi.point.behavior" with behavior "revInspectorEditorBehavior"
+﻿script "com.livecode.pi.point.behavior"
 local sMax, sMin
 
 constant kFieldWidth = 100
@@ -68,10 +68,8 @@ on editorUpdate
    if tConflicted then
       set the backcolor of field "x" of me to kConflictedFieldColor
       set the backcolor of field "y" of me to kConflictedFieldColor
-      --      put empty into field "x" of me
-      --      put empty into field "y" of me
-      put item 1 of tValue + 0 into field "x" of me
-      put item 2 of tValue + 0 into field "y" of me
+      put empty into field "x" of me
+      put empty into field "y" of me
    else
       set the backcolor of field "x" of me to empty
       set the backcolor of field "y" of me to empty
@@ -108,13 +106,6 @@ on openField
       lock messages
       put empty into field "x" of me
       put empty into field "y" of me
-      # Ensure that when the user types the text is the default color rather than the effective grey
-      set the textcolor of field 1 of me to empty
-      unlock messages
-   else
-      lock messages
-      put 0 into field "x" of me
-      put 0 into field "y" of me
       # Ensure that when the user types the text is the default color rather than the effective grey
       set the textcolor of field 1 of me to empty
       unlock messages

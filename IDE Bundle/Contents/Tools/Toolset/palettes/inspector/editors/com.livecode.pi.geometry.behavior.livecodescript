@@ -3,20 +3,20 @@ on editorInitialize
    set the editorMinWidth of me to 220
    put the editorLabel of me into field "rowlabel" of me
    set the rowShowLabel of me to false
-
+   
    set the cMode of me to "scaling"
-
+   
    -- (edit tperry 4-12-23)
    -- update the geometry graphic, and add support for Linux properly too
-   if the platform contains "Mac" then
+   if the platform contains "Mac" then 
       set the icon of btn "Window" to 210117
       set the top of btn "window" to 104
    end if
-   if the platform contains "win" then
+   if the platform contains "win" then 
       set the icon of btn "Window" to 210116
       set the top of btn "Window" to 102
    end if
-   if the platform contains "linux" then
+   if the platform contains "linux" then 
       set the icon of btn "Window" to 210118
       set the top of btn "Window" to 104
    end if
@@ -73,7 +73,7 @@ tValue["maxWidth"] - <number>
 function buttonNameToKey pButtonName
    local tPosition
    put word 1 of pButtonName into tPosition
-
+   
    local tKey
    if sMode is "scaling" then
       put "scale" & tPosition into tKey
@@ -91,41 +91,41 @@ on editorUpdate
    lock screen
    local tValue
    put the editorValue["geometry"] of me into tValue
-
+   
    lock messages
    local tObjectId, tObjectName
-
+   
    local tPositions
    if sMode is "scaling" then
       put "Bottom,Left,Top,Right" into tPositions
    else
       put "Bottom, Right" into tPositions
    end if
-
+   
    local tKey, tPosition
    repeat for each item tPosition in "Bottom,Left,Top,Right"
       local tCardRelGraphic, tObjRelGraphic
       put the long id of graphic tPosition of group "content" of group "Diagram" of me into tCardRelGraphic
       put the long id of graphic (tPosition && "object") of group (tPosition && "Object") of group "content" of group "Diagram" of me into tObjRelGraphic
-
+      
       put buttonNameToKey(tPosition) into tKey
-
+      
       if tValue[tKey] is true then
          set the backPattern of tObjRelGraphic to the cNoSize of tObjRelGraphic
-
+         
          local tTargetGraphic
          if tValue[tKey &"ObjectRef"] is "card" then
             put tCardRelGraphic into tTargetGraphic
          else
             put tObjRelGraphic into tTargetGraphic
          end if
-
-         if tValue[tKey & "Absolute"] then
+         
+         if tValue[tKey & "Absolute"] then 
             set the backPattern of tTargetGraphic to the cFixed of tTargetGraphic
-         else
+         else 
             set the backPattern of tTargetGraphic to the cProportional of tTargetGraphic
          end if
-
+         
          if tValue[tKey &"ObjectRef"] is not "card" then
             put tValue[tKey & "ObjectRef"] into tObjectId
             put revUniqueIDToName(tObjectId) into tObjectName
@@ -136,12 +136,12 @@ on editorUpdate
          set the backPattern of tObjRelGraphic to the cNoSize of tObjRelGraphic
       end if
    end repeat
-
+   
    set the hilite of button "prevent object clipping text" of group "Geometry Options" of me to (tValue["dontClipText"] is true)
    set the enabled of group "Clipping" of group "Geometry Options" of me to (tValue["dontClipText"] is true)
    set the hilite of button "horizontal scrollbar" of group "Clipping" of group "Geometry Options" of me to (tValue["showHScroll"] is true)
    set the hilite of button "vertical scrollbar" of group "Clipping" of group "Geometry Options" of me to (tValue["showVScroll"] is true)
-
+   
    if sMode is "scaling" then
       put tValue["minWidth"] into fld "minWidth" of group "minmax" of group "Geometry Options" of me
       put tValue["maxWidth"] into fld "maxWidth" of group "minmax" of group "Geometry Options" of me
@@ -153,14 +153,14 @@ on editorUpdate
       put tValue["minTop"] into fld "minHeight" of group "minmax" of group "Geometry Options" of me
       put tValue["maxBottom"] into fld "maxHeight" of group "minmax" of group "Geometry Options" of me
    end if
-
+   
    repeat for each item tItem in "minWidth,maxWidth,minHeight,maxHeight"
       if fld tItem of group "minmax" of group "Geometry Options" of me is not empty then
          put true into tValue["limit"]
          exit repeat
       end if
    end repeat
-
+   
    set the hilite of button "limitsize" of group "Geometry Options" of me to (tValue["limit"] is true)
    set the enabled of grp "minMax" of group "Geometry Options" of me to (tValue["limit"] is true)
    unlock messages
@@ -171,17 +171,17 @@ constant kControlGap = 5
 on editorResize
    set the rect of group "Diagram" of me to the effective rect of group "Diagram" of me
    set the loc of group "Diagram" of me to the loc of me
-
+   
    set the left of field "rowLabel" of me to the left of me
    set the top of field "rowLabel" of me to the top of me
-
+   
    set the left of group "scaleorpos" of me to the left of group "DIagram" of me + kControlGap
    set the top of group "scaleorpos" of me to the bottom of field "rowLabel" of me + kControlGap
-
+   
    set the top of group "Diagram" of me to the bottom of group "scaleorpos" of me + kControlGap
    set the loc of group "content" of group "Diagram" of me to the loc of group "Diagram" of me
    set the bottom of group "content" of group "Diagram" of me to the bottom of group "Diagram" of me
-
+   
    set the loc of group "Geometry Options" of me to the loc of me
    set the top of group "Geometry Options" of me to the bottom of group "DIagram" of me + kControlGap
 end editorResize
@@ -189,10 +189,10 @@ end editorResize
 on mouseUp pButton
    local tTarget
    put the short name of the target into tTarget
-
+   
    local tValue
    put the editorValue["geometry"] of me into tValue
-
+   
    switch tTarget
       case "scaling"
       case "positioning"
@@ -218,8 +218,8 @@ on mouseUp pButton
             local tNames
             put "minWidth,maxWidth,minHeight,maxHeight" into tNames
             repeat for each item tField in tNames
-               put empty into fld tField of group "minMax" of group "Geometry Options" of me
-               send "closeField" to fld tField of group "minMax" of group "Geometry Options" of me
+               put empty into fld tField of group "minMax" of group "Geometry Options" of me 
+               send "closeField" to fld tField of group "minMax" of group "Geometry Options" of me 
             end repeat
          end if
          break
@@ -240,7 +240,7 @@ on mouseDown pButton
    local tTarget, tValue
    put the editorValue["geometry"] of me into tValue
    put the short name of the target into tTarget
-
+   
    if word 1 of the target is "button" then
       switch tTarget
          case "Top Object"
@@ -250,7 +250,7 @@ on mouseDown pButton
             set the cSide of me to word 1 of tTarget
             set the cCurrentButton of me to the long id of the target
             revRefreshContentsOfMenu
-            popup btn "Object name" at the clickLoc
+            popup btn "Object name" at the clickLoc   
             break
          default
             break
@@ -262,10 +262,10 @@ on mouseDown pButton
       else
          local tSide
          put word 1 of the short name of the target into tSide
-
+         
          local tKey
          put buttonNameToKey(tSide) into tKey
-
+         
          local tGraphicID, tObjectRef
          switch tTarget
             case "Top Object"
@@ -278,7 +278,7 @@ on mouseDown pButton
                      exit mouseDown
                   end if
                end if
-
+               
                switch the backPattern of the target
                   case the cNoSize of the target
                      set the backPattern of the target to the cFixed of the target
@@ -338,11 +338,11 @@ on mouseDown pButton
                put the long id of graphic (tSide && "object") of group (tSide && "object") of group "content" of group "Diagram" of me into tGraphicID
                set the backPattern of tGraphicID to the cNoSize of tGraphicID
                break
-            default
+            default 
                break
          end switch
          setValue tValue, tKey
-      end if
+      end if  
    end if
 end mouseDown
 
@@ -350,21 +350,21 @@ on revRefreshContentsOfMenu
    local tCurrentButton, tSelectedObject, tControl, tObject, tStack, tList
    put the editorValue["object"] of me into tObject
    put revIDEStackOfObject(tObject) into tStack
-
+   
    local tDefaultStack
    put the defaultStack into tDefaultStack
    set the defaultStack to tStack
-
+   
    repeat with i = 1 to the number of controls
-      put the cCurrentButton of me into tCurrentButton
-      if the long id of control i is not tObject then
+      put the cCurrentButton of me into tCurrentButton       
+      if the long id of control i is not tObject then 
          local tMenuItem
          if the name of control i is the cSelectedObject of tCurrentButton then
             put "!r" & the name of control i into tMenuItem
          else
             put "!u" & the name of control i into tMenuItem
          end if
-
+         
          if tList is empty then
             put tMenuItem into tList
          else
@@ -372,9 +372,9 @@ on revRefreshContentsOfMenu
          end if
       end if
    end repeat
-
+   
    set the defaultStack to tDefaultStack
-
+   
    set the text of button "Object name" of me to tList
 end revRefreshContentsOfMenu
 
@@ -382,26 +382,26 @@ on menuPick pWhich
    if the short name of the target is "Object Name" then
       local tSide
       put the cSide of me into tSide
-
+      
       local tGraphicLongID
       put the long id of graphic (tSide && "object") of group (tSide && "object") of group "content" of group "Diagram" of me into tGraphicLongID
-
-
+      
+      
       if the backPattern of tGraphicLongID is the cNoSize of tGraphicLongID then
          set the backPattern of tGraphicLongID to the cFixed of tGraphicLongID
-      end if
+      end if   
       set the backPattern of grc tSide of group "content" of group "Diagram" of me to the cNoSize of grc tSide of group "content" of group "Diagram" of me
-
+      
       local tKey
       put buttonNameToKey(tSide) into tKey
-
+      
       local tTrue
       put the backPattern of tGraphicLongID is the cFixed of tGraphicLongID into tTrue
-
+      
       local tValue
       put the editorValue["geometry"] of me into tValue
       put true into tValue[tKey]
-
+      
       if tTrue then
          --fixed scaling
          put true into tValue[tKey & "Absolute"]
@@ -409,23 +409,23 @@ on menuPick pWhich
          --proportional scaling
          put false into tValue[tKey & "Absolute"]
       end if
-      put oppositeSide(tSide) into tValue[tKey & "ObjectSide"]
+      put oppositeSide(tSide) into tValue[tKey & "ObjectSide"] 
       put pWhich into tValue[tKey & "ObjectRef"]
-
+      
       # Adjust menu text
       local tMenuText
       repeat with x = 1 to the number of lines of the text of button "Object name" of me
          if pWhich is line x of button "Object name" of me then
             put "!r" & line x of button "Object name" of me into line x of tMenuText
          else
-            put "!u" & line x of button "Object name" of me into line x of tMenuText
+            put "!u" & line x of button "Object name" of me into line x of tMenuText 
          end if
       end repeat
-
+      
       local tButtonTemp
       put the cCurrentButton of me into tButtonTemp
       set the cObjectList of tButtonTemp to tMenuText
-
+      
       setValue tValue, tKey
    else if the short name of the target is "Squiggle Type" then
       lock screen
@@ -484,10 +484,10 @@ end setValue
 on closeField
    local tFieldValue
    put the text of the target into tFieldValue
-
+   
    local tValue
    put the editorValue["geometry"] of me into tValue
-
+   
    switch the short name of the target
       case "minWidth"
          if sMode is "scaling" then
@@ -518,7 +518,7 @@ on closeField
          end if
          break
    end switch
-
+   
    setValue tValue
 end closeField
 

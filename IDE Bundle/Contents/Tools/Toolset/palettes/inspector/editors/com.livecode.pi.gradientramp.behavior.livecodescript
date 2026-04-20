@@ -1,11 +1,7 @@
-﻿script "com.livecode.pi.gradientramp.behavior" with behavior "revInspectorEditorBehavior"
+﻿script "com.livecode.pi.gradientramp.behavior"
 on editorInitialize
-   set the editorMinWidth of me to 240
+   set the editorMinWidth of me to 260
    set the editorMaxWidth of me to 0
-   -- drawer this stack
-   -- set the systemWindow of this stack to true
-   -- set the systemWindow of this stack to true
-   --  modal (this stack)
 end editorInitialize
 
 on editorUpdate
@@ -14,7 +10,7 @@ on editorUpdate
    put the editorValue of me into tValue
    put the editorEnabled of me into tEnabled
    put the editorEffective of me into tEffective
-
+   
    lock messages
    updateSubeditorValue tValue
    unlock messages
@@ -25,24 +21,24 @@ on editorResize
    lock screen
    lock messages
    set the lockLoc of me to true
-
+   
    local tColorRect, tWidgetRect
    put the rect of me into tColorRect
    put tColorRect into tWidgetRect
-
+   
    if the height of me <= 90 then
       put the top of me + 60 into item 4 of tWidgetRect
    else
       put the bottom of me - 30 into item 4 of tWidgetRect
    end if
    put the bottom of me - 30 into item 2 of tColorRect
-
+   
    set the rect of group "color" of me to tColorRect
    set the rect of widget 1 of me to tWidgetRect
-
+   
    unlock messages
    dispatch "resizeControl" to group "color" of me
-
+   
    set the lockloc of me to false
    unlock screen
 end editorResize
@@ -54,14 +50,14 @@ on valueChanged
    else
       local tSelected
       put the selectedStop of widget 1 of me into tSelected
-      if tSelected is 0 then
+      if tSelected is 0 then 
          exit valueChanged
       end if
-
+      
       local tValue
       put the editorValue of me into tValue
       put the thumbposition of scrollbar "alpha" of me into sOpacity
-      put currentValue() into item 2 to 5 of line tSelected of tValue
+      put currentValue() into item 2 to 5 of line tSelected of tValue 
       set the editorValue of me to tValue
       updateSubeditorValue tValue
    end if
@@ -154,22 +150,22 @@ on updateSubeditorValue pValue
    if tMDown is not empty then
       put the long id of the mousecontrol into tMDown
    end if
-
-   if tMDown is not the long id of widget "ramp" of me then
+   
+   if tMDown is not the long id of widget "ramp" of me then 
       updateRampValue pValue
    end if
-
+   
    local tSelectedValue
    put rampValue() into tSelectedValue
    if tMDown is not the long id of scrollbar "alpha" of me then
       updateOpacityValue item 5 of tSelectedValue
    end if
-
+   
    updateColorDisplay item 2 to 5 of tSelectedValue
 end updateSubeditorValue
 
 on mouseUp
-   switch the short name of the target
+   switch the short name of the target 
       case "color"
          local tSelectedStop
          put the selectedStop of widget "ramp" of me into tSelectedStop
@@ -190,24 +186,7 @@ on mouseUp
          put the thumbposition of scrollbar "alpha" of me into sOpacity
          valueChanged
          break
-      case "from"
-         put the thumbposition of scrollbar "from" of me into sOpacity
-         valueChanged
-         break
       default
-         -- pass mouseUp
-         break
+         pass mouseUp
    end switch
-   -- pass mouseUp
 end mouseUp
-
-on closeStack
-   -- if there is a stack "revPropertyPopup fillGradient" then
-   --      stop using stack "revPropertyPopup fillGradient"
-   --      close stack "revPropertyPopup fillGradient"
-   --      delete stack "revPropertyPopup fillGradient"
-   send ("delete stack "& quote & "revPropertyPopup fillGradient" & quote ) to stack "Home" in 1 sec
-   --   wait 2 sec
-   --   put "stack removed from memory:" & (there is a stack "revPropertyPopup fillGradient")
-   -- end if
-end closeStack
